@@ -56,6 +56,7 @@ fi
 #
 # Thus a variable can carry the flags all at once
 activeFlags=0x00000
+oldActiveFlags=0x00000
 
 FLAG_d1=0x00001 
 FLAG_d2=0x00010
@@ -64,39 +65,44 @@ FLAG_t=0x01000
 FLAG_s=0x10000
 
 
-# Executing the process acording to the given option
+# Compile C code, create directories
+  # -v option print the creation of the folders
+mkdir -v temp
+mkdir -v images
+echo
+make -C progc
+echo
+
+# Go througt all the given option
 for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
 	option=${!i}
-  
+  oldActiveFlags=$activeFlags
+
+  # Activating the Flags for the curent option
 	case $option in
     '-d1')
       if ! (( $activeFlags & $FLAG_d1)) ; then
         activeFlags=$(( activeFlags + FLAG_d1 ))
-        echo process -d1 ...
       fi
     ;;
     '-d2')
       if ! (( $activeFlags & $FLAG_d2)) ; then
         activeFlags=$(( activeFlags + FLAG_d2 ))
-        echo process -d2 ...
       fi
     ;;
     '-l')
       if ! (( $activeFlags & $FLAG_l)) ; then
         activeFlags=$(( activeFlags + FLAG_l ))
-        echo process -l ...
       fi
     ;;
     '-t')
       if ! (( $activeFlags & $FLAG_t)) ; then
         activeFlags=$(( activeFlags + FLAG_t ))
-        echo process -t ...
       fi
     ;;
     '-s')
       if ! (( $activeFlags & $FLAG_s)) ; then
         activeFlags=$(( activeFlags + FLAG_s ))
-        echo process -s ...
       fi
     ;;
     *) #DEFAULT
@@ -104,8 +110,13 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
       echoHelp
       exit 3
     ;;
-
 	esac # End of the case
+
+  # If the Flags are uptaded:
+  if (( $oldActiveFlags != $activeFlags )) ; then
+    # We give the curent option to the process
+    ./progc/main.exe $option
+  fi
 done
 
 
