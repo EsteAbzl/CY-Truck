@@ -1,5 +1,8 @@
 #!/bin/bash  
 
+# Memorise the value of the last useful comand ('$?')
+# when we need to test it.
+exitNumber=0 
 
 printHelpFile(){
   directoryHelpFile='help.txt'
@@ -19,6 +22,7 @@ printHelpFile(){
 
 echoHelp(){
    echo "Try 'bash $0 -h' for more information."
+   echo
 }
 
 
@@ -65,18 +69,24 @@ FLAG_t=0x01000
 FLAG_s=0x10000
 
 
-# Compile C code, create directories
-  # -v option print the creation of the folders
+# Create directories. -v option print the creation of the folders
 mkdir -v temp
 mkdir -v images
-echo
-make -C progc
-echo
+echo ---
+
+# Compile C code in the "progc" directory
+make -C progc/
+exitNumber=$?
+if (( $exitNumber != 0 )) ; then
+  echo
+  echo "$0: Make didn't work as expected and ended with: $exitNumber"
+  exit 3
+fi
+echo ---
 
 # Go througt all the given option
 for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
 	option=${!i}
-  oldActiveFlags=$activeFlags
 
   # Activating the Flags for the curent option
 	case $option in
@@ -108,16 +118,34 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
     *) #DEFAULT
       echo "$0: Invalid option '$option'"
       echoHelp
-      exit 3
+      #exit 4 
+      # Should we stop the program if there is a wrong option? What if other valid option have already been processed?
+      # I think we should only warn and continue the program.
     ;;
 	esac # End of the case
 
   # If the Flags are uptaded:
   if (( $oldActiveFlags != $activeFlags )) ; then
     # We give the curent option to the process
-    ./progc/main.exe $option
+    ./progc/main.exe $data $option 
+    exitNumber=$?
+    if (( exitNumber != 0)) ; then
+      echo
+      echo "$0: The process for $option didn't work as expected and ended with: $exitNumber"
+    fi
   fi
+  
+  oldActiveFlags=$activeFlags
+  
 done
+echo ---
+
+# Chec if at least one process started
+if (( $activeFlags == 0 )) ; then
+  echo "$0: We did not find any correct option."
+  echoHelp
+  exit 4
+fi
 
 
 # Next is to print the results
