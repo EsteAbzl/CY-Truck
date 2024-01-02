@@ -47,7 +47,7 @@ data=$1
 
 # Check if $data is a file
 if [ ! -f $data ] ; then
-  echo "$0: The targeted file hasn't been found, it must be the first argument."
+  echo "$0: The data file hasn't been found, it must be the first argument."
   echoHelp
 	exit 2
 fi
