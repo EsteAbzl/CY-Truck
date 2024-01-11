@@ -1,0 +1,22 @@
+Exercice 1.1.a)
+Dans l'ordre -3 debut
+DEBUT
+[2, 5, 9, 10, 1, -3]
+[2, 5, 9, 10, 1] (depiler)
+[2, 5, 9, 10] (depiler)
+[2, 5, 9, 10, 12] (empiler 12)
+[2, 5, 9, 10] (depiler)
+[2, 5, 9, 10, 8] (empiler 8)
+[2, 5, 9, 10, 8, 7] (empiler 7)
+FIN
+
+1.1.b)
+
+Dans l'odre inverse :
+Resultat = [2,5,9,10,1,-3]
+
+
+2.a)[7, 8, 12, 5, 9, 10]
+2.b)[12,8,7,2, 5, 9]
+
+3)besoin pile secondaire
