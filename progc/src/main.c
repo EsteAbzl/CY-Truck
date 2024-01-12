@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #define Size_Max 100
 
-typedef struct _client {
-  int route_number;
-  int distance;
-} Client;
-
 void D1(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
