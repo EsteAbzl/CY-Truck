@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define Size_Max 100
+
 
 int line_count(File *fData){
   int c;
@@ -18,9 +20,9 @@ void D1(FILE *fData, int line_number){
   if(File *fData == NULL){
     exit(4);
   }
-  char chaine[999]; //peut etre un malloc
-  //faire un while avec un fgets ?
-  
+  char chain[Size_Max]; //peut etre un malloc
+  //while(fgets(chain,Size_Max,fData != EOF){    
+  //}  
 }
 
 
