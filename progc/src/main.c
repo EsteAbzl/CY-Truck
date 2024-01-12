@@ -2,22 +2,8 @@
 #include <stdlib.h>
 #define Size_Max 100
 
-
-int line_count(File *fData){
-  int c;
-  int nb_line = 0;
-  FILE *fp;
-  /* là j'ouvre le fichier que je désire en mode "r" */
-  /* voici ma boucle */
-  while ((c = getc(fData)) != EOF){ //parcours carac par carac, si il s'agit d'un retour à la ligne ça ajoute 1 au nb de ligne
-    if (c == '\n'){
-        ++nb_line;
-    }
-  }
-}
-
 void D1(FILE *fData, int line_number){
-  if(File *fData == NULL){
+  if(fData == NULL){
     exit(4);
   }
   char chain[Size_Max]; //peut etre un malloc
