@@ -236,26 +236,3 @@ void displayInfixe(Avl_str* p){
         displayInfixe(p->pR);
     }
 }
-
-
-int main(){
-    Avl_str* p = NULL;
-    int h=0;
-    p = createAvl_str("D");
-    p = addAvl_str(p, "A",&h);
-    h=0;
-    p = addAvl_str(p, "F",&h);
-    h=0;
-    p = addAvl_str(p, "E",&h);
-    h=0;
-    p = addAvl_str(p, "C",&h);
-    h=0;
-    p = addAvl_str(p, "A",&h);
-    h=0;
-    p = addAvl_str(p, "B",&h);
-    h=0;
-
-    displayInfixe(p);
-
-    return 0;
-}
