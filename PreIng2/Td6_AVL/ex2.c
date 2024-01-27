@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 
-typedef struct _avl {
+typedef struct _Avl {
     int           value;
     int bFactor;
-    struct _avl* pL;
-    struct _avl* pR;
+    struct _Avl* pL;
+    struct _Avl* pR;
 } Avl;
 
 Avl * createAvl(int v){
@@ -34,7 +34,7 @@ int AvlRightExist(Avl * pTree){
 
 #define MAX(a,b) (((a)>(b))?(a):(b)) //fct max
 
-int bstHeight(Avl * pTree){ //hauteur
+int AvlHeight(Avl * pTree){ //hauteur
     int comptL=0,comptR=0;
     if(pTree==NULL){
         return 0;
@@ -44,10 +44,10 @@ int bstHeight(Avl * pTree){ //hauteur
     }
     else{
         if(AvlLeftExist(pTree)){
-            comptL = bstHeight(pTree->pL);
+            comptL = AvlHeight(pTree->pL);
         }
         if(AvlRightExist(pTree)){
-            comptR = bstHeight(pTree->pR); 
+            comptR = AvlHeight(pTree->pR); 
         }
     }
     return MAX(comptL,comptR)+1;
@@ -147,7 +147,7 @@ Avl* SuppMax(Avl* pTree, int* elem){
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-Avl * avlRotationL(Avl * pTree){
+Avl * AvlRotationL(Avl * pTree){
     if(pTree==NULL||pTree->pR == NULL){
         return 0;
     }
@@ -165,7 +165,7 @@ Avl * avlRotationL(Avl * pTree){
     return pTree;    
 }
 
-Avl * avlRotationR(Avl * pTree){
+Avl * AvlRotationR(Avl * pTree){
     if(pTree==NULL||pTree->pL == NULL){
         return 0;
     }
@@ -182,20 +182,20 @@ Avl * avlRotationR(Avl * pTree){
     return pTree;    
 }
 
-Avl * avlRotationRL(Avl * pTree){
+Avl * AvlRotationRL(Avl * pTree){
     if(pTree==NULL){
         return 0;
     }
-    pTree->pR = avlRotationR(pTree->pR);
-    return avlRotationL(pTree);
+    pTree->pR = AvlRotationR(pTree->pR);
+    return AvlRotationL(pTree);
 }
 
-Avl * avlRotationLR(Avl * pTree){
+Avl * AvlRotationLR(Avl * pTree){
     if(pTree==NULL){
         return 0;
     }
-    pTree->pL = avlRotationL(pTree->pL);
-    return avlRotationR(pTree);
+    pTree->pL = AvlRotationL(pTree->pL);
+    return AvlRotationR(pTree);
 }
 
 Avl * equilibrage(Avl * pTree){
@@ -207,10 +207,10 @@ Avl * equilibrage(Avl * pTree){
             exit(1);
         }
         if(pTree->pR->bFactor >= 0){
-            return avlRotationL(pTree);
+            return AvlRotationL(pTree);
         }
         else{
-            return avlRotationRL(pTree);
+            return AvlRotationRL(pTree);
         }
     }
     else if(pTree->bFactor <=-2){
@@ -218,10 +218,10 @@ Avl * equilibrage(Avl * pTree){
             exit(1);
         }
         if(pTree->pL->bFactor <= 0){
-            return avlRotationR(pTree);
+            return AvlRotationR(pTree);
         }
         else{
-            return avlRotationLR(pTree);
+            return AvlRotationLR(pTree);
         }
     }
     return pTree;
