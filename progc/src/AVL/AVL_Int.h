@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Avl_Int.c"
+#include "AVL_Int.c"
 
 
 // Int AVL node

@@ -1,9 +1,9 @@
 #ifndef _AVLCOMMON_H
 #define _AVLCOMMON_H
 
-#include "Avl_Int.h"
-#include "Avl_Driver.h"
-#include "Avl_Common.c"
+#include "AVL_Int.h"
+#include "AVL_Driver.h"
+#include "AVL_Common.c"
 
 #ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
