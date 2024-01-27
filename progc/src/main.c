@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #define Size_Max 100
 
-void D1(FILE *fData, int line_number) {
-  if (fData == NULL) {
-    exit(4);
-  }
-  char chain[Size_Max]; // peut etre un malloc
-  // while(fgets(chain,Size_Max,fData != EOF){
-  // }
-}
-
 int main(int argc, char *argv[]) {
   if (argc - 1 == 2) {
     printf("\n---Entering %s process---\n", argv[2]);
