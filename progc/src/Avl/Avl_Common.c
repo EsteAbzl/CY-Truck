@@ -1,3 +1,6 @@
+#ifndef _AVLCOMMON_C
+#define _AVLCOMMON_C
+
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -5,6 +8,7 @@
 int checkPtr(void *ptr) {
   return ptr == NULL;
 }
+
 
 int checkLeftAvl(void *ptr) {
   return !checkPtr(ptr) && !checkPtr(ptr->pL);
@@ -116,3 +120,6 @@ void *AvlRotationLR(void *pTree) {
   pTree->pL = AvlRotationL(pTree->pL);
   return AvlRotationR(pTree);
 }
+
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef _AVLDRIVER_C
+#define _AVLDRIVER_C
+
 AvlDriver *createAvlDriver(char *str) {
   AvlDriver *pNew = malloc(sizeof(AvlDriver));
   if (checkPtr(pNew)) exit(1);
@@ -77,7 +80,7 @@ AvlDriver *_delAvlDriver(AvlDriver *pTree, char *str, int *h) {
     pTree->pL = _delAvlDriver(pTree->pL, str, h);
     *h = -*h;
   }
-  // Element was found, replace as needed
+  // Element found, replace as needed
   else if (!checkLeftAvl(pTree)){
     AvlDriver *tmp;
     tmp = pTree;
@@ -115,11 +118,4 @@ AvlDriver *delAvlLargestStr(AvlDriver *pTree, char **str) {
 }
 
 
-// DEBUG
-void displayInorder(AvlDriver *p) {
-  if (p != NULL) {
-    displayInorder(p->pL);
-    printf("%s", p->name);
-    displayInorder(p->pR);
-  }
-}
+#endif
