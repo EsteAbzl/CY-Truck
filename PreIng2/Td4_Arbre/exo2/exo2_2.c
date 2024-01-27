@@ -251,7 +251,7 @@ int node_count(Tree * pTree){
 
 #define MAX(a,b) (((a)>(b))?(a):(b)) //fct max
 
-int AvlHeight(Tree * pTree){
+int avlHeight(Tree * pTree){
     int comptL=0,comptR=0;
     if(pTree==NULL){
         exit(2);
@@ -261,10 +261,10 @@ int AvlHeight(Tree * pTree){
     }
     else{
         if(TreeLeftExist(pTree)){
-            comptL = AvlHeight(pTree->pLeft);
+            comptL = avlHeight(pTree->pLeft);
         }
         if(TreeRightExist(pTree)){
-            comptR = AvlHeight(pTree->pRight); 
+            comptR = avlHeight(pTree->pRight); 
         }
     }
     return MAX(comptL,comptR)+1;
@@ -297,6 +297,6 @@ int main(){
     
     printf("nbr de feuille = %d\n",leaf_count(pTree));
     printf("nbr de noeud = %d\n",node_count(pTree));
-    printf("hauteur = %d\n",AvlHeight(pTree));
+    printf("hauteur = %d\n",avlHeight(pTree));
     return 0;
 }

@@ -33,7 +33,7 @@ int Avl_str_RightExist(Avl_str *pTree) {
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b)) // fct max
 
-int AvlHeight(Avl_str *pTree) { // hauteur
+int avlHeight(Avl_str *pTree) { // hauteur
   int comptL = 0, comptR = 0;
   if (pTree == NULL) {
     return 0;
@@ -42,10 +42,10 @@ int AvlHeight(Avl_str *pTree) { // hauteur
     return 1;
   } else {
     if (Avl_str_LeftExist(pTree)) {
-      comptL = AvlHeight(pTree->pL);
+      comptL = avlHeight(pTree->pL);
     }
     if (Avl_str_RightExist(pTree)) {
-      comptR = AvlHeight(pTree->pR);
+      comptR = avlHeight(pTree->pR);
     }
   }
   return MAX(comptL, comptR) + 1;
@@ -151,7 +151,7 @@ Avl_str *pre_DelAvl_str(Avl_str *pTree, char *str) {
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-Avl_str *AvlRotationL(Avl_str *pTree) {
+Avl_str *avlRotationL(Avl_str *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
@@ -170,7 +170,7 @@ Avl_str *AvlRotationL(Avl_str *pTree) {
   return pTree;
 }
 
-Avl_str *AvlRotationR(Avl_str *pTree) {
+Avl_str *avlRotationR(Avl_str *pTree) {
   if (pTree == NULL || pTree->pL == NULL) {
     return 0;
   }
@@ -188,20 +188,20 @@ Avl_str *AvlRotationR(Avl_str *pTree) {
   return pTree;
 }
 
-Avl_str *AvlRotationRL(Avl_str *pTree) {
+Avl_str *avlRotationRL(Avl_str *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pR = AvlRotationR(pTree->pR);
-  return AvlRotationL(pTree);
+  pTree->pR = avlRotationR(pTree->pR);
+  return avlRotationL(pTree);
 }
 
-Avl_str *AvlRotationLR(Avl_str *pTree) {
+Avl_str *avlRotationLR(Avl_str *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pL = AvlRotationL(pTree->pL);
-  return AvlRotationR(pTree);
+  pTree->pL = avlRotationL(pTree->pL);
+  return avlRotationR(pTree);
 }
 
 Avl_str *equilibrage_str(Avl_str *pTree) {
@@ -212,18 +212,18 @@ Avl_str *equilibrage_str(Avl_str *pTree) {
       exit(1);
     }
     if (pTree->pR->bFactor >= 0) {
-      return AvlRotationL(pTree);
+      return avlRotationL(pTree);
     } else {
-      return AvlRotationRL(pTree);
+      return avlRotationRL(pTree);
     }
   } else if (pTree->bFactor <= -2) {
     if (pTree->pL == NULL) {
       exit(1);
     }
     if (pTree->pL->bFactor <= 0) {
-      return AvlRotationR(pTree);
+      return avlRotationR(pTree);
     } else {
-      return AvlRotationLR(pTree);
+      return avlRotationLR(pTree);
     }
   }
   return pTree;

@@ -37,30 +37,30 @@ int checkRightAvl(void *ptr);
 // In : Pointer to BST
 // Out : int
 // Returns height of a BST
-int AvlHeight(void *ptr);
+int avlHeight(void *ptr);
 
 
 // In : Pointer to root of rotation
 // Out : Modified root subtree
 // Explicit
-AvlDriver *AvlRotationL(AvlDriver *pTree);
+AvlDriver *avlRotationL(AvlDriver *pTree);
 
 
 // In : Pointer to root of rotation
 // Out : Modified root subtree
 // Explicit
-AvlDriver *AvlRotationR(AvlDriver *pTree);
+AvlDriver *avlRotationR(AvlDriver *pTree);
 
 // In : Pointer to root of rotation
 // Out : Modified root subtree
 // Explicit
-AvlDriver *AvlRotationRL(AvlDriver *pTree);
+AvlDriver *avlRotationRL(AvlDriver *pTree);
 
 
 // In : Pointer to root of rotation
 // Out : Modified root subtree
 // Explicit
-AvlDriver *AvlRotationLR(AvlDriver *pTree);
+AvlDriver *avlRotationLR(AvlDriver *pTree);
 
 
 // In : Pointer to Avl to balance
