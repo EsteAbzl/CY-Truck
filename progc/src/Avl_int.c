@@ -1,59 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct _avl_int {
+typedef struct _AvlInt {
   int value; // Sort by value
 
-  int equilibre;
-  struct _avl_int *pL;
-  struct _avl_int *pR;
-} Avl_int;
+  int bFactor;
+  struct _AvlInt *pL;
+  struct _AvlInt *pR;
+} AvlInt;
 
-Avl_int *createAvl(int v) {
-  Avl_int *pNew = malloc(sizeof(Avl_int));
+AvlInt *createAvl(int v) {
+  AvlInt *pNew = malloc(sizeof(AvlInt));
   if (pNew == NULL) {
     exit(1);
   }
   pNew->value = v;
-  pNew->equilibre = 0;
+  pNew->bFactor = 0;
   pNew->pL = NULL;
   pNew->pR = NULL;
   return pNew;
 }
-int AvlNULL(Avl_int *pTree) { return pTree == NULL; }
+int AvlNULL(AvlInt *pTree) { return pTree == NULL; }
 
-int AvlLeftExist(Avl_int *pTree) {
+int AvlLeftExist(AvlInt *pTree) {
   return !AvlNULL(pTree) && !AvlNULL(pTree->pL);
 }
 
-int AvlRightExist(Avl_int *pTree) {
+int AvlRightExist(AvlInt *pTree) {
   return !AvlNULL(pTree) && !AvlNULL(pTree->pR);
 }
 
-Avl_int *equilibrage(Avl_int *pTree);
+AvlInt *equilibrage(AvlInt *pTree);
 
-Avl_int *AddAvl_int(Avl_int *p, int v, int *h) {
+AvlInt *AddAvlInt(AvlInt *p, int v, int *h) {
   if (p == NULL) {
     // found the place to create new node
     *h = 1;
     return createAvl(v);
   } else if (v < p->value) {
     // look into the left subtree
-    p->pL = AddAvl_int(p->pL, v, h);
+    p->pL = AddAvlInt(p->pL, v, h);
     *h = -*h;
   } else if (v > p->value) {
     // look into the right subtree
     // h reste le mm
-    p->pR = AddAvl_int(p->pR, v, h);
+    p->pR = AddAvlInt(p->pR, v, h);
   } else {
     *h = 0;
     return p;
     // We have found the same value : do nothing
   }
   if (*h != 0) {
-    p->equilibre = p->equilibre + *h;
+    p->bFactor = p->bFactor + *h;
     p = equilibrage(p);
-    if (p->equilibre == 0) {
+    if (p->bFactor == 0) {
       *h = 0;
     } else {
       *h = -1;
@@ -62,14 +62,14 @@ Avl_int *AddAvl_int(Avl_int *p, int v, int *h) {
   return p;
 }
 
-Avl_int *pre_AddAvl_int(Avl_int *pTree, int elem) {
+AvlInt *pre_AddAvlInt(AvlInt *pTree, int elem) {
   static int h = 0;
-  return AddAvl_int(pTree, elem, &h);
+  return AddAvlInt(pTree, elem, &h);
 }
 
-Avl_int *SuppMax_int(Avl_int *pTree, int *elem);
+AvlInt *SuppMax_int(AvlInt *pTree, int *elem);
 
-Avl_int *DelAvl_int(Avl_int *pTree, int elem, int *h) {
+AvlInt *DelAvlInt(AvlInt *pTree, int elem, int *h) {
   // element non présent dans l’arbre
   if (pTree == NULL) {
     *h = 1;
@@ -77,15 +77,15 @@ Avl_int *DelAvl_int(Avl_int *pTree, int elem, int *h) {
   }
   // parcours récursif de l’arbre
   else if (pTree->value < elem) { // go a droite car elem plus grand
-    pTree->pR = DelAvl_int(pTree->pR, elem, h);
+    pTree->pR = DelAvlInt(pTree->pR, elem, h);
   } else if (pTree->value > elem) { // go a gauche car elem plus ptit
-    pTree->pL = DelAvl_int(pTree->pL, elem, h);
+    pTree->pL = DelAvlInt(pTree->pL, elem, h);
     *h = -*h;
   }
   // élément trouvé : remplacement par fils unique
   else if (!AvlLeftExist(pTree)) { // si il a pas de sous arbre gauche on remplace par
                          // sous arbre droit (fils unique)
-    Avl_int *tmp;
+    AvlInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
     free(tmp);
@@ -96,9 +96,9 @@ Avl_int *DelAvl_int(Avl_int *pTree, int elem, int *h) {
     pTree->pL = SuppMax_int(pTree->pL, &(pTree->value));
   }
   if (*h != 0) {
-    pTree->equilibre = pTree->equilibre + *h;
+    pTree->bFactor = pTree->bFactor + *h;
     pTree = equilibrage(pTree);
-    if (pTree->equilibre == 0) {
+    if (pTree->bFactor == 0) {
       *h = 0;
     } else {
       *h = -1;
@@ -107,8 +107,8 @@ Avl_int *DelAvl_int(Avl_int *pTree, int elem, int *h) {
   return pTree;
 }
 
-Avl_int *SuppMax_int(Avl_int *pTree, int *elem) {
-  Avl_int *tmp;
+AvlInt *SuppMax_int(AvlInt *pTree, int *elem) {
+  AvlInt *tmp;
   if (AvlRightExist(pTree)) {
     SuppMax_int(pTree->pR, elem);
   } else {
@@ -120,87 +120,87 @@ Avl_int *SuppMax_int(Avl_int *pTree, int *elem) {
   return pTree;
 }
 
-Avl_int *pre_DelAvl_int(Avl_int *pTree, int elem) {
+AvlInt *pre_DelAvlInt(AvlInt *pTree, int elem) {
   static int h = 0;
-  return DelAvl_int(pTree, elem, &h);
+  return DelAvlInt(pTree, elem, &h);
 }
 
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-Avl_int *Rota_G(Avl_int *pTree) {
+AvlInt *avlRotationL(AvlInt *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
-  Avl_int *Pivot = pTree->pR;
+  AvlInt *Pivot = pTree->pR;
 
   pTree->pR = Pivot->pL;
   Pivot->pL = pTree;
 
   // verif equilibrage
-  int eq_Ptree = pTree->equilibre, eq_Pivot = Pivot->equilibre;
-  pTree->equilibre -= max(eq_Pivot, 0) - 1;
-  Pivot->equilibre =
-      min(eq_Ptree + eq_Pivot - 2, min(eq_Ptree - 2, eq_Pivot - 1));
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MAX(eq_Pivot, 0) - 1;
+  Pivot->bFactor =
+      MIN(eq_Ptree + eq_Pivot - 2, MIN(eq_Ptree - 2, eq_Pivot - 1));
 
   pTree = Pivot;
   return pTree;
 }
 
-Avl_int *Rota_D(Avl_int *pTree) {
+AvlInt *avlRotationR(AvlInt *pTree) {
   if (pTree == NULL || pTree->pL == NULL) {
     return 0;
   }
-  Avl_int *Pivot = pTree->pL;
+  AvlInt *Pivot = pTree->pL;
   pTree->pL = Pivot->pR;
   Pivot->pR = pTree;
 
   // verif equilibrage
-  int eq_Ptree = pTree->equilibre, eq_Pivot = Pivot->equilibre;
-  pTree->equilibre -= min(eq_Pivot, 0) + 1;
-  Pivot->equilibre =
-      max(eq_Ptree + eq_Pivot + 2, max(eq_Ptree + 2, eq_Pivot + 1));
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MIN(eq_Pivot, 0) + 1;
+  Pivot->bFactor =
+      MAX(eq_Ptree + eq_Pivot + 2, MAX(eq_Ptree + 2, eq_Pivot + 1));
 
   pTree = Pivot;
   return pTree;
 }
 
-Avl_int *RotaDouble_G(Avl_int *pTree) {
+AvlInt *avlRotationRL(AvlInt *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pR = Rota_D(pTree->pR);
-  return Rota_G(pTree);
+  pTree->pR = avlRotationR(pTree->pR);
+  return avlRotationL(pTree);
 }
 
-Avl_int *RotaDouble_D(Avl_int *pTree) {
+AvlInt *avlRotationLR(AvlInt *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pL = Rota_G(pTree->pL);
-  return Rota_D(pTree);
+  pTree->pL = avlRotationL(pTree->pL);
+  return avlRotationR(pTree);
 }
 
-Avl_int *equilibrage(Avl_int *pTree) {
+AvlInt *equilibrage(AvlInt *pTree) {
   if (pTree == NULL) {
     return pTree;
-  } else if (pTree->equilibre >= 2) {
+  } else if (pTree->bFactor >= 2) {
     if (pTree->pR == NULL) {
       exit(1);
     }
-    if (pTree->pR->equilibre >= 0) {
-      return Rota_G(pTree);
+    if (pTree->pR->bFactor >= 0) {
+      return avlRotationL(pTree);
     } else {
-      return RotaDouble_G(pTree);
+      return avlRotationRL(pTree);
     }
-  } else if (pTree->equilibre <= -2) {
+  } else if (pTree->bFactor <= -2) {
     if (pTree->pL == NULL) {
       exit(1);
     }
-    if (pTree->pL->equilibre <= 0) {
-      return Rota_D(pTree);
+    if (pTree->pL->bFactor <= 0) {
+      return avlRotationR(pTree);
     } else {
-      return RotaDouble_D(pTree);
+      return avlRotationLR(pTree);
     }
   }
   return pTree;

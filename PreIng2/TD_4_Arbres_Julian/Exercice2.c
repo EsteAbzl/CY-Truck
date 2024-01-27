@@ -244,7 +244,7 @@ int tailleArbre(Tree* p){
     return tailleArbreREC(p) - 1;
 }
 
-int max(int a, int b){
+int MAX(int a, int b){
     if(a>b){
         return a;
     }
@@ -254,7 +254,7 @@ int max(int a, int b){
 }
 int hauteur(Tree* p){
     if(!(p==NULL)){
-        return 1 + max(hauteur(p->pLeft),hauteur(p->pRight));
+        return 1 + MAX(hauteur(p->pLeft),hauteur(p->pRight));
     }
 }
 

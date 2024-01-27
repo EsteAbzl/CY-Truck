@@ -4,7 +4,7 @@
 
 typedef struct _avl {
     int           value;
-    int equilibre;
+    int bFactor;
     struct _avl* pL;
     struct _avl* pR;
 } Avl;
@@ -15,7 +15,7 @@ Avl * createAvl(int v){
         exit(1);
     }
     pNew->value = v;
-    pNew->equilibre = 0;
+    pNew->bFactor = 0;
     pNew->pL    = NULL;
     pNew->pR    = NULL;
     return pNew;
@@ -34,7 +34,7 @@ int AvlRightExist(Avl * pTree){
 
 #define MAX(a,b) (((a)>(b))?(a):(b)) //fct max
 
-int high(Avl * pTree){ //hauteur
+int bstHeight(Avl * pTree){ //hauteur
     int comptL=0,comptR=0;
     if(pTree==NULL){
         return 0;
@@ -44,10 +44,10 @@ int high(Avl * pTree){ //hauteur
     }
     else{
         if(AvlLeftExist(pTree)){
-            comptL = high(pTree->pL);
+            comptL = bstHeight(pTree->pL);
         }
         if(AvlRightExist(pTree)){
-            comptR = high(pTree->pR); 
+            comptR = bstHeight(pTree->pR); 
         }
     }
     return MAX(comptL,comptR)+1;
@@ -77,9 +77,9 @@ Avl* addAvl(Avl* p, int v,int *h){
         // We have found the same value : do nothing
     }   
     if(*h != 0){
-        p->equilibre = p->equilibre+*h;
+        p->bFactor = p->bFactor+*h;
         p = equilibrage(p);
-        if(p->equilibre==0){
+        if(p->bFactor==0){
             *h = 0;
         }
         else{
@@ -118,9 +118,9 @@ Avl* delABR(Avl * pTree, int elem,int *h){
         pTree->pL = SuppMax(pTree->pL, &(pTree->value));
     }
     if(*h != 0){
-        pTree->equilibre = pTree->equilibre+*h;
+        pTree->bFactor = pTree->bFactor+*h;
         pTree = equilibrage(pTree);
-        if(pTree->equilibre==0){
+        if(pTree->bFactor==0){
             *h = 0;
         }
         else{
@@ -144,10 +144,10 @@ Avl* SuppMax(Avl* pTree, int* elem){
     return pTree;
 }
 
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) (((a)>(b))?(a):(b))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
-Avl * Rota_G(Avl * pTree){
+Avl * avlRotationL(Avl * pTree){
     if(pTree==NULL||pTree->pR == NULL){
         return 0;
     }
@@ -157,15 +157,15 @@ Avl * Rota_G(Avl * pTree){
     Pivot->pL = pTree;
     
     //verif equilibrage
-    int eq_Ptree = pTree->equilibre, eq_Pivot = Pivot->equilibre;
-    pTree->equilibre -= max(eq_Pivot,0) - 1; 
-    Pivot->equilibre = min(eq_Ptree + eq_Pivot - 2,min(eq_Ptree - 2,eq_Pivot-1));
+    int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+    pTree->bFactor -= MAX(eq_Pivot,0) - 1; 
+    Pivot->bFactor = MIN(eq_Ptree + eq_Pivot - 2,MIN(eq_Ptree - 2,eq_Pivot-1));
     
     pTree = Pivot;
     return pTree;    
 }
 
-Avl * Rota_D(Avl * pTree){
+Avl * avlRotationR(Avl * pTree){
     if(pTree==NULL||pTree->pL == NULL){
         return 0;
     }
@@ -174,54 +174,54 @@ Avl * Rota_D(Avl * pTree){
     Pivot->pR = pTree;
     
     //verif equilibrage
-    int eq_Ptree = pTree->equilibre, eq_Pivot = Pivot->equilibre;
-    pTree->equilibre -= min(eq_Pivot,0) + 1; 
-    Pivot->equilibre = max(eq_Ptree + eq_Pivot + 2,max(eq_Ptree + 2,eq_Pivot+1));
+    int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+    pTree->bFactor -= MIN(eq_Pivot,0) + 1; 
+    Pivot->bFactor = MAX(eq_Ptree + eq_Pivot + 2,MAX(eq_Ptree + 2,eq_Pivot+1));
     
     pTree = Pivot;
     return pTree;    
 }
 
-Avl * RotaDouble_G(Avl * pTree){
+Avl * avlRotationRL(Avl * pTree){
     if(pTree==NULL){
         return 0;
     }
-    pTree->pR = Rota_D(pTree->pR);
-    return Rota_G(pTree);
+    pTree->pR = avlRotationR(pTree->pR);
+    return avlRotationL(pTree);
 }
 
-Avl * RotaDouble_D(Avl * pTree){
+Avl * avlRotationLR(Avl * pTree){
     if(pTree==NULL){
         return 0;
     }
-    pTree->pL = Rota_G(pTree->pL);
-    return Rota_D(pTree);
+    pTree->pL = avlRotationL(pTree->pL);
+    return avlRotationR(pTree);
 }
 
 Avl * equilibrage(Avl * pTree){
     if(pTree==NULL){
         return pTree;
     }
-    else if(pTree->equilibre >=2){
+    else if(pTree->bFactor >=2){
         if(pTree->pR==NULL){
             exit(1);
         }
-        if(pTree->pR->equilibre >= 0){
-            return Rota_G(pTree);
+        if(pTree->pR->bFactor >= 0){
+            return avlRotationL(pTree);
         }
         else{
-            return RotaDouble_G(pTree);
+            return avlRotationRL(pTree);
         }
     }
-    else if(pTree->equilibre <=-2){
+    else if(pTree->bFactor <=-2){
         if(pTree->pL==NULL){
             exit(1);
         }
-        if(pTree->pL->equilibre <= 0){
-            return Rota_D(pTree);
+        if(pTree->pL->bFactor <= 0){
+            return avlRotationR(pTree);
         }
         else{
-            return RotaDouble_D(pTree);
+            return avlRotationLR(pTree);
         }
     }
     return pTree;

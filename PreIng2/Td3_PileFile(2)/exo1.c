@@ -10,12 +10,12 @@ typedef struct _node{
     struct _node* pFront;
 } Node;
 
-Node* creaNode(char *chaine){
+Node* creaNode(char *str){
     Node *pNew = malloc(sizeof(Node));
-    if(pNew == NULL || chaine == NULL){
+    if(pNew == NULL || str == NULL){
         exit(2);
     }
-    strcpy(pNew->mot,chaine); //pour copier la chaine de carac de chaine sur pNew->mot
+    strcpy(pNew->mot,str); //pour copier la str de carac de str sur pNew->mot
     pNew->pNext = NULL;
     pNew->pFront = NULL;
     return pNew;
@@ -83,18 +83,18 @@ int compareMot(char *mot1,char *mot2){
     return 0; //erreur
 }
 
-Node* insertListe(Node* pHead,char *chaine){
+Node* insertListe(Node* pHead,char *str){
     Node* p1 = pHead;
     Node* pTemp = NULL;
-    Node* pNew = creaNode(chaine);
-    if(chaine == NULL || pNew == NULL){
+    Node* pNew = creaNode(str);
+    if(str == NULL || pNew == NULL){
         exit(1);
     }
     if(pHead == NULL){
-        return creaNode(chaine);
+        return creaNode(str);
     }
     else if(compareMot(pNew->mot,pHead->mot)){
-        return insertHead(pHead,chaine);
+        return insertHead(pHead,str);
     }
     else{
         while((p1!=NULL)&&compareMot(p1->mot,pNew->mot)){
@@ -102,7 +102,7 @@ Node* insertListe(Node* pHead,char *chaine){
             p1 = p1->pNext;
         }
         if(p1==NULL){
-            insertEnd(pHead,chaine);
+            insertEnd(pHead,str);
         }
         else{
             pTemp->pNext = pNew;
@@ -115,32 +115,32 @@ Node* insertListe(Node* pHead,char *chaine){
 }
 
 int main(){
-    Node* chaine1=NULL,*chaine2=NULL;
+    Node* str1=NULL,*str2=NULL;
     /*
-    char chaine_temp[21]={0}; // \0 indique la fin du string  <- le 0 = '\0'
+    char str_temp[21]={0}; // \0 indique la fin du string  <- le 0 = '\0'
 
     printf("veuillez ecrire un mot de 20 carac max");
-    scanf("%s",chaine_temp);
-    if(strlen(chaine_temp)>20){
+    scanf("%s",str_temp);
+    if(strlen(str_temp)>20){
         exit(1); //dépasse 20 (INTERDIT), strlen cherche \0
     }
-    chaine1 = creaNode(chaine_temp);
+    str1 = creaNode(str_temp);
 
     printf("veuillez ecrire un mot de 20 carac max");
-    scanf("%s",chaine_temp);
-    if(strlen(chaine_temp)>20){
+    scanf("%s",str_temp);
+    if(strlen(str_temp)>20){
         exit(1); //dépasse 20 (INTERDIT), strlen cherche \0
     }
-    chaine2 = creaNode(chaine_temp);
+    str2 = creaNode(str_temp);
     */
-    chaine2=insertListe(chaine2,"d");
-    chaine2=insertListe(chaine2,"b");
-    chaine2=insertListe(chaine2,"a");
-    chaine2=insertListe(chaine2,"e");
-    chaine2=insertListe(chaine2,"c");
-    chaine2=insertListe(chaine2,"f");
-    displayList(chaine2);
-    displayInv(chaine2);
+    str2=insertListe(str2,"d");
+    str2=insertListe(str2,"b");
+    str2=insertListe(str2,"a");
+    str2=insertListe(str2,"e");
+    str2=insertListe(str2,"c");
+    str2=insertListe(str2,"f");
+    displayList(str2);
+    displayInv(str2);
 
     return 0;
 }
