@@ -98,14 +98,25 @@ void D1(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
   }
-  
-  // Créer un arbre des personnes
-  // boucle while pour lire les données de tout le fichier
-  // recup la ligne
-  // si la personne X dans arbre -> ajout et ajouter id trajet
-  // si la personnes est dedans incrementer la variable de +1
-
-  // free arbre ?
+  AvlDriver *pDriver = NULL;
+  DataLine* pLine =  init_ReadLine(fData);
+  while(readLine(fData, pLine)){
+    if(pDriver == NULL){
+        pDriver = createAvlDriver(pLine->name);
+        pDriver->Avl_Path = createAvlInt(pLine->route_ID);
+        pDriver->nPath = 1;
+    }
+    if(IsInAvl(pDriver,pLine->name)){
+        pDriver = createAvlDriver(pLine->name);
+        //recherche elem pour ajouter npath et Avl_Path
+    }
+    else{
+        pDriver = createAvlDriver(pLine->name);
+        //recherche elem pour ajouter npath et Avl_Path
+        
+    }
+  }
+  free(pLine);
 }
 
 void D2(FILE *fData, int line_number) {
