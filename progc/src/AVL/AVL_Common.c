@@ -1,3 +1,6 @@
+#ifndef _AVLCOMMON_C
+#define _AVLCOMMON_C
+
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -5,6 +8,7 @@
 int checkPtr(void *ptr) {
   return ptr == NULL;
 }
+
 
 int checkLeftAvl(void *ptr) {
   return !checkPtr(ptr) && !checkPtr(ptr->pL);
@@ -16,7 +20,7 @@ int checkRightAvl(void *ptr) {
 }
 
 
-int AvlHeight(void *ptr) { // hauteur
+int avlHeight(void *ptr) { // hauteur
   int countL = 0, countR = 0;
   if (ptr == NULL) {
     return 0;
@@ -25,10 +29,10 @@ int AvlHeight(void *ptr) { // hauteur
     return 1;
   } else {
     if (checkLeftAvl(ptr)) {
-      countL = AvlHeight(ptr->pL);
+      countL = avlHeight(ptr->pL);
     }
     if (checkRightAvl(ptr)) {
-      countR = AvlHeight(ptr->pR);
+      countR = avlHeight(ptr->pR);
     }
   }
   return MAX(countL, countR) + 1;
@@ -43,25 +47,25 @@ void *balanceAvl(void *pTree) {
       exit(1);
     }
     if (pTree->pR->bFactor >= 0) {
-      return AvlRotationL(pTree);
+      return avlRotationL(pTree);
     } else {
-      return AvlRotationRL(pTree);
+      return avlRotationRL(pTree);
     }
   } else if (pTree->bFactor <= -2) {
     if (pTree->pL == NULL) {
       exit(1);
     }
     if (pTree->pL->bFactor <= 0) {
-      return AvlRotationR(pTree);
+      return avlRotationR(pTree);
     } else {
-      return AvlRotationLR(pTree);
+      return avlRotationLR(pTree);
     }
   }
   return pTree;
 }
 
 
-void *AvlRotationL(void *pTree) {
+void *avlRotationL(void *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
@@ -81,7 +85,7 @@ void *AvlRotationL(void *pTree) {
 }
 
 
-void *AvlRotationR(void *pTree) {
+void *avlRotationR(void *pTree) {
   if (pTree == NULL || pTree->pL == NULL) {
     return 0;
   }
@@ -100,19 +104,22 @@ void *AvlRotationR(void *pTree) {
 }
 
 
-void *AvlRotationRL(void *pTree) {
+void *avlRotationRL(void *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pR = AvlRotationR(pTree->pR);
-  return AvlRotationL(pTree);
+  pTree->pR = avlRotationR(pTree->pR);
+  return avlRotationL(pTree);
 }
 
 
-void *AvlRotationLR(void *pTree) {
+void *avlRotationLR(void *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pL = AvlRotationL(pTree->pL);
-  return AvlRotationR(pTree);
+  pTree->pL = avlRotationL(pTree->pL);
+  return avlRotationR(pTree);
 }
+
+
+#endif

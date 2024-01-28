@@ -1,14 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-
-typedef struct _AvlInt {
-  int value;          // Our sorting value is an int
-  int bFactor;        // Balance factor
-  struct _AvlInt *pL;
-  struct _AvlInt *pR;
-} AvlInt;
-
+#ifndef _AVLINT_C
+#define _AVLINT_C
 
 AvlInt *createAvlInt(int v) {
   AvlInt *pNew = malloc(sizeof(AvlInt));
@@ -76,28 +67,26 @@ AvlDriver *delAvlInt(AvlDriver *pTree, char *str) {
 
 
 AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h) {
-  // element non présent dans l’arbre
+  // Element not in tree
   if (pTree == NULL) {
     *h = 1;
     return pTree;
   }
-  // parcours récursif de l’arbre
-  else if (pTree->value < elem) { // go a droite car elem plus grand
+  // Recursively search through BST
+  else if (pTree->value < elem) {
     pTree->pR = _delAvlInt(pTree->pR, elem, h);
-  } else if (pTree->value > elem) { // go a gauche car elem plus ptit
+  } else if (pTree->value > elem) {
     pTree->pL = _delAvlInt(pTree->pL, elem, h);
     *h = -*h;
   }
-  // élément trouvé : remplacement par fils unique
-  else if (!checkLeftAvl(pTree)) { // si il a pas de sous arbre gauche on remplace par
-                         // sous arbre droit (fils unique)
+  // Element found, replace as needed
+  else if (!checkLeftAvl(pTree)) {
     AvlInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
     free(tmp);
     *h = -1;
   }
-  // élément trouvé : remplacement par prédécesseur
   else {
     pTree->pL = delAvlLargestInt(pTree->pL, &(pTree->value));
   }
@@ -126,3 +115,6 @@ AvlInt *delAvlLargestInt(AvlInt *pTree, int *elem) {
   }
   return pTree;
 }
+
+
+#endif
