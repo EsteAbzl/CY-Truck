@@ -40,7 +40,7 @@ AvlDriver *delAvlDriver(AvlDriver *pTree, char *str);
 
 // In : Pointer to Avl, String
 // Out : Pointer to searched value or 0 if not found
-AvlDriver *IsInAvl(AvlDriver *pTree,char *str);
+AvlDriver *isInAvl(AvlDriver *pTree,char *str);
 
 
 #endif

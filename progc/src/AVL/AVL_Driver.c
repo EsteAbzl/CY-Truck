@@ -117,7 +117,7 @@ AvlDriver *delAvlLargestStr(AvlDriver *pTree, char **str) {
   return pTree;
 }
 
-AvlDriver *IsInAvl(AvlDriver *pTree,char *str){;
+AvlDriver *isInAvl(AvlDriver *pTree,char *str){;
  if (pTree == NULL) {
     return 0; //mean not in Avl
   } else if (strcmp(str, pTree->name) < 0) {
