@@ -122,16 +122,14 @@ AvlDriver *isInAvl(AvlDriver *pTree,char *str){;
     return 0; //mean not in Avl
   } else if (strcmp(str, pTree->name) < 0) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlDriver(pTree->pL, str, h);
-    // balance factor needs to be inverted
-    *h = -*h;
+    return isInAvl(pTree->pL, str);
   } else if (strcmp(str, pTree->name) > 0) {
     // If the new node's value is greater, check the right branch
-    pTree->pR = _addAvlDriver(pTree->pR, str, h);
+    return isInAvl(pTree->pR, str, h);
   } else {
     return pTree;
   }
+  return 0;
 }
-
 
 #endif
