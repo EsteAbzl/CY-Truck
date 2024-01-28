@@ -38,5 +38,9 @@ AvlDriver *addAvlDriver(AvlDriver *pTree, char *str);
 // Deletes the specified element from the tree.
 AvlDriver *delAvlDriver(AvlDriver *pTree, char *str);
 
+// In : Pointer to Avl, String
+// Out : Pointer to searched value or 0 if not found
+AvlDriver *IsInAvl(AvlDriver *pTree,char *str);
+
 
 #endif
