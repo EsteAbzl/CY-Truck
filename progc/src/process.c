@@ -98,6 +98,7 @@ void D1(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
   }
+  AvlDriver *pTemp = NULL;
   AvlDriver *pDriver = NULL;
   DataLine* pLine =  init_ReadLine(fData);
   while(readLine(fData, pLine)){
@@ -107,12 +108,15 @@ void D1(FILE *fData, int line_number) {
         pDriver->nPath = 1;
     }
     if(IsInAvl(pDriver,pLine->name)){
-        pDriver = createAvlDriver(pLine->name);
-        //recherche elem pour ajouter npath et Avl_Path
+        pTemp = IsInAvl(pDriver,pLine->name);
+        pTemp->npath++;
+        pTemp->Avl_Path = addAvlInt(pTemp->Avl_Path,pLine->route_ID);    
     }
     else{
-        pDriver = createAvlDriver(pLine->name);
-        //recherche elem pour ajouter npath et Avl_Path
+        pDriver = addAvlInt(pTemp->Avl_Path,pLine->route_ID);
+        pTemp = IsInAvl(pDriver,pLine->name);
+        pTemp->npath = 1;
+        pTemp->Avl_Path =  createAvlInt(pLine->route_ID);
         
     }
   }
