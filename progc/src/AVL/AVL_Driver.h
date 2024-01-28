@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "AVL_Driver.c"
 
 // Driver Avl node
 typedef struct _AvlDriver {

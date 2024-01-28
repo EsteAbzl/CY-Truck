@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "AVL_Int.c"
-
 
 // Int AVL node
 typedef struct _AvlInt {

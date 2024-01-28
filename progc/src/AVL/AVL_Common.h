@@ -3,7 +3,6 @@
 
 #include "AVL_Int.h"
 #include "AVL_Driver.h"
-#include "AVL_Common.c"
 
 #ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
