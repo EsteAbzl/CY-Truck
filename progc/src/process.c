@@ -1,5 +1,39 @@
 #include "process.h"
 
+FIFO* creaFIFO(pDriver * driver){
+    FIFO *pNew = malloc(sizeof(FIFO));
+    if(pNew == NULL || driver == NULL){
+        exit(2);
+    }
+    pNew->driver = driver;
+    pNew->pNext = NULL;
+    return pNew;
+}
+
+FIFO* insertFIFO (FIFO* pHead,pDriver * driver){
+    if(checkptr(pHead)){
+      return creaFIFO(driver);
+    }
+    else{
+      pTemp = pHead;
+      while(pTemp->pNext !=NULL){
+        pTemp = pTemp->pNext;
+      }
+      Node* pNew = creaFIFO(driver);
+      pTemp->pNext = pNew;
+      return pHead;
+    }
+    return 0;
+}
+
+FIFO* suprFIFO(FIFO* pHead){
+    temp = pHead;
+    pHead = pHead->pNext;
+    free(temp);
+    return pHead;	
+}
+
+
 DataLine* init_ReadLine(FILE* fFile){
   if(fFile == NULL){
     printf("%s: pFile isn't properly given", __func__);
@@ -94,7 +128,7 @@ int readLine(FILE* fFile, DataLine* pLine){
 
 
 
-void D1(FILE *fData, int line_number) {
+void D2(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
   }
@@ -121,18 +155,28 @@ void D1(FILE *fData, int line_number) {
     }
   }
   free(pLine);
-}
 
-void D2(FILE *fData, int line_number) {
-  if (fData == NULL) {
-    exit(4);
+  AvlDriver * max, * node;
+  FIFO * file = malloc(sizeof(FIFO));
+  if(file == NULL){
+     exit(5);
   }
-  // Créer un arbre des personnes
-
-  // boucle while pour lire les données de tout le fichier
-  // recup la ligne
-  // si la personne X dans arbre -> ajout
-  // si la personnes est dedans incrementer la distance
-
-  // free arbre ?
+  max = pDriver;
+  while(!checkptr(pDriver)){
+    file = insertFIFO(pDriver);
+    while(!checkptr(file)){
+      node = suprFIFO(file);
+      NodeShow(node);
+      if(TreeLeftExist(node)){
+        file=insertFIFO(file,node->pL);
+      }
+      if(TreeRightExist(node)){
+        file=insertFIFO(file,node->pR);
+      }
+      if(node->driver->totalDist > max->driver->totalDist){
+        max = node;
+      }
+    }
+  }
+  //d2 retourne max ?????
 }
