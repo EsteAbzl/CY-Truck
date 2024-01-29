@@ -96,7 +96,7 @@ int readLine(FILE* fFile, DataLine* pLine){
 
 
 
-void D2(FILE *fData, int line_number) {
+AvlDriver *D2(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
   }
@@ -163,5 +163,5 @@ void D2(FILE *fData, int line_number) {
       }
     }
   }
+  return max;
 }
-  //d2 retourne max
