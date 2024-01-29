@@ -26,9 +26,9 @@ AvlDriver* createAvlDriver(char *str);
 // Out : Pointer to modified Avl
 // Adds in a new node to a BST. If the BST is an Avl,
 // it will remain balanced.
-AvlDriver* addAvlDriver(AvlDriver *pTree, char *str);
+//AvlDriver* addAvlDriver(AvlDriver *pTree, char *str);
 // Private ! Do not use !
-AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h);
+AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h);
 
 
 // In : Pointer to Avl, String
@@ -36,8 +36,8 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h);
 // Deletes the specified element from the tree.
 AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
 // Private ! Do not use !
-AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h);
-AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str);
+AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h);
+//AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str);
 
 
 // In : Pointer to Avl, String
