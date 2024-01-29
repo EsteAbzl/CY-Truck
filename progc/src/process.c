@@ -100,6 +100,7 @@ AvlDriver *D2(FILE *fData, int line_number) {
   if (fData == NULL) {
     exit(4);
   }
+  int *h = 0;
   AvlDriver *pTemp = NULL;
   AvlDriver *pDriver = NULL;
   DataLine* pLine =  init_ReadLine(fData);
@@ -113,55 +114,10 @@ AvlDriver *D2(FILE *fData, int line_number) {
         pTemp->totalDist += pLine->distance;
     }
     else{
-        pDriver = addAvlDriver(pDriver,pLine->name);
+        pDriver = addAvlDriver(pDriver,pLine->name,h);
         pTemp = isInAvlDriver(pDriver,pLine->name);
         pTemp->totalDist = pLine->distance;   
     }
   }
   free(pLine);
-
-  AvlDriver * max , * min , * node;
-  int content = 0;
-  FIFO * file = malloc(sizeof(FIFO));
-  if(file == NULL){
-     exit(5);
-  }
-  while(!checkPtr(pDriver)){
-    file = insertFIFO(file,pDriver);
-    while(!checkPtr(file)){
-      node = suprFIFO(file);
-      if(checkLeftAvlDriver(node)){
-        file=insertFIFO(file,node->pL);
-      }
-      if(checkRightAvlDriver(node)){
-        file=insertFIFO(file,node->pR);
-      }
-      if(max == NULL){
-        min = createAvlDriver(node->name);
-        min->totalDist = node->totalDist;
-        max = createAvlDriver(node->name);
-        max->totalDist = node->totalDist;
-        content++;
-      }
-      else if(content<10){
-        max = addAvlDriver(max,node->name);
-        pTemp = isInAvlDriver(max,node->name);
-        pTemp->totalDist= node->totalDist;
-        if(pTemp->totalDist < min->totalDist){
-            min = pTemp;
-        }
-        content++;
-      }
-      else{
-        if(pTemp->totalDist > min->totalDist){
-            max = delAvlDriver(max,min->name);
-            max = addAvlDriver(max,pTemp->name);
-            pTemp = isInAvlDriver(max,pTemp->name);
-            pTemp->totalDist= node->totalDist;
-            min = pickmin_AvlDriver(max);          
-        }
-      }
-    }
-  }
-  return max;
 }
