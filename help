@@ -1,0 +1,29 @@
+.TH man 1 "29 January 2024" "version 1.0" "main man page"
+.SH NAME
+	main.sh
+.SH SYNOPSIS
+	main.sh [FILE] [OPTION] ...
+.SH DESCRIPTION
+	main.sh search, analyse, make graphic from data in a csv file.
+.SH OPTIONS
+	-d1
+		get the list all the driver with the number of route they have driven,
+		from that list, it only show the 10 driver with the biggest path number in 
+		reverse order
+
+	-d2
+		get the total distance (sum each step the drove) of each driver,
+		only show the 10 driver with biggest total distance in reverse order.
+
+	-l
+		get the total distance of each route (sum each step the drove for one route)
+		only show the 10 driver with biggest total distance in reverse order.
+		ordered by the id number.
+	-t
+	
+	-s
+		
+.SH BUGS
+	No known bugs (for now :) ).
+.SH AUTHOR
+	Alouhette (evan.lippens@etu.cyu.fr)
