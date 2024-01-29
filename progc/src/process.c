@@ -138,45 +138,62 @@ void D2(FILE *fData, int line_number) {
   while(readLine(fData, pLine)){
     if(pDriver == NULL){
         pDriver = createAvlDriver(pLine->name);
-        pDriver->AvlPath = createAvlInt(pLine->route_ID);
-        pDriver->nPath = 1;
+        pDriver->totalDist = pLine->distance;
     }
-    if(isInAvlDriver(pDriver,pLine->name)){
+    elif(isInAvlDriver(pDriver,pLine->name)){
         pTemp = isInAvlDriver(pDriver,pLine->name);
-        pTemp->nPath++;
-        pTemp->AvlPath = addAvlInt(pTemp->AvlPath,pLine->route_ID);    
+        pTemp->totalDist += pLine->distance;
     }
     else{
-        pDriver->AvlPath = addAvlInt(pTemp->AvlPath,pLine->route_ID);
+        pDriver = addAvlDriver(pDriver,pLine->name);
         pTemp = isInAvlDriver(pDriver,pLine->name);
-        pTemp->nPath = 1;
-        pTemp->AvlPath =  createAvlInt(pLine->route_ID);
-        
+        pTemp->totalDist = pLine->distance;   
     }
   }
   free(pLine);
 
-  AvlDriver * max, * node;
+  AvlDriver * max , * min , * node;
+  int content = 0;
   FIFO * file = malloc(sizeof(FIFO));
   if(file == NULL){
      exit(5);
   }
-  max = pDriver;
   while(!checkptr(pDriver)){
     file = insertFIFO(pDriver);
     while(!checkptr(file)){
       node = suprFIFO(file);
-      NodeShow(node);
       if(TreeLeftExist(node)){
         file=insertFIFO(file,node->pL);
       }
       if(TreeRightExist(node)){
         file=insertFIFO(file,node->pR);
       }
-      if(node->driver->totalDist > max->driver->totalDist){
-        max = node;
+      if(max == NULL){
+        min = createAvlDriver(node->name);
+        min->totalDist = node->totalDist;
+        max = createAvlDriver(node->name);
+        max->totalDist = node->totalDist;
+        content++;
+      }
+      elif(content<10){
+        max = addAvlDriver(max,node->name);
+        ptemp = isInAvlDriver(max,node->name);
+        pTemp->totalDist= node->distance;
+        if(pTemp->totalDist < min->totalDist){
+            min = pTemp;
+        }
+        content++
+      }
+      else{
+        if(pTemp->totalDist > min->totalDist){
+            max = delAvlDriver(max,-min>name);
+            max = addAvlDriver(max,pTemp->name);
+            pTemp = isInAvlDriver(max,pTemp->name);
+            pTemp->totalDist= node->distance;
+            min = pickmin_AvlDriver(max);          
+        }
       }
     }
   }
-  //d2 retourne max ?????
 }
+  //d2 retourne max

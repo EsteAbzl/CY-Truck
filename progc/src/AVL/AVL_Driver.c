@@ -244,3 +244,30 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
 
 
 #endif
+
+AvlDriver * pickmin_AvlDriver(AvlDriver *pTree){
+  AvlDriver * min, * node;
+  int content = 0;
+  FIFO * file = malloc(sizeof(FIFO));
+  if(file == NULL){
+     exit(5);
+  }
+  min = pTree;
+  while(!checkptr(pDriver)){
+    file = insertFIFO(pDriver);
+    while(!checkptr(file)){
+      node = suprFIFO(file);
+      NodeShow(node);
+      if(TreeLeftExist(node)){
+        file=insertFIFO(file,node->pL);
+      }
+      if(TreeRightExist(node)){
+        file=insertFIFO(file,node->pR);
+      }
+      if(min->totalDist<node->totalDist){
+        min = node;
+      }
+    }
+  }
+  return min;
+}
