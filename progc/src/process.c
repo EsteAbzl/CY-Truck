@@ -2,7 +2,6 @@
 
 
 
-
 DataLine* init_ReadLine(FILE* fFile){
   if(fFile == NULL){
     printf("%s: pFile isn't properly given", __func__);
@@ -109,7 +108,7 @@ void D2(FILE *fData, int line_number) {
         pDriver = createAvlDriver(pLine->name);
         pDriver->totalDist = pLine->distance;
     }
-    elif(isInAvlDriver(pDriver,pLine->name)){
+    else if(isInAvlDriver(pDriver,pLine->name)){
         pTemp = isInAvlDriver(pDriver,pLine->name);
         pTemp->totalDist += pLine->distance;
     }
@@ -127,14 +126,14 @@ void D2(FILE *fData, int line_number) {
   if(file == NULL){
      exit(5);
   }
-  while(!checkptr(pDriver)){
-    file = insertFIFO(pDriver);
-    while(!checkptr(file)){
+  while(!checkPtr(pDriver)){
+    file = insertFIFO(file,pDriver);
+    while(!checkPtr(file)){
       node = suprFIFO(file);
-      if(TreeLeftExist(node)){
+      if(checkLeftAvlDriver(node)){
         file=insertFIFO(file,node->pL);
       }
-      if(TreeRightExist(node)){
+      if(checkRightAvlDriver(node)){
         file=insertFIFO(file,node->pR);
       }
       if(max == NULL){
@@ -144,21 +143,21 @@ void D2(FILE *fData, int line_number) {
         max->totalDist = node->totalDist;
         content++;
       }
-      elif(content<10){
+      else if(content<10){
         max = addAvlDriver(max,node->name);
-        ptemp = isInAvlDriver(max,node->name);
-        pTemp->totalDist= node->distance;
+        pTemp = isInAvlDriver(max,node->name);
+        pTemp->totalDist= node->totalDist;
         if(pTemp->totalDist < min->totalDist){
             min = pTemp;
         }
-        content++
+        content++;
       }
       else{
         if(pTemp->totalDist > min->totalDist){
-            max = delAvlDriver(max,-min>name);
+            max = delAvlDriver(max,min->name);
             max = addAvlDriver(max,pTemp->name);
             pTemp = isInAvlDriver(max,pTemp->name);
-            pTemp->totalDist= node->distance;
+            pTemp->totalDist= node->totalDist;
             min = pickmin_AvlDriver(max);          
         }
       }

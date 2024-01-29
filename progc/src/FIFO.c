@@ -1,8 +1,10 @@
+
+#include "AVL/AVL_Common.h"
 #include "FIFO.h"
 
 FIFO* creaFIFO(AvlDriver* driver){
     FIFO *pNew = malloc(sizeof(FIFO));
-    if(pNew == NULL || driver == NULL){
+    if(!checkPtr(pNew) || !checkPtr(driver)){
         exit(2);
     }
     pNew->driver = driver;
@@ -11,7 +13,8 @@ FIFO* creaFIFO(AvlDriver* driver){
 }
 
 FIFO* insertFIFO (FIFO* pHead, AvlDriver* driver){
-    if(checkptr(pHead)){
+    FIFO* pTemp = NULL;
+    if(!checkPtr(pHead)){
       return creaFIFO(driver);
     }
     else{
@@ -19,7 +22,7 @@ FIFO* insertFIFO (FIFO* pHead, AvlDriver* driver){
       while(pTemp->pNext !=NULL){
         pTemp = pTemp->pNext;
       }
-      Node* pNew = creaFIFO(driver);
+      FIFO* pNew = creaFIFO(driver);
       pTemp->pNext = pNew;
       return pHead;
     }
@@ -27,7 +30,7 @@ FIFO* insertFIFO (FIFO* pHead, AvlDriver* driver){
 }
 
 AvlDriver* suprFIFO(FIFO* pHead){
-    temp = pHead;
+    FIFO* ptemp = pHead;
     pHead = pHead->pNext;
-    return temp->driver;	
+    return ptemp->driver;	
 }

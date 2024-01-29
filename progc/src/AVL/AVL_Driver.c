@@ -255,11 +255,10 @@ AvlDriver * pickmin_AvlDriver(AvlDriver *pTree){
     file = insertFIFO(file, pTree);
     while(!checkPtr(file)){
       node = suprFIFO(file);
-      NodeShow(node);
-      if(TreeLeftExist(node)){
+      if(checkLeftAvlDriver(node)){
         file=insertFIFO(file,node->pL);
       }
-      if(TreeRightExist(node)){
+      if(checkRightAvlDriver(node)){
         file=insertFIFO(file,node->pR);
       }
       if(min->totalDist<node->totalDist){

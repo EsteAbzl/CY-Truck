@@ -1,6 +1,7 @@
 #ifndef _FIFO_H
 #define _FIFO_H
 
+#include <stdlib.h>
 #include "AVL/AVL_Driver.h"
 
 typedef struct _Fifo{
