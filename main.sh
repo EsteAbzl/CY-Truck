@@ -5,18 +5,8 @@
 exitNumber=0 
 
 printHelpFile(){
-  directoryHelpFile='help.txt'
-  contentHelpFile=`cat $directoryHelpFile`
-
-  # Change the previous separator to only '\n' which is at the end of each line
-  oldIFS=$IFS 
-  IFS=$'\n'
-
-  for line in $contentHelpFile ; do
-    echo $line
-  done
-
-  IFS=$oldIFS
+  show=`man ./help`
+  echo "$show"
 }
 
 
