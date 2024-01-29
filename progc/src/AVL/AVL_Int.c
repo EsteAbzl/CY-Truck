@@ -13,7 +13,7 @@ AvlInt *createAvlInt(int v) {
   return pNew;
 }
 
-
+/*
 // First function gets called as our main BST adding function.
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
@@ -22,11 +22,11 @@ AvlInt *addAvlInt(AvlInt *pTree, int elem) {
   static int h = 0;
   return _addAvlInt(pTree, elem, &h);
 }
-
+*/
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
-AvlInt *_addAvlInt(AvlInt *p, int v, int *h) {
+AvlInt *addAvlInt(AvlInt *p, int v, int *h) {
   if (checkPtr(p)) {
     // If in a leaf, add the new node there.
     *h = 1;
@@ -57,7 +57,7 @@ AvlInt *_addAvlInt(AvlInt *p, int v, int *h) {
   return p;
 }
 
-
+/*
 // Same Hack
 // When I wrote this code, only me and God knew why we had to do
 // it that way. Now, days later, only God knows.
@@ -66,9 +66,9 @@ AvlInt *delAvlInt(AvlInt *pTree, int elem) {
   static int h = 0;
   return _delAvlInt(pTree, elem, &h);
 }
+*/
 
-
-AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h) {
+AvlInt *delAvlInt(AvlInt *pTree, int elem, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
