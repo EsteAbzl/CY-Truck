@@ -1,3 +1,15 @@
-This is the documentation file "help.txt"
+Name
+      main.sh
+Synopsis
+      main.sh [FILE] [OPTION] ...
+Description
+      Opperate searching and form graphics about the csv file
+
+      -d1
+      
+      -d2
+      
+      -s
+      
+      -t
   
-    work in   progress..
