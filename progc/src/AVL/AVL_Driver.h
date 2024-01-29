@@ -9,7 +9,7 @@ typedef struct _AvlDriver {
   char *name;             // We use strings as our sort value.
   int bFactor;            // Balance factor
                           // See : man strcmp
-  AvlDriver *AvlPath;        // AvlDriver stores every route taken by
+  AvlInt *AvlPath;        // AvlDriver stores every route taken by
                           // the driver.
   float totalDist;        // Explicit
   int nPath;              // Number of routes stored in AvlPath
