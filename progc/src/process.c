@@ -1,37 +1,6 @@
 #include "process.h"
 
-FIFO* creaFIFO(pDriver * driver){
-    FIFO *pNew = malloc(sizeof(FIFO));
-    if(pNew == NULL || driver == NULL){
-        exit(2);
-    }
-    pNew->driver = driver;
-    pNew->pNext = NULL;
-    return pNew;
-}
 
-FIFO* insertFIFO (FIFO* pHead,pDriver * driver){
-    if(checkptr(pHead)){
-      return creaFIFO(driver);
-    }
-    else{
-      pTemp = pHead;
-      while(pTemp->pNext !=NULL){
-        pTemp = pTemp->pNext;
-      }
-      Node* pNew = creaFIFO(driver);
-      pTemp->pNext = pNew;
-      return pHead;
-    }
-    return 0;
-}
-
-FIFO* suprFIFO(FIFO* pHead){
-    temp = pHead;
-    pHead = pHead->pNext;
-    free(temp);
-    return pHead;	
-}
 
 
 DataLine* init_ReadLine(FILE* fFile){

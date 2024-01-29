@@ -251,9 +251,9 @@ AvlDriver * pickmin_AvlDriver(AvlDriver *pTree){
      exit(5);
   }
   min = pTree;
-  while(!checkptr(pDriver)){
-    file = insertFIFO(pDriver);
-    while(!checkptr(file)){
+  while(!checkPtr(pTree)){
+    file = insertFIFO(file, pTree);
+    while(!checkPtr(file)){
       node = suprFIFO(file);
       NodeShow(node);
       if(TreeLeftExist(node)){

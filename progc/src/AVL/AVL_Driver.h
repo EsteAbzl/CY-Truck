@@ -1,7 +1,7 @@
 #ifndef _AVLDRIVER_H
 #define _AVLDRIVER_H
 
-#include "../FIFO.h"
+#include "AVL_Int.h"
 
 // Driver Avl node
 typedef struct _AvlDriver {
@@ -15,7 +15,6 @@ typedef struct _AvlDriver {
   float totalDist;        // Explicit
   int nPath;              // Number of routes stored in AvlPath
 } AvlDriver;
-
 
 // In : string
 // Out : AvlDriver
@@ -96,6 +95,6 @@ AvlDriver *balanceAvlDriver(AvlDriver *pTree);
 // In : Pointer to Avl to search in
 // Out : Pointer to min  of Avl
 // search and return min in avl
-AvlDriver * pickmin_AvlDriver(AvlDriver *pTree)
+AvlDriver * pickmin_AvlDriver(AvlDriver *pTree);
 
 #endif
