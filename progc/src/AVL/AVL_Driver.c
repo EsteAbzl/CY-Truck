@@ -1,7 +1,9 @@
 #ifndef _AVLDRIVER_C
 #define _AVLDRIVER_C
 
-AvlDriver *createAvlDriver(char *str) {
+#include "AVL_Common.h"
+
+AvlDriver* createAvlDriver(char *str) {
   AvlDriver *pNew = malloc(sizeof(AvlDriver));
   if (checkPtr(pNew)) exit(1);
   pNew->name = str;
@@ -17,7 +19,7 @@ AvlDriver *createAvlDriver(char *str) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlDriver *addAvlDriver(AvlDriver *pTree, char *str) {
+AvlDriver* addAvlDriver(AvlDriver *pTree, char *str) {
   static int h = 0;
   return _addAvlDriver(pTree, str, &h);
 }
@@ -25,7 +27,7 @@ AvlDriver *addAvlDriver(AvlDriver *pTree, char *str) {
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
-AvlDriver *_addAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
@@ -61,13 +63,13 @@ AvlDriver *_addAvlDriver(AvlDriver *pTree, char *str, int *h) {
 // When I wrote this code, only me and God knew why we had to do
 // it that way. Now, days later, only God knows.
 // May Richie have mercy on our souls.
-AvlDriver *delAvlDriver(AvlDriver *pTree, char *str) {
+AvlDriver* delAvlDriver(AvlDriver *pTree, char *str) {
   static int h = 0;
   return _delAvlDriver(pTree, str, &h);
 }
 
 
-AvlDriver *_delAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
@@ -104,7 +106,7 @@ AvlDriver *_delAvlDriver(AvlDriver *pTree, char *str, int *h) {
 }
 
 
-AvlDriver *delAvlLargestStr(AvlDriver *pTree, char **str) {
+AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str) {
   AvlDriver *tmp;
   if (checkRightAvl(pTree)) {
     delAvlLargestStr(pTree->pR, str);
@@ -117,20 +119,22 @@ AvlDriver *delAvlLargestStr(AvlDriver *pTree, char **str) {
   return pTree;
 }
 
-AvlDriver *isInAvl(AvlDriver *pTree,char *str){;
- if (pTree == NULL) {
-    return 0; //mean not in Avl
+AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
+  AvlDriver* ret = NULL;
+  if (pTree == NULL) {
+    // Return NULL if not found
+    ret = NULL;
   } else if (strcmp(str, pTree->name) < 0) {
-    // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlDriver(pTree->pL, str, h);
-    // balance factor needs to be inverted
-    *h = -*h;
+    // Search value lower than current value, go left
+    ret = isInAvlDriver(pTree->pL, str);
   } else if (strcmp(str, pTree->name) > 0) {
-    // If the new node's value is greater, check the right branch
-    pTree->pR = _addAvlDriver(pTree->pR, str, h);
-  } else {
-    return pTree;
+    // Search value higher than current value, go right
+    ret = isInAvlDriver(pTree->pR, str);
+  } else if (strcmp(str, pTree->name) == 0) {
+    // Return the current node if found
+    ret = pTree;
   }
+  return ret;
 }
 
 
