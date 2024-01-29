@@ -51,7 +51,7 @@ AvlInt *_addAvlInt(AvlInt *p, int v, int *h) {
     if (p->bFactor == 0) {
       *h = 0;
     } else {
-      *h = -1;
+      *h = 1;
     }
   }
   return p;
