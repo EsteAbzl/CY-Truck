@@ -164,10 +164,10 @@ void D2(FILE *fData, int line_number) {
       node = suprFIFO(file);
       NodeShow(node);
       if(TreeLeftExist(node)){
-        (insertFIFO(file,node->pL);
+        file=insertFIFO(file,node->pL);
       }
       if(TreeRightExist(node)){
-        insertFIFO(file,node->pR);
+        file=insertFIFO(file,node->pR);
       }
       if(node->driver->totalDist > max->driver->totalDist){
         max = node;
