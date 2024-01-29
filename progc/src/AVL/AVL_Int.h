@@ -1,16 +1,13 @@
 #ifndef _AVLINT_H
 #define _AVLINT_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 
 // Int AVL node
 typedef struct _AvlInt {
-  int value;          // Our sorting value is an int
-  int bFactor;        // Balance factor
   struct _AvlInt *pL;
   struct _AvlInt *pR;
+  int* value;          // Our sorting value is an int
+  int bFactor;        // Balance factor
 } AvlInt;
 
 
@@ -25,12 +22,17 @@ AvlInt *createAvlInt(int v);
 // Adds in a new node to a BST. If the BST is an Avl,
 // it will remain balanced.
 AvlInt *addAvlInt(AvlInt *pTree, int elem);
+// Private ! Do not use !
+AvlInt *_addAvlInt(AvlInt *p, int v, int *h);
 
 
 // In : Pointer to Avl, String
 // Out : Pointer to modified Avl
 // Deletes the specified element from the tree.
-AvlDriver *delAvlInt(AvlDriver *pTree, char *str);
+AvlInt *delAvlInt(AvlInt *pTree, int elem);
+// Private ! Do not use !
+AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h);
+AvlInt *delAvlLargestInt(AvlInt *pTree, int *elem);
 
 
 #endif
