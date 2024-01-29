@@ -50,7 +50,7 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
-      *h = -1;
+      *h = 1;
     }
   }
   return pTree;
