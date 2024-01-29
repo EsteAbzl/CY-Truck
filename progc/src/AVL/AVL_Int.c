@@ -33,12 +33,12 @@ AvlInt *addAvlInt(AvlInt *p, int v, int *h) {
     return createAvlInt(v);
   } else if (v < p->value) {
     // If the new node's value is lesser, check the left branch
-    p->pL = _addAvlInt(p->pL, v, h);
+    p->pL = addAvlInt(p->pL, v, h);
     // balance factor needs to be inverted
     *h = -*h;
   } else if (v > p->value) {
     // If the new node's value is greater, check the right branch
-    p->pR = _addAvlInt(p->pR, v, h);
+    p->pR = addAvlInt(p->pR, v, h);
   } else {
     // If the new node's value is equal, abort the insertion,
     // This prevent duplicate entries.
@@ -76,9 +76,9 @@ AvlInt *delAvlInt(AvlInt *pTree, int elem, int *h) {
   }
   // Recursively search through BST
   else if (pTree->value < elem) {
-    pTree->pR = _delAvlInt(pTree->pR, elem, h);
+    pTree->pR = delAvlInt(pTree->pR, elem, h);
   } else if (pTree->value > elem) {
-    pTree->pL = _delAvlInt(pTree->pL, elem, h);
+    pTree->pL = delAvlInt(pTree->pL, elem, h);
     *h = -*h;
   }
   // Element found, replace as needed

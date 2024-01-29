@@ -34,10 +34,10 @@ AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h);
 // In : Pointer to Avl, String
 // Out : Pointer to modified Avl
 // Deletes the specified element from the tree.
-AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
+//AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
 // Private ! Do not use !
 AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h);
-//AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str);
+AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str);
 
 
 // In : Pointer to Avl, String

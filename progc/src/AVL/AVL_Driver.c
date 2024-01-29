@@ -33,12 +33,13 @@ AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h) {
     // If in a leaf, add the node there
     *h = 1;
     return createAvlDriver(str);
-  } else if (strcmp(str, pTree->name) < 0) {
+  } else if (strcmp(str, pTree->name) > 0) {
+    pTree->pR = addAvlDriver(pTree->pR, str, h);
+  }else if (strcmp(str, pTree->name) < 0) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlDriver(pTree->pL, str, h);
+    pTree->pL = addAvlDriver(pTree->pL, str, h);
     // balance factor needs to be inverted
     *h = -*h;
-    _addAvlDriver(pTree->pR, str, h);
   } else {
     // If the new node's value is equal, abort the insertion,
     // This prevent duplicate entries.
@@ -76,9 +77,9 @@ AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h) {
   }
   // Recursively search through the BST
   else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = _delAvlDriver(pTree->pR, str, h);
+    pTree->pR = delAvlDriver(pTree->pR, str, h);
   } else if (strcmp(str, pTree->name) < 0) {
-    pTree->pL = _delAvlDriver(pTree->pL, str, h);
+    pTree->pL = delAvlDriver(pTree->pL, str, h);
     *h = -*h;
   }
   // Element found, replace as needed
