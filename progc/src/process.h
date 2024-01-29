@@ -11,13 +11,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "FIFO.h"
 #include "AVL/AVL_Common.h"
 
 
-typedef struct _Fifo{
-    struct _Fifo* pNext;
-    AvlDriver * driver;
-}FIFO;
+
 
 typedef struct{
     long route_ID;

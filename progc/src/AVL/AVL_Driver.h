@@ -1,6 +1,7 @@
 #ifndef _AVLDRIVER_H
 #define _AVLDRIVER_H
 
+#include "../FIFO.h"
 
 // Driver Avl node
 typedef struct _AvlDriver {

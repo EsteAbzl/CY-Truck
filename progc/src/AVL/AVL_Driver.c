@@ -243,8 +243,6 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
 }
 
 
-#endif
-
 AvlDriver * pickmin_AvlDriver(AvlDriver *pTree){
   AvlDriver * min, * node;
   int content = 0;
@@ -271,3 +269,6 @@ AvlDriver * pickmin_AvlDriver(AvlDriver *pTree){
   }
   return min;
 }
+
+
+#endif
