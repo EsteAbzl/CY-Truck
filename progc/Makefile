@@ -11,7 +11,7 @@ main:
 	@echo === Starting compile job... ===
 	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) -o $(BINDIR)/cy-trucks.exe $(FILES)
-	echo === Done ! ===
+	@echo === Done ! ===
 
 # Clean jop
 clean:

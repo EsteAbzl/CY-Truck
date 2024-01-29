@@ -36,7 +36,8 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
     // If the new node's value is lesser, check the left branch
     pTree->pL = _addAvlDriver(pTree->pL, str, h);
     // balance factor needs to be inverted
-    *h = -*h;67B7-4A50ddAvlDriver(pTree->pR, str, h);
+    *h = -*h;
+    _addAvlDriver(pTree->pR, str, h);
   } else {
     // If the new node's value is equal, abort the insertion,
     // This prevent duplicate entries.
@@ -45,7 +46,7 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   }
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvl(pTree);
+    pTree = balanceAvlDriver(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -80,7 +81,7 @@ AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h) {
     *h = -*h;
   }
   // Element found, replace as needed
-  else if (!checkLeftAvl(pTree)){
+  else if (!checkLeftAvlDriver(pTree)){
     AvlDriver *tmp;
     tmp = pTree;
     pTree = pTree->pR;
@@ -92,7 +93,7 @@ AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h) {
   }
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvl(pTree);
+    pTree = balanceAvlDriver(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -105,7 +106,7 @@ AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h) {
 
 AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str) {
   AvlDriver *tmp;
-  if (checkRightAvl(pTree)) {
+  if (checkRightAvlDriver(pTree)) {
     delAvlLargestStr(pTree->pR, str);
   } else {
     *str = pTree->name;
@@ -115,7 +116,6 @@ AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str) {
   }
   return pTree;
 }
-
 
 AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
   AvlDriver* ret = NULL;

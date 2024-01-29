@@ -104,19 +104,19 @@ void D1(FILE *fData, int line_number) {
   while(readLine(fData, pLine)){
     if(pDriver == NULL){
         pDriver = createAvlDriver(pLine->name);
-        pDriver->Avl_Path = createAvlInt(pLine->route_ID);
+        pDriver->AvlPath = createAvlInt(pLine->route_ID);
         pDriver->nPath = 1;
     }
-    if(isInAvl(pDriver,pLine->name)){
-        pTemp = isInAvl(pDriver,pLine->name);
-        pTemp->npath++;
-        pTemp->Avl_Path = addAvlInt(pTemp->Avl_Path,pLine->route_ID);    
+    if(isInAvlDriver(pDriver,pLine->name)){
+        pTemp = isInAvlDriver(pDriver,pLine->name);
+        pTemp->nPath++;
+        pTemp->AvlPath = addAvlInt(pTemp->AvlPath,pLine->route_ID);    
     }
     else{
-        pDriver = addAvlInt(pTemp->Avl_Path,pLine->route_ID);
-        pTemp = isInAvl(pDriver,pLine->name);
-        pTemp->npath = 1;
-        pTemp->Avl_Path =  createAvlInt(pLine->route_ID);
+        pDriver->AvlPath = addAvlInt(pTemp->AvlPath,pLine->route_ID);
+        pTemp = isInAvlDriver(pDriver,pLine->name);
+        pTemp->nPath = 1;
+        pTemp->AvlPath =  createAvlInt(pLine->route_ID);
         
     }
   }

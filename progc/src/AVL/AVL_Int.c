@@ -31,12 +31,12 @@ AvlInt *_addAvlInt(AvlInt *p, int v, int *h) {
     // If in a leaf, add the new node there.
     *h = 1;
     return createAvlInt(v);
-  } else if (v < *(p->value)) {
+  } else if (v < p->value) {
     // If the new node's value is lesser, check the left branch
     p->pL = _addAvlInt(p->pL, v, h);
     // balance factor needs to be inverted
     *h = -*h;
-  } else if (v > *(p->value)) {
+  } else if (v > p->value) {
     // If the new node's value is greater, check the right branch
     p->pR = _addAvlInt(p->pR, v, h);
   } else {
@@ -47,7 +47,7 @@ AvlInt *_addAvlInt(AvlInt *p, int v, int *h) {
   }
   if (*h != 0) {
     p->bFactor = p->bFactor + *h;
-    p = balanceAvl(p);
+    p = balanceAvlInt(p);
     if (p->bFactor == 0) {
       *h = 0;
     } else {
@@ -75,14 +75,14 @@ AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h) {
     return pTree;
   }
   // Recursively search through BST
-  else if (*(pTree->value) < elem) {
+  else if (pTree->value < elem) {
     pTree->pR = _delAvlInt(pTree->pR, elem, h);
-  } else if (*(pTree->value) > elem) {
+  } else if (pTree->value > elem) {
     pTree->pL = _delAvlInt(pTree->pL, elem, h);
     *h = -*h;
   }
   // Element found, replace as needed
-  else if (!checkLeftAvl(pTree)) {
+  else if (!checkLeftAvlInt(pTree)) {
     AvlInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
@@ -90,11 +90,11 @@ AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h) {
     *h = -1;
   }
   else {
-    pTree->pL = delAvlLargestInt(pTree->pL, pTree->value);
+    pTree->pL = delAvlLargestInt(pTree->pL, &(pTree->value));
   }
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvl(pTree);
+    pTree = balanceAvlInt(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -107,10 +107,10 @@ AvlInt *_delAvlInt(AvlInt *pTree, int elem, int *h) {
 
 AvlInt *delAvlLargestInt(AvlInt *pTree, int *elem) {
   AvlInt *tmp;
-  if (checkRightAvl(pTree)) {
+  if (checkRightAvlInt(pTree)) {
     delAvlLargestInt(pTree->pR, elem);
   } else {
-    *elem = *(pTree->value);
+    *elem = pTree->value;
     tmp = pTree;
     pTree = pTree->pL;
     free(tmp);
@@ -174,7 +174,7 @@ AvlInt *balanceAvlInt(AvlInt *pTree) {
 }
 
 
-AvlInt *avlIntRotationL(Avlint *pTree) {
+AvlInt *avlIntRotationL(AvlInt *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
