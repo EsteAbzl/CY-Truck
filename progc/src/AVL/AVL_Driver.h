@@ -92,9 +92,4 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree);
 AvlDriver *balanceAvlDriver(AvlDriver *pTree);
 
 
-// In : Pointer to Avl to search in
-// Out : Pointer to min  of Avl
-// search and return min in avl
-AvlDriver * pickmin_AvlDriver(AvlDriver *pTree);
-
 #endif
