@@ -6,9 +6,7 @@
 AvlInt *createAvlInt(int v) {
   AvlInt *pNew = malloc(sizeof(AvlInt));
   if (checkPtr(pNew)) exit (1);
-  pNew->value = malloc(sizeof(int*));
-  if (checkPtr(pNew->value)) exit (1);
-  *(pNew->value) = v;
+  pNew->value = v;
   pNew->bFactor = 0;
   pNew->pL = NULL;
   pNew->pR = NULL;
@@ -118,6 +116,113 @@ AvlInt *delAvlLargestInt(AvlInt *pTree, int *elem) {
     free(tmp);
   }
   return pTree;
+}
+
+
+int checkLeftAvlInt(AvlInt *ptr) {
+  return !checkPtr(ptr) && !checkPtr(ptr->pL);
+}
+
+
+int checkRightAvlInt(AvlInt *ptr) {
+  return !checkPtr(ptr) && !checkPtr(ptr->pR);
+}
+
+
+int avlIntHeight(AvlInt *ptr) { // hauteur
+  int countL = 0, countR = 0;
+  if (ptr == NULL) {
+    return 0;
+  }
+  if (!checkLeftAvlInt(ptr) && !checkRightAvlInt(ptr)) {
+    return 1;
+  } else {
+    if (checkLeftAvlInt(ptr)) {
+      countL = avlIntHeight(ptr->pL);
+    }
+    if (checkRightAvlInt(ptr)) {
+      countR = avlIntHeight(ptr->pR);
+    }
+  }
+  return MAX(countL, countR) + 1;
+}
+
+
+AvlInt *balanceAvlInt(AvlInt *pTree) {
+  if (pTree == NULL) {
+    return pTree;
+  } else if (pTree->bFactor >= 2) {
+    if (pTree->pR == NULL) {
+      exit(1);
+    }
+    if (pTree->pR->bFactor >= 0) {
+      return avlIntRotationL(pTree);
+    } else {
+      return avlIntRotationRL(pTree);
+    }
+  } else if (pTree->bFactor <= -2) {
+    if (pTree->pL == NULL) {
+      exit(1);
+    }
+    if (pTree->pL->bFactor <= 0) {
+      return avlIntRotationR(pTree);
+    } else {
+      return avlIntRotationLR(pTree);
+    }
+  }
+  return pTree;
+}
+
+
+AvlInt *avlIntRotationL(Avlint *pTree) {
+  if (pTree == NULL || pTree->pR == NULL) {
+    return 0;
+  }
+  AvlInt *Pivot = pTree->pR;
+  pTree->pR = Pivot->pL;
+  Pivot->pL = pTree;
+
+  // check balancing
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MAX(eq_Pivot, 0) - 1;
+  Pivot->bFactor = MIN(eq_Ptree + eq_Pivot - 2, MIN(eq_Ptree - 2, eq_Pivot - 1));
+  pTree = Pivot;
+  return pTree;
+}
+
+
+AvlInt *avlIntRotationR(AvlInt *pTree) {
+  if (pTree == NULL || pTree->pL == NULL) {
+    return 0;
+  }
+  AvlInt *Pivot = pTree->pL;
+  pTree->pL = Pivot->pR;
+  Pivot->pR = pTree;
+
+  // check balancing
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MIN(eq_Pivot, 0) + 1;
+  Pivot->bFactor = MAX(eq_Ptree + eq_Pivot + 2, MAX(eq_Ptree + 2, eq_Pivot + 1));
+  pTree = Pivot;
+  return pTree;
+}
+
+
+AvlInt *avlIntRotationRL(AvlInt *pTree) {
+  if (pTree == NULL) {
+    return 0;
+  }
+  pTree->pR = avlIntRotationR(pTree->pR);
+  return avlIntRotationL(pTree);
+}
+
+
+AvlInt *avlIntRotationLR(AvlInt *pTree) {
+  if (pTree == NULL) {
+    return 0;
+  }
+  pTree->pL = avlIntRotationL(pTree->pL);
+  return avlIntRotationR(pTree);
 }
 
 

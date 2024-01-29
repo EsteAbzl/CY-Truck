@@ -20,56 +20,11 @@
 #define OFF_VALUE 16
 #define OFF_BFACTOR 24
 
+
 // In : Pointer
 // Out : int (read as bool)
 // Returns 1 if pointer is invalid
 int checkPtr(void *ptr);
-
-// In : Pointer to BST
-// Out : int (read as bool)
-// Checks if left child exists
-int checkLeftAvl(void *ptr);
-
-
-// In : Pointer to BST
-// Out : int (read as bool)
-// Checks if right child exists
-int checkRightAvl(void *ptr);
-
-
-// In : Pointer to BST
-// Out : int
-// Returns height of a BST
-int avlHeight(void *ptr);
-
-
-// In : Pointer to root of rotation
-// Out : Modified root subtree
-// Explicit
-void *avlRotationL(void *pTree);
-
-
-// In : Pointer to root of rotation
-// Out : Modified root subtree
-// Explicit
-void *avlRotationR(void *pTree);
-
-// In : Pointer to root of rotation
-// Out : Modified root subtree
-// Explicit
-void *avlRotationRL(void *pTree);
-
-
-// In : Pointer to root of rotation
-// Out : Modified root subtree
-// Explicit
-void *avlRotationLR(void *pTree);
-
-
-// In : Pointer to Avl to balance
-// Out : Pointer to modified Avl
-// Rebalances an Avl
-void *balanceAvl(void *pTree);
 
 
 #endif

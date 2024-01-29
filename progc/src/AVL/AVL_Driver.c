@@ -36,10 +36,7 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
     // If the new node's value is lesser, check the left branch
     pTree->pL = _addAvlDriver(pTree->pL, str, h);
     // balance factor needs to be inverted
-    *h = -*h;
-  } else if (strcmp(str, pTree->name) > 0) {
-    // If the new node's value is greater, check the right branch
-    pTree->pR = _addAvlDriver(pTree->pR, str, h);
+    *h = -*h;67B7-4A50ddAvlDriver(pTree->pR, str, h);
   } else {
     // If the new node's value is equal, abort the insertion,
     // This prevent duplicate entries.
@@ -136,5 +133,113 @@ AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
   }
   return ret;
 }
+
+
+int checkLeftAvlDriver(AvlDriver *ptr) {
+  return !checkPtr(ptr) && !checkPtr(ptr->pL);
+}
+
+
+int checkRightAvlDriver(AvlDriver *ptr) {
+  return !checkPtr(ptr) && !checkPtr(ptr->pR);
+}
+
+
+int avlDriverHeight(AvlDriver *ptr) { // hauteur
+  int countL = 0, countR = 0;
+  if (ptr == NULL) {
+    return 0;
+  }
+  if (!checkLeftAvlDriver(ptr) && !checkRightAvlDriver(ptr)) {
+    return 1;
+  } else {
+    if (checkLeftAvlDriver(ptr)) {
+      countL = avlDriverHeight(ptr->pL);
+    }
+    if (checkRightAvlDriver(ptr)) {
+      countR = avlDriverHeight(ptr->pR);
+    }
+  }
+  return MAX(countL, countR) + 1;
+}
+
+
+AvlDriver *balanceAvlDriver(AvlDriver *pTree) {
+  if (pTree == NULL) {
+    return pTree;
+  } else if (pTree->bFactor >= 2) {
+    if (pTree->pR == NULL) {
+      exit(1);
+    }
+    if (pTree->pR->bFactor >= 0) {
+      return avlDriverRotationL(pTree);
+    } else {
+      return avlDriverRotationRL(pTree);
+    }
+  } else if (pTree->bFactor <= -2) {
+    if (pTree->pL == NULL) {
+      exit(1);
+    }
+    if (pTree->pL->bFactor <= 0) {
+      return avlDriverRotationR(pTree);
+    } else {
+      return avlDriverRotationLR(pTree);
+    }
+  }
+  return pTree;
+}
+
+
+AvlDriver *avlDriverRotationL(AvlDriver *pTree) {
+  if (pTree == NULL || pTree->pR == NULL) {
+    return 0;
+  }
+  AvlDriver *Pivot = pTree->pR;
+  pTree->pR = Pivot->pL;
+  Pivot->pL = pTree;
+
+  // check balancing
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MAX(eq_Pivot, 0) - 1;
+  Pivot->bFactor = MIN(eq_Ptree + eq_Pivot - 2, MIN(eq_Ptree - 2, eq_Pivot - 1));
+  pTree = Pivot;
+  return pTree;
+}
+
+
+AvlDriver *avlDriverRotationR(AvlDriver *pTree) {
+  if (pTree == NULL || pTree->pL == NULL) {
+    return 0;
+  }
+  AvlDriver *Pivot = pTree->pL;
+  pTree->pL = Pivot->pR;
+  Pivot->pR = pTree;
+
+  // check balancing
+  int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
+  pTree->bFactor -= MIN(eq_Pivot, 0) + 1;
+  Pivot->bFactor = MAX(eq_Ptree + eq_Pivot + 2, MAX(eq_Ptree + 2, eq_Pivot + 1));
+  pTree = Pivot;
+  return pTree;
+}
+
+
+AvlDriver *avlDriverRotationRL(AvlDriver *pTree) {
+  if (pTree == NULL) {
+    return 0;
+  }
+  pTree->pR = avlDriverRotationR(pTree->pR);
+  return avlDriverRotationL(pTree);
+}
+
+
+AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
+  if (pTree == NULL) {
+    return 0;
+  }
+  pTree->pL = avlDriverRotationL(pTree->pL);
+  return avlDriverRotationR(pTree);
+}
+
 
 #endif

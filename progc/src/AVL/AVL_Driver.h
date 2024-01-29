@@ -9,7 +9,7 @@ typedef struct _AvlDriver {
   char *name;             // We use strings as our sort value.
   int bFactor;            // Balance factor
                           // See : man strcmp
-  AvlInt *AvlPath;        // AvlInt stores every route taken by
+  AvlDriver *AvlPath;        // AvlDriver stores every route taken by
                           // the driver.
   float totalDist;        // Explicit
   int nPath;              // Number of routes stored in AvlPath
@@ -43,6 +43,53 @@ AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str);
 // In : Pointer to Avl, String
 // Out : Pointer to found node or NULL if not found
 AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str);
+
+
+// In : Pointer to BST
+// Out : int (read as bool)
+// Checks if left child exists
+int checkLeftAvlDriver(AvlDriver *ptr);
+
+
+// In : Pointer to BST
+// Out : int (read as bool)
+// Checks if right child exists
+int checkRightAvlDriver(AvlDriver *ptr);
+
+
+// In : Pointer to BST
+// Out : int
+// Returns height of a BST
+int avlDriverHeight(AvlDriver *ptr);
+
+
+// In : Pointer to root of rotation
+// Out : Modified root subtree
+// Explicit
+AvlDriver *avlDriverRotationL(AvlDriver *pTree);
+
+
+// In : Pointer to root of rotation
+// Out : Modified root subtree
+// Explicit
+AvlDriver *avlDriverRotationR(AvlDriver *pTree);
+
+// In : Pointer to root of rotation
+// Out : Modified root subtree
+// Explicit
+AvlDriver *avlDriverRotationRL(AvlDriver *pTree);
+
+
+// In : Pointer to root of rotation
+// Out : Modified root subtree
+// Explicit
+AvlDriver *avlDriverRotationLR(AvlDriver *pTree);
+
+
+// In : Pointer to Avl to balance
+// Out : Pointer to modified Avl
+// Rebalances an Avl
+AvlDriver *balanceAvlDriver(AvlDriver *pTree);
 
 
 #endif
