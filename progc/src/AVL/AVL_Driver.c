@@ -14,7 +14,7 @@ AvlDriver* createAvlDriver(char *str) {
   return pNew;
 }
 
-
+/*
 // First function gets called as our main BST adding function.
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
@@ -27,7 +27,8 @@ AvlDriver* addAvlDriver(AvlDriver *pTree, char *str) {
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
-AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
+*/
+AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
@@ -56,7 +57,7 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   return pTree;
 }
 
-
+/*
 // Same Hack
 // When I wrote this code, only me and God knew why we had to do
 // it that way. Now, days later, only God knows.
@@ -65,9 +66,9 @@ AvlDriver* delAvlDriver(AvlDriver *pTree, char *str) {
   static int h = 0;
   return _delAvlDriver(pTree, str, &h);
 }
+*/
 
-
-AvlDriver* _delAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
