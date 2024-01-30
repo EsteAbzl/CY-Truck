@@ -112,31 +112,31 @@ void S_Init(FILE* fData){
   while (readLine(fData, pLine)) {
     // read the current line
     AvlRoute* pTemp = isInAvlRoute(pRoute, pLine->route_ID);
-
+    float dist = pLine->distance;
+    printf("DEBUG %i : DIST = %f\n", ++DEBUG, dist);
     // Insert the data into the tree
     if (pRoute == NULL) {
       pRoute = createAvlRoute(pLine->route_ID);
       pRoute->nSteps++;
-      pRoute->distTot = pLine->distance;
-      pRoute->distMax = pLine->distance;
-      pRoute->distMax = pLine->distance;
+      pRoute->distTot = dist;
+      pRoute->distMax = dist;
+      pRoute->distMax = dist;
     } else if (pTemp == NULL) {
       pRoute = addAvlRoute(pRoute, pLine->route_ID, pNew);
       pNew->nSteps++;
-      pNew->distTot = pLine->distance;
-      pNew->distMax = pLine->distance;
-      pNew->distMin = pLine->distance;
+      pNew->distTot = dist;
+      pNew->distMax = dist;
+      pNew->distMin = dist;
     } else {
       pTemp->nSteps++;
-      pTemp->distTot += pLine->distance;
-      if ( pTemp->distMax < pLine->distance ) {
-        pTemp->distMax += pLine->distance;
+      pTemp->distTot += dist;
+      if ( pTemp->distMax < dist ) {
+        pTemp->distMax += dist;
       }
-      if ( pTemp->distMin > pLine->distance ) {
-        pTemp->distMin = pLine->distance;
+      if ( pTemp->distMin > dist ) {
+        pTemp->distMin = dist;
       }
     }
-    printf("DEBUG %i\n", ++DEBUG);
     printf("nSteps: %i, distTot: %f, distMax: %f, distMin: %f\n", pRoute->nSteps, pRoute->distTot, pRoute->distMax, pRoute->distMin);
   }
   //
