@@ -20,25 +20,26 @@ AvlDriver* createAvlDriver(char *str) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlDriver* addAvlDriver(AvlDriver *pTree, char *str) {
+AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, AvlDriver* pNew) {
   static int h = 0;
-  return _addAvlDriver(pTree, str, &h);
+  return _addAvlDriver(pTree, str, &h, pNew);
 }
 
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h, AvlDriver* pNew) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
-    return createAvlDriver(str);
+    pNew = createAvlDriver(str);
+    return pNew;
   } else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = _addAvlDriver(pTree->pR, str, h);
+    pTree->pR = _addAvlDriver(pTree->pR, str, h, pNew);
   }else if (strcmp(str, pTree->name) < 0) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlDriver(pTree->pL, str, h);
+    pTree->pL = _addAvlDriver(pTree->pL, str, h, pNew);
     // balance factor needs to be inverted
     *h = -*h;
   } else {
@@ -256,7 +257,7 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
 void infixe(AvlDriver *pTree){
   if(!checkPtr(pTree)){
     infixe(pTree->pL);
-    printf("%s , %d",pTree->name,pTree->totalDist);
+    printf("%s %.7f\n",pTree->name,pTree->totalDist);
     infixe(pTree->pR);
   }
 }

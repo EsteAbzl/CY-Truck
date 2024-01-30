@@ -117,7 +117,7 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
   # If the Flags are uptaded:
   if (( $oldActiveFlags != $activeFlags )) ; then
     # We give the curent option to the process
-    ./progc/bin/cy-trucks.exe $data $option 
+    ./progc/bin/cy-trucks.exe $data $option > OUTPUT.TXT
     exitNumber=$?
     if (( exitNumber != 0)) ; then
       echo

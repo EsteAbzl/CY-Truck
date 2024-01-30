@@ -101,6 +101,8 @@ AvlDriver *D2(FILE *fData) {
   AvlDriver *pDriver = NULL;
   DataLine* pLine =  init_ReadLine(fData);
   int *h = 0;
+  AvlDriver* pNew = malloc(sizeof(AvlDriver*));
+  if (checkPtr(pNew)) exit (1);
   while(readLine(fData, pLine)){
     char * copy = malloc(sizeof(char)*32);
     copy = strcpy(copy, pLine->name);
@@ -113,14 +115,14 @@ AvlDriver *D2(FILE *fData) {
       //printf("DEBUG2\n");
     } else if (pTemp == NULL){
       //printf("DEBUG3\n");
-      pDriver = addAvlDriver(pDriver, copy);
+      pDriver = addAvlDriver(pDriver, copy, pNew);
       //printf("%s\n", pDriver->pL->name);
       //printf("DEBUG10\n");
       // TODO FIX THIS THIS IS AWFUL AND INEFFICIENT
-      pTemp = isInAvlDriver(pDriver, copy);
+      // pTemp = isInAvlDriver(pDriver, copy);
       //printf("DEBUG11\n");
-      if(checkPtr(pTemp)) exit (69);
-      pTemp->totalDist = pLine->distance;
+      if(checkPtr(pNew)) exit (69);
+      pNew->totalDist = pLine->distance;
       //printf("DEBUG12\n");
       // printf("%s,%f\n", pTemp->name, pTemp->totalDist);
       //printf("DEBUG4\n");

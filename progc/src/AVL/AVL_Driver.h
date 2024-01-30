@@ -26,9 +26,9 @@ AvlDriver* createAvlDriver(char *str);
 // Out : Pointer to modified Avl
 // Adds in a new node to a BST. If the BST is an Avl,
 // it will remain balanced.
-AvlDriver* addAvlDriver(AvlDriver *pTree, char *str);
+AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, AvlDriver* pNew);
 // Private ! Do not use !
-AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h);
+AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h, AvlDriver* pNew);
 
 
 // In : Pointer to Avl, String
