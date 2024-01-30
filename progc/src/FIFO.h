@@ -1,22 +1,20 @@
 #ifndef _FIFO_H
 #define _FIFO_H
 
+#include <stdio.h>
 #include <stdlib.h>
-#include "AVL/AVL_Driver.h"
 
-typedef struct _Fifo{
-    struct _Fifo* pNext;
-    AvlDriver * driver;
+typedef struct _fifo{
+    float val;
+    struct _fifo* pNext;
 }FIFO;
 
+FIFO* createFIFO(float v);
 
-FIFO* creaFIFO(AvlDriver* driver);
+void displayFIFO(FIFO *pHead);
 
+FIFO* addFIFO(FIFO* pHead, float v);
 
-FIFO* insertFIFO (FIFO* pHead, AvlDriver* driver);
-
-
-AvlDriver* suprFIFO(FIFO* pHead);
-
+FIFO* delFIFO(FIFO* pHead);
 
 #endif

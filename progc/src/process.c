@@ -1,4 +1,5 @@
 #include "process.h"
+#include "FIFO.h"
 
 
 
@@ -93,8 +94,75 @@ int readLine(FILE* fFile, DataLine* pLine){
   return (string[0] != EOF); // Part of a little complicated way to know when we trully hit the EOF
 }
 
+// Holy crap finally some good code
+void S_Init(FILE* fData){
+  if (fData == NULL) {
+    exit(122);
+  }
+  AvlRoute* pRoute = NULL;
+  DataLine* pLine = init_ReadLine(fData);
+  int *h = 0;
+  AvlRoute* pNew = malloc(sizeof(AvlRoute));
+  if (checkPtr(pNew)) exit (1);
 
-AvlDriver *D2(FILE *fData) {
+  // 
+  // PASS 1 : FILL THE AVL
+  //
+  int DEBUG=0;
+  while (readLine(fData, pLine)) {
+    // read the current line
+    AvlRoute* pTemp = isInAvlRoute(pRoute, pLine->route_ID);
+
+    // Insert the data into the tree
+    if (pRoute == NULL) {
+      pRoute = createAvlRoute(pLine->route_ID);
+      pRoute->nSteps++;
+      pRoute->distTot = pLine->distance;
+      pRoute->distMax = pLine->distance;
+      pRoute->distMax = pLine->distance;
+    } else if (pTemp == NULL) {
+      pRoute = addAvlRoute(pRoute, pLine->route_ID, pNew);
+      pNew->nSteps++;
+      pNew->distTot = pLine->distance;
+      pNew->distMax = pLine->distance;
+      pNew->distMin = pLine->distance;
+    } else {
+      pTemp->nSteps++;
+      pTemp->distTot += pLine->distance;
+      if ( pTemp->distMax < pLine->distance ) {
+        pTemp->distMax += pLine->distance;
+      }
+      if ( pTemp->distMin > pLine->distance ) {
+        pTemp->distMin = pLine->distance;
+      }
+    }
+    printf("DEBUG %i\n", ++DEBUG);
+    printf("nSteps: %i, distTot: %f, distMax: %f, distMin: %f\n", pRoute->nSteps, pRoute->distTot, pRoute->distMax, pRoute->distMin);
+  }
+  //
+  // PASS 2 : COMPUTE AVERAGES AND PRINT
+  //
+  S_Process(pRoute);
+}
+
+void S_Process(AvlRoute* pRoute) {
+  if ( pRoute == NULL ) exit (200);
+  // LEFT CHILD
+  printf("DEBUG : SENT TO LEFT CHILD\n");
+  if ( pRoute->pL != NULL ) S_Process(pRoute->pL);
+  
+  // ROOT
+  printf("DEBUG : PROCESSING ROOT\n");
+  printf("%ld %f %f %f\n", pRoute->id, pRoute->distMin, pRoute->distTot / pRoute->nSteps, pRoute->distMax);
+
+  // RIGHT CHILD
+  printf("DEBUG : SENT TO RIGHT CHILD\n");
+  if ( !checkPtr(pRoute->pR) ) S_Process(pRoute->pR);
+}
+
+// RIPBOZO PACKWATCH REST IN PISS YOU WONT BE MISSED
+// AWK REPLACED YOU YOU USELESS PILE OF HACKY CRAP
+/*AvlDriver *D2(FILE *fData) {
   if (fData == NULL) {
     exit(122);
   }
@@ -137,3 +205,4 @@ AvlDriver *D2(FILE *fData) {
   infixe(pDriver);
   free(pLine);
 }
+*/

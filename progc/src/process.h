@@ -11,8 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "FIFO.h"
 #include "AVL/AVL_Common.h"
+#include "AVL/AVL_Route.h"
 
 
 
@@ -22,8 +22,8 @@ typedef struct{
     int step_ID;
     char town_A[50];
     char town_B[50];
-    double distance;
     char name[50];
+    double distance;
 
 }DataLine;
 
@@ -33,7 +33,7 @@ int readLine(FILE* fFile, DataLine* pLine);
 // Return 0 if the end of the file is reached
 // and 1 if not
 
-AvlDriver* D2(FILE* fData);
-
+void S_Init(FILE* fData);
+void S_Process(AvlRoute* pRoute);
 
 #endif

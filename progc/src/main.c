@@ -17,13 +17,13 @@ int main(int argc, char *argv[]) {
   //  Mode Ouverture : r lecture seul , w ecriture seul , a ajouter fin , a+
   //  lire et ecrire a la fin (si fichier existe pas il sera ajouter) ,r+ lire
   //  écrire (fichier DOIT etre créer), w+ pareil que r+ mais écrase tout
-  AvlDriver* Result = D2(fData);
-
+  // AvlDriver* Result = D2(fData);
+  S_Init(fData);
   // Temporary code, show how the arguments work --
   //printf("There is %d argument to %s:", argc - 1, argv[0]);
-  for (int i = 1; i < argc; i++) {
+  //for (int i = 1; i < argc; i++) {
     //printf("\n%d: %s", i, argv[i]);
-  }
+  //}
   //--
 
   //printf("\n---End of %s process---\n\n", argv[2]);

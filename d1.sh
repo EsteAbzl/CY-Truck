@@ -15,7 +15,11 @@ time cat data.csv | sed -e 1d | cut -f1,6 -d";" | sort | uniq | cut -f2 -d";" | 
 #   s/a/b/c : selection and replacement operation
 #   a : ^[ \t]*
 #       ^[] is a special expression
-#          SPACE\t expands SPACE until next character is found
+#          SPACE\t expands SPACE until next character is found. \t specifically means tab.
+#                   note : that's not EXACTLY what it is but it's how I always used it.
+#                          I don't really have a rigorous understanding of sed, I just used
+#                          neovim as my editor of choice for years now so I'm used to doing that
+#                          kind of stuff in my scripts...
 #          * is any character
 #       thus ^[ \t]* means "Any number of spaces before a character"
 #   b : nothing.
