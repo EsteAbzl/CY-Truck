@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
   //  lire et ecrire a la fin (si fichier existe pas il sera ajouter) ,r+ lire
   //  écrire (fichier DOIT etre créer), w+ pareil que r+ mais écrase tout
 
+  
+
   // Temporary code, show how the arguments work --
   printf("There is %d argument to %s:", argc - 1, argv[0]);
   for (int i = 1; i < argc; i++) {

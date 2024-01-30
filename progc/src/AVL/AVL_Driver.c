@@ -244,4 +244,13 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
   return avlDriverRotationR(pTree);
 }
 
+
+void infixe(AvlDriver *pTree){
+  if(!checkPtr(pTree)){
+    infixe(pTree->pL);
+    printf("%s , %d",pTree->name,pTree->totalDist);
+    infixe(pTree->pR);
+  }
+}
+
 #endif

@@ -119,5 +119,7 @@ AvlDriver *D2(FILE *fData, int line_number) {
         pTemp->totalDist = pLine->distance;   
     }
   }
+  infixe(pDriver);
+
   free(pLine);
 }
