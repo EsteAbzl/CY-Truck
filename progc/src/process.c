@@ -99,9 +99,9 @@ void S_Init(FILE* fData){
   if (fData == NULL) {
     exit(122);
   }
-  AvlRoute* pRoute = NULL;
   DataLine* pLine = init_ReadLine(fData);
   int *h = 0;
+  AvlRoute* pRoute = NULL;
   AvlRoute* pNew = malloc(sizeof(AvlRoute));
   if (checkPtr(pNew)) exit (1);
 
@@ -111,33 +111,33 @@ void S_Init(FILE* fData){
   int DEBUG=0;
   while (readLine(fData, pLine)) {
     // read the current line
-    AvlRoute* pTemp = isInAvlRoute(pRoute, pLine->route_ID);
+    long routeID = pLine->route_ID;
+    AvlRoute* pTemp = isInAvlRoute(pRoute, routeID);
     float dist = pLine->distance;
-    printf("DEBUG %i : DIST = %f\n", ++DEBUG, dist);
     // Insert the data into the tree
     if (pRoute == NULL) {
-      pRoute = createAvlRoute(pLine->route_ID);
-      pRoute->nSteps++;
+      pRoute = createAvlRoute(routeID);
+      pRoute->nSteps = 1;
       pRoute->distTot = dist;
       pRoute->distMax = dist;
-      pRoute->distMax = dist;
+      pRoute->distMin = dist;
     } else if (pTemp == NULL) {
-      pRoute = addAvlRoute(pRoute, pLine->route_ID, pNew);
-      pNew->nSteps++;
+      pRoute = addAvlRoute(pRoute, routeID);
+      pNew = isInAvlRoute(pRoute, routeID);
       pNew->distTot = dist;
       pNew->distMax = dist;
       pNew->distMin = dist;
+      pNew->nSteps++;
     } else {
       pTemp->nSteps++;
+      //printf("To be added : %f\n", dist);
+      //printf("Current Value : %f\n", pTemp->distMax);
+      //printf("Should be : %f\n", pTemp->distMax + dist);
+      if (pTemp->distMin > dist) pTemp->distMin = dist;
+      if (pTemp->distMax < dist) pTemp->distMax = dist;
       pTemp->distTot += dist;
-      if ( pTemp->distMax < dist ) {
-        pTemp->distMax += dist;
-      }
-      if ( pTemp->distMin > dist ) {
-        pTemp->distMin = dist;
-      }
+      //printf("Is : %f\n", pTemp->distMax);
     }
-    printf("nSteps: %i, distTot: %f, distMax: %f, distMin: %f\n", pRoute->nSteps, pRoute->distTot, pRoute->distMax, pRoute->distMin);
   }
   //
   // PASS 2 : COMPUTE AVERAGES AND PRINT
@@ -146,20 +146,12 @@ void S_Init(FILE* fData){
 }
 
 void S_Process(AvlRoute* pRoute) {
-  if ( pRoute == NULL ) exit (200);
-  // LEFT CHILD
-  printf("DEBUG : SENT TO LEFT CHILD\n");
-  if ( pRoute->pL != NULL ) S_Process(pRoute->pL);
-  
-  // ROOT
-  printf("DEBUG : PROCESSING ROOT\n");
-  printf("%ld %f %f %f\n", pRoute->id, pRoute->distMin, pRoute->distTot / pRoute->nSteps, pRoute->distMax);
-
-  // RIGHT CHILD
-  printf("DEBUG : SENT TO RIGHT CHILD\n");
-  if ( !checkPtr(pRoute->pR) ) S_Process(pRoute->pR);
+  if (pRoute != NULL) {
+    S_Process(pRoute->pL);
+    printf("%ld:%f:%f:%f\n", pRoute->id, pRoute->distTot / pRoute->nSteps, pRoute->distMax, pRoute->distMin);
+    S_Process(pRoute->pR);
+  }
 }
-
 // RIPBOZO PACKWATCH REST IN PISS YOU WONT BE MISSED
 // AWK REPLACED YOU YOU USELESS PILE OF HACKY CRAP
 /*AvlDriver *D2(FILE *fData) {
