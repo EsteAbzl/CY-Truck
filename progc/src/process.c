@@ -42,7 +42,7 @@ int readLine(FILE* fFile, DataLine* pLine){
   }
   
   char c = 0;       // caracter being read
-  char string[100]; // column being read
+  char string[50]; // column being read
   int i = 0;        // 'c' caracter position in 'string'
   int column = 0;
 
@@ -85,7 +85,7 @@ int readLine(FILE* fFile, DataLine* pLine){
     }
 
     i++;
-    if(i >= 100){
+    if(i >= 50){
       printf("%s: The number of caracter of the column %d execced 100", __func__, column++);
       exit(6);
     }
