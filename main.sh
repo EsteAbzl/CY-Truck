@@ -16,7 +16,6 @@ echoHelp(){
 }
 
 
-
 # Look for the '-h' option
 for entry in $* ; do
 	if [ $entry = "-h" ] ; then
@@ -72,6 +71,7 @@ if (( $exitNumber != 0 )) ; then
   echo "$0: Make didn't work as expected and ended with: $exitNumber"
   exit 3
 fi
+
 echo ---
 
 # Go througt all the given option
@@ -117,7 +117,7 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
   # If the Flags are uptaded:
   if (( $oldActiveFlags != $activeFlags )) ; then
     # We give the curent option to the process
-    ./progc/main.exe $data $option 
+    ./progc/bin/cy-trucks.exe $data $option 
     exitNumber=$?
     if (( exitNumber != 0)) ; then
       echo

@@ -33,5 +33,7 @@ int readLine(FILE* fFile, DataLine* pLine);
 // Return 0 if the end of the file is reached
 // and 1 if not
 
+AvlDriver* D2(FILE* fData);
+
 
 #endif

@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "AVL/AVL_Common.h"
+#include "AVL/AVL_Driver.h"
+#include "process.h"
 #define Size_Max 100
 
 int main(int argc, char *argv[]) {
@@ -10,14 +13,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  FILE *fData = NULL;
-  // if((fopen()))
-  //  FILE* fopen(const char* nomDuFichier, const char* modeOuverture);
+  FILE *fData = fopen(argv[1], "r");
   //  Mode Ouverture : r lecture seul , w ecriture seul , a ajouter fin , a+
   //  lire et ecrire a la fin (si fichier existe pas il sera ajouter) ,r+ lire
   //  écrire (fichier DOIT etre créer), w+ pareil que r+ mais écrase tout
-
-  
+  AvlDriver* Result = D2(fData);
 
   // Temporary code, show how the arguments work --
   printf("There is %d argument to %s:", argc - 1, argv[0]);

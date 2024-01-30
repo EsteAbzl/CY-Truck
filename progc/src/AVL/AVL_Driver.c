@@ -11,10 +11,11 @@ AvlDriver* createAvlDriver(char *str) {
   pNew->pL = NULL;
   pNew->pR = NULL;
   pNew->AvlPath = NULL;
+  //printf("DEBUG %s DANS CREATEAVLDRIVER\n", pNew->name);
   return pNew;
 }
 
-/*
+
 // First function gets called as our main BST adding function.
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
@@ -27,17 +28,17 @@ AvlDriver* addAvlDriver(AvlDriver *pTree, char *str) {
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
-*/
-AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h) {
+
+AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
     return createAvlDriver(str);
   } else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = addAvlDriver(pTree->pR, str, h);
+    pTree->pR = _addAvlDriver(pTree->pR, str, h);
   }else if (strcmp(str, pTree->name) < 0) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = addAvlDriver(pTree->pL, str, h);
+    pTree->pL = _addAvlDriver(pTree->pL, str, h);
     // balance factor needs to be inverted
     *h = -*h;
   } else {
@@ -46,6 +47,7 @@ AvlDriver* addAvlDriver(AvlDriver *pTree, char *str, int *h) {
     *h = 0;
     return pTree;
   }
+  // printf("DEBUG 500\n");
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
     pTree = balanceAvlDriver(pTree);
@@ -123,16 +125,22 @@ AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
   AvlDriver* ret = NULL;
   if (pTree == NULL) {
     // Return NULL if not found
+    // printf("isinavl null\n");
     ret = NULL;
+    // int i = strcmp("test", "test");
+    // printf("strcmp retourne %i", i);
   } else if (strcmp(str, pTree->name) < 0) {
     // Search value lower than current value, go left
     ret = isInAvlDriver(pTree->pL, str);
+    // printf("isinavl go left\n");
   } else if (strcmp(str, pTree->name) > 0) {
     // Search value higher than current value, go right
     ret = isInAvlDriver(pTree->pR, str);
-  } else if (strcmp(str, pTree->name) == 0) {
+    // printf("isinavl go right\n");
+  } else {
     // Return the current node if found
     ret = pTree;
+    // printf("isinavl found\n");
   }
   return ret;
 }
@@ -203,7 +211,7 @@ AvlDriver *avlDriverRotationL(AvlDriver *pTree) {
 
   // check balancing
   int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
-  pTree->bFactor -= MAX(eq_Pivot, 0) - 1;
+  pTree->bFactor = eq_Ptree - MAX(eq_Pivot, 0) - 1;
   Pivot->bFactor = MIN(eq_Ptree + eq_Pivot - 2, MIN(eq_Ptree - 2, eq_Pivot - 1));
   pTree = Pivot;
   return pTree;
@@ -220,7 +228,7 @@ AvlDriver *avlDriverRotationR(AvlDriver *pTree) {
 
   // check balancing
   int eq_Ptree = pTree->bFactor, eq_Pivot = Pivot->bFactor;
-  pTree->bFactor -= MIN(eq_Pivot, 0) + 1;
+  pTree->bFactor = eq_Ptree - MIN(eq_Pivot, 0) + 1;
   Pivot->bFactor = MAX(eq_Ptree + eq_Pivot + 2, MAX(eq_Ptree + 2, eq_Pivot + 1));
   pTree = Pivot;
   return pTree;
