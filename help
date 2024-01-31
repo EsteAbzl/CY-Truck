@@ -7,6 +7,7 @@
 	main.sh search, analyse, make graphic from data in a csv file.
 .SH OPTIONS
 	-d1
+
 		This option get the list of all the driver with the number of route they have driven. From that list, it will only sohw the 10 driver with the most route (placed from the most route number to the least) in a graphic with the route number on the x-axis the full driver name on the y-axis.
 
 	-d2
