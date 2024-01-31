@@ -6,7 +6,7 @@
 
 AvlTown* createAvlTown(char *str) {
   AvlTown *pNew = malloc(sizeof(AvlTown));
-  if (checkPtr(pNew)) exit(1);
+  if (CHECK_PTR(pNew)) exit(1);
   pNew->name = str;
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -148,12 +148,12 @@ AvlTown* isInAvlTown(AvlTown *pTree, char *str){
 
 
 int checkLeftAvlTown(AvlTown *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pL);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
 
 int checkRightAvlTown(AvlTown *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pR);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
@@ -255,7 +255,7 @@ AvlTown *avlTownRotationLR(AvlTown *pTree) {
 
 
 void inorderTown(AvlTown *pTree){
-  if(!checkPtr(pTree)){
+  if(!CHECK_PTR(pTree)){
     inorderTown(pTree->pL);
     printf("name: %s, passes: %i\n",pTree->name, pTree->nPass);
     inorderTown(pTree->pR);

@@ -1,8 +1,4 @@
 #include "process.h"
-#include "AVL/AVL_Driver.h"
-#include "FIFO.h"
-
-
 
 DataLine* init_ReadLine(FILE* fFile){
   if(fFile == NULL){
@@ -10,7 +6,7 @@ DataLine* init_ReadLine(FILE* fFile){
     exit(4);
   }
 
-  // Set the cursor to the start af the file
+  // Set the cursor to the start of the file
   rewind(fFile);
 
   // Get rid of the first line
@@ -43,7 +39,7 @@ int readLine(FILE* fFile, DataLine* pLine){
   }
   
   char c = 0;       // caracter being read
-  char string[50]; // column being read
+  char string[COLUMN_SIZE];  // column being read
   int i = 0;        // 'c' caracter position in 'string'
   int column = 0;
 
@@ -86,8 +82,8 @@ int readLine(FILE* fFile, DataLine* pLine){
     }
 
     i++;
-    if(i >= 50){
-      printf("%s: The number of caracter of the column %d execced 100", __func__, column++);
+    if(i >= COLUMN_SIZE){
+      printf("%s: The number of caracter of the column %d execced %d", __func__, column++, COLUMN_SIZE);
       exit(6);
     }
   }
@@ -104,7 +100,7 @@ void T_Init(FILE* fData){
   int *h = 0;
   AvlTown* pTown = NULL;
   AvlTown* pNew = malloc(sizeof(AvlTown));
-  if (checkPtr(pNew)) exit (1);
+  if (CHECK_PTR(pNew)) exit (1);
 
   // 
   // PASS 1 : FILL THE AVL
@@ -112,7 +108,7 @@ void T_Init(FILE* fData){
   while (readLine(fData, pLine)) {
     // read the current line
     char* townName = malloc(sizeof(char)*50);
-    if (checkPtr(townName)) exit (220);
+    if (CHECK_PTR(townName)) exit (220);
     townName = strcpy(townName, pLine->town_B);
     AvlTown* pNew = NULL;
 
@@ -156,7 +152,7 @@ void T2_Init(FILE* fData){
   int *h = 0;
   AvlTown* pTown = NULL;
   AvlTown* pNew = malloc(sizeof(AvlTown));
-  if (checkPtr(pNew)) exit (1);
+  if (CHECK_PTR(pNew)) exit (1);
 
   // 
   // PASS 1 : FILL THE AVL
@@ -164,7 +160,7 @@ void T2_Init(FILE* fData){
   while (readLine(fData, pLine)) {
     // read the current line
     char* townName = malloc(sizeof(char)*50);
-    if (checkPtr(townName)) exit (220);
+    if (CHECK_PTR(townName)) exit (220);
     townName = strcpy(townName, pLine->town_B);
     AvlTown* pNew = NULL;
 
@@ -175,7 +171,7 @@ void T2_Init(FILE* fData){
       pTown = createAvlTown(townName);
       pTown->nPass++;
       char* driverName = malloc(sizeof(char)*50);
-      if (checkPtr(driverName)) exit (200);
+      if (CHECK_PTR(driverName)) exit (200);
       driverName = strcpy(driverName, pLine->name);
       pTown->pDrivers = createAvlDriver(driverName);
     } else if (pTemp == NULL) {
@@ -184,14 +180,14 @@ void T2_Init(FILE* fData){
       pNew = isInAvlTown(pTown, townName);
       pNew->nPass++;
       char* driverName = malloc(sizeof(char)*50);
-      if (checkPtr(driverName)) exit (200);
+      if (CHECK_PTR(driverName)) exit (200);
       driverName = strcpy(driverName, pLine->name);
       pNew->pDrivers = createAvlDriver(driverName);
     } else {
       // case 3 : the town was logged, simply append
       pTemp->nPass++;
       char* driverName = malloc(sizeof(char)*50);
-      if (checkPtr(driverName)) exit (200);
+      if (CHECK_PTR(driverName)) exit (200);
       driverName = strcpy(driverName, pLine->name);
       pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
     }
@@ -201,7 +197,7 @@ void T2_Init(FILE* fData){
     if (pLine->step_ID == 1) {
       // read the current line
       char* townName = malloc(sizeof(char)*50);
-      if (checkPtr(townName)) exit (220);
+      if (CHECK_PTR(townName)) exit (220);
       townName = strcpy(townName, pLine->town_A);
       AvlTown* pNew = NULL;
 
@@ -212,7 +208,7 @@ void T2_Init(FILE* fData){
         pTown = createAvlTown(townName);
         pTown->nPass++;
         char* driverName = malloc(sizeof(char)*50);
-        if (checkPtr(driverName)) exit (200);
+        if (CHECK_PTR(driverName)) exit (200);
         driverName = strcpy(driverName, pLine->name);
         pTown->pDrivers = createAvlDriver(driverName);
       } else if (pTemp == NULL) {
@@ -221,14 +217,14 @@ void T2_Init(FILE* fData){
         pNew = isInAvlTown(pTown, townName);
         pNew->nPass++;
         char* driverName = malloc(sizeof(char)*50);
-        if (checkPtr(driverName)) exit (200);
+        if (CHECK_PTR(driverName)) exit (200);
         driverName = strcpy(driverName, pLine->name);
         pNew->pDrivers = createAvlDriver(driverName);
       } else {
         // case 3 : the town was logged, simply append
         pTemp->nPass++;
         char* driverName = malloc(sizeof(char)*50);
-        if (checkPtr(driverName)) exit (200);
+        if (CHECK_PTR(driverName)) exit (200);
         driverName = strcpy(driverName, pLine->name);
         pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
       }
@@ -256,7 +252,7 @@ void S_Init(FILE* fData){
   int *h = 0;
   AvlRoute* pRoute = NULL;
   AvlRoute* pNew = malloc(sizeof(AvlRoute));
-  if (checkPtr(pNew)) exit (1);
+  if (CHECK_PTR(pNew)) exit (1);
 
   // 
   // PASS 1 : FILL THE AVL
@@ -314,7 +310,7 @@ void S_Process(AvlRoute* pRoute) {
   DataLine* pLine =  init_ReadLine(fData);
   int *h = 0;
   AvlDriver* pNew = malloc(sizeof(AvlDriver*));
-  if (checkPtr(pNew)) exit (1);
+  if (CHECK_PTR(pNew)) exit (1);
   while(readLine(fData, pLine)){
     char * copy = malloc(sizeof(char)*32);
     copy = strcpy(copy, pLine->name);
@@ -333,7 +329,7 @@ void S_Process(AvlRoute* pRoute) {
       // TODO FIX THIS THIS IS AWFUL AND INEFFICIENT
       // pTemp = isInAvlDriver(pDriver, copy);
       //printf("DEBUG11\n");
-      if(checkPtr(pNew)) exit (69);
+      if(CHECK_PTR(pNew)) exit (69);
       pNew->totalDist = pLine->distance;
       //printf("DEBUG12\n");
       // printf("%s,%f\n", pTemp->name, pTemp->totalDist);

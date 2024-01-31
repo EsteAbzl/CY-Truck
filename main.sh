@@ -108,9 +108,7 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
     *) #DEFAULT
       echo "$0: Invalid option '$option'"
       echoHelp
-      #exit 4 
-      # Should we stop the program if there is a wrong option? What if other valid option have already been processed?
-      # I think we should only warn and continue the program.
+      # Program doesn't stop there in case other options work
     ;;
 	esac # End of the case
 
@@ -118,6 +116,9 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
   if (( $oldActiveFlags != $activeFlags )) ; then
     # We give the curent option to the process
     ./progc/bin/cy-trucks.exe $data $option > OUTPUT.TXT
+
+    # WE CAN USE SHELL PROCESS HERE!!
+
     exitNumber=$?
     if (( exitNumber != 0)) ; then
       echo

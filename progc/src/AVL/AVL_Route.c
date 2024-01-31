@@ -6,7 +6,7 @@
 
 AvlRoute* createAvlRoute(long id) {
   AvlRoute *pNew = malloc(sizeof(AvlRoute));
-  if (checkPtr(pNew)) exit(1);
+  if (CHECK_PTR(pNew)) exit(1);
   pNew->id = id;
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -147,12 +147,12 @@ AvlRoute* isInAvlRoute(AvlRoute *pTree, long id){
 
 
 int checkLeftAvlRoute(AvlRoute *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pL);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
 
 int checkRightAvlRoute(AvlRoute *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pR);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
@@ -254,7 +254,7 @@ AvlRoute *avlRouteRotationLR(AvlRoute *pTree) {
 
 
 void inorderRoute(AvlRoute *pTree){
-  if(!checkPtr(pTree)){
+  if(!CHECK_PTR(pTree)){
     inorderRoute(pTree->pL);
     printf("%ld, nSteps: %i, distTot: %f\n", pTree->id, pTree->nSteps, pTree->distTot);
     inorderRoute(pTree->pR);

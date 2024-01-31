@@ -5,7 +5,7 @@
 
 AvlDriver* createAvlDriver(char *str) {
   AvlDriver *pNew = malloc(sizeof(AvlDriver));
-  if (checkPtr(pNew)) exit(1);
+  if (CHECK_PTR(pNew)) exit(1);
   pNew->name = str;
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -146,12 +146,12 @@ AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
 
 
 int checkLeftAvlDriver(AvlDriver *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pL);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
 
 int checkRightAvlDriver(AvlDriver *ptr) {
-  return !checkPtr(ptr) && !checkPtr(ptr->pR);
+  return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
@@ -270,7 +270,7 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
 
 
 void infixe(AvlDriver *pTree){
-  if(!checkPtr(pTree)){
+  if(!CHECK_PTR(pTree)){
     infixe(pTree->pL);
     printf("  %s\n",pTree->name);
     infixe(pTree->pR);
