@@ -1,6 +1,6 @@
 #include "AVL_Route.h"
 
-AvlRoute* createAvlRoute(long id) {
+AvlRoute* createAvlRoute(int id) {
   AvlRoute *pNew = malloc(sizeof(AvlRoute));
   if (CHECK_PTR(pNew)) exit(1);
   pNew->id = id;
@@ -19,7 +19,7 @@ AvlRoute* createAvlRoute(long id) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlRoute* addAvlRoute(AvlRoute *pTree, long id) {
+AvlRoute* addAvlRoute(AvlRoute *pTree, int id) {
   static int h = 0;
   return _addAvlRoute(pTree, id, &h);
 }
@@ -28,7 +28,7 @@ AvlRoute* addAvlRoute(AvlRoute *pTree, long id) {
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h) {
+AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
@@ -70,7 +70,7 @@ AvlRoute* delAvlRoute(AvlRoute *pTree, char *str) {
 }
 */
 
-AvlRoute* delAvlRoute(AvlRoute *pTree, long* id, int *h) {
+AvlRoute* delAvlRoute(AvlRoute *pTree, int* id, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
@@ -107,7 +107,7 @@ AvlRoute* delAvlRoute(AvlRoute *pTree, long* id, int *h) {
 }
 
 
-AvlRoute* delAvlLargestLong(AvlRoute *pTree, long *id) {
+AvlRoute* delAvlLargestLong(AvlRoute *pTree, int *id) {
   AvlRoute *tmp;
   if (checkRightAvlRoute(pTree)) {
     delAvlLargestLong(pTree->pR, id);
@@ -120,7 +120,7 @@ AvlRoute* delAvlLargestLong(AvlRoute *pTree, long *id) {
   return pTree;
 }
 
-AvlRoute* isInAvlRoute(AvlRoute *pTree, long id){
+AvlRoute* isInAvlRoute(AvlRoute *pTree, int id){
   AvlRoute* ret = NULL;
   if (pTree == NULL) {
     // Return NULL if not found
@@ -252,7 +252,7 @@ AvlRoute *avlRouteRotationLR(AvlRoute *pTree) {
 void inorderRoute(AvlRoute *pTree){
   if(!CHECK_PTR(pTree)){
     inorderRoute(pTree->pL);
-    printf("%ld, nSteps: %i, distTot: %f\n", pTree->id, pTree->nSteps, pTree->distTot);
+    printf("%d, nSteps: %i, distTot: %f\n", pTree->id, pTree->nSteps, pTree->distTot);
     inorderRoute(pTree->pR);
   }
 }
