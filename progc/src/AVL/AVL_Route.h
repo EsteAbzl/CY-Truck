@@ -1,6 +1,9 @@
 #ifndef _AVLROUTE_H
 #define _AVLROUTE_H
 
+// INCLUDES
+    #include "AVL_Common.h"
+    
 // STRUCTURES
     // Route Avl node
     typedef struct _AvlRoute {

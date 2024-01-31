@@ -1,6 +1,9 @@
 #ifndef _AVLDRIVER_H
 #define _AVLDRIVER_H
 
+// INCLUDES
+    #include "AVL_Common.h"
+
 // STRUCTURES
     // Driver Avl node
     typedef struct _AvlDriver {

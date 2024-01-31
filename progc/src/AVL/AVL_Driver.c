@@ -1,7 +1,4 @@
-#ifndef _AVLDRIVER_C
-#define _AVLDRIVER_C
-
-#include "AVL_Common.h"
+#include "AVL_Driver.h"
 
 AvlDriver* createAvlDriver(char *str) {
   AvlDriver *pNew = malloc(sizeof(AvlDriver));
@@ -276,5 +273,3 @@ void infixe(AvlDriver *pTree){
     infixe(pTree->pR);
   }
 }
-
-#endif

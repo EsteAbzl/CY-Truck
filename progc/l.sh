@@ -1,6 +1,7 @@
 #!/bin/bash
 
-time cat data.csv | sed -e 1d | cut -f1,5 -d";" | awk -F';' '{dist[$1] += $2} END{for (id in dist) printf "%s %.6f\n", id, dist[id]}' | sort -nr -k2 | head -n10 | sort -nr -k1
+data=$1
+time cat $data | sed -e 1d | cut -f1,5 -d";" | awk -F';' '{dist[$1] += $2} END{for (id in dist) printf "%s %.6f\n", id, dist[id]}' | sort -nr -k2 | head -n10 | sort -nr -k1
 
 # Nothing new here. Check D2 if you want an explaination for the awk script.
 # It's 42 past midnight as I'm writing this. I don't want to copypaste.

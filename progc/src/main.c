@@ -14,9 +14,27 @@ int main(int argc, char *argv[]) {
         écrire (fichier DOIT etre créer), w+ pareil que r+ mais écrase tout. */
   FILE *fData = fopen(argv[1], "r");
   
-  /* redirection into the right process
-  if()
-  */
+  // Redirection into the right process
+  if(strcmp(argv[2], "-d1") == 0){
+
+  }
+  else if(strcmp(argv[2], "-d2") == 0){
+
+  }
+  else if(strcmp(argv[2], "-l") == 0){
+
+  }
+  else if(strcmp(argv[2], "-t") == 0){
+
+  }
+  else if(strcmp(argv[2], "-s") == 0){
+
+  }
+  else{
+    printf("C ERROR: Option wasn't found");
+    exit(2);
+  }
+ 
 
   /* =-=-=-= TEST ZONE =-=-=-= */
 
@@ -25,7 +43,9 @@ int main(int argc, char *argv[]) {
   //T2_Init(fData);
   T_Init(fData);
 
-  /* =-=-=-=-----------=-=-=-= */
+  /* =-=-=-=-----------=-=-=-= */// INCLUDES
+
+  fclose(fData);
   
 
   //printf("\n---End of %s process---\n\n", argv[2]);

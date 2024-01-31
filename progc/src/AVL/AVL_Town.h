@@ -2,6 +2,7 @@
 #define _AVLTOWN_H
 
 // INCLUDES
+    #include "AVL_Common.h"
     #include "AVL_Driver.h"
 
 // STRUCTURES

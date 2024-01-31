@@ -6,11 +6,7 @@
     #include <stdlib.h>
     #include <string.h>
 
-    #include "../FIFO.h"
-    #include "AVL_Driver.h"
-
-// DEFINES
-
+// MACRO
     #ifndef MIN
     #define MIN(a, b) (((a) < (b)) ? (a) : (b))
     #endif
@@ -23,6 +19,7 @@
     #define CHECK_PTR(ptr) (ptr == NULL)
     #endif
 
+// DEFINES
     #define OFF_LEFT_CHILD 0    //0x00000
     #define OFF_RIGHT_CHILD 8   //0x01000
     #define OFF_VALUE 16        //0x10000

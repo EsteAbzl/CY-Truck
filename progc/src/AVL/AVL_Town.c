@@ -1,7 +1,3 @@
-#ifndef _AVLTOWN_C
-#define _AVLTOWN_C
-
-#include "AVL_Common.h"
 #include "AVL_Town.h"
 
 AvlTown* createAvlTown(char *str) {
@@ -261,5 +257,3 @@ void inorderTown(AvlTown *pTree){
     inorderTown(pTree->pR);
   }
 }
-
-#endif

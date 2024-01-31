@@ -1,6 +1,7 @@
 #!/bin/bash
 
-time cat data.csv | sed -e 1d | cut -f1,6 -d";" | sort | uniq | cut -f2 -d";" | sort | uniq -c | sort -nr | head -n10 | sed -e 's/^[ \t]*//'
+data=$1
+time cat $data | sed -e 1d | cut -f1,6 -d";" | sort | uniq | cut -f2 -d";" | sort | uniq -c | sort -nr | head -n10 | sed -e 's/^[ \t]*//'
 # cat : get output
 # sed -e 1d : deletes the first line
 # cut -f1,6 -d";" : get the route ID and the name

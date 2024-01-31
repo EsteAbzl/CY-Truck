@@ -1,7 +1,3 @@
-#ifndef _AVLROUTE_C
-#define _AVLROUTE_C
-
-#include "AVL_Common.h"
 #include "AVL_Route.h"
 
 AvlRoute* createAvlRoute(long id) {
@@ -260,5 +256,3 @@ void inorderRoute(AvlRoute *pTree){
     inorderRoute(pTree->pR);
   }
 }
-
-#endif
