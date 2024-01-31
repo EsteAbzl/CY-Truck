@@ -1,5 +1,6 @@
 .ccls-cache
 .replit
+.vscode
 replit.nix
 main.exe
 data.csv
