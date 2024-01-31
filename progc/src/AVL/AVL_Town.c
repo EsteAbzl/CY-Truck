@@ -1,16 +1,18 @@
-#ifndef _AVLDRIVER_C
-#define _AVLDRIVER_C
+#ifndef _AVLTOWN_C
+#define _AVLTOWN_C
 
 #include "AVL_Common.h"
+#include "AVL_Town.h"
 
-AvlDriver* createAvlDriver(char *str) {
-  AvlDriver *pNew = malloc(sizeof(AvlDriver));
+AvlTown* createAvlTown(char *str) {
+  AvlTown *pNew = malloc(sizeof(AvlTown));
   if (checkPtr(pNew)) exit(1);
   pNew->name = str;
   pNew->bFactor = 0;
   pNew->pL = NULL;
   pNew->pR = NULL;
-  //printf("DEBUG %s DANS CREATEAVLDRIVER\n", pNew->name);
+  pNew->pDrivers = NULL;
+  pNew->nFirst = 0;
   return pNew;
 }
 
@@ -19,25 +21,25 @@ AvlDriver* createAvlDriver(char *str) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlDriver* addAvlDriver(AvlDriver *pTree, char *str) {
+AvlTown* addAvlTown(AvlTown *pTree, char *str) {
   static int h = 0;
-  return _addAvlDriver(pTree, str, &h);
+  return _addAvlTown(pTree, str, &h);
 }
 
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlTown* _addAvlTown(AvlTown *pTree, char *str, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
-    return createAvlDriver(str);
+    return createAvlTown(str);
   } else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = _addAvlDriver(pTree->pR, str, h);
+    pTree->pR = _addAvlTown(pTree->pR, str, h);
   }else if (strcmp(str, pTree->name) < 0) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlDriver(pTree->pL, str, h);
+    pTree->pL = _addAvlTown(pTree->pL, str, h);
     // balance factor needs to be inverted
     *h = -*h;
   } else {
@@ -49,7 +51,7 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
   // printf("DEBUG 500\n");
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlDriver(pTree);
+    pTree = balanceAvlTown(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -64,13 +66,13 @@ AvlDriver* _addAvlDriver(AvlDriver *pTree, char *str, int *h) {
 // When I wrote this code, only me and God knew why we had to do
 // it that way. Now, days later, only God knows.
 // May Richie have mercy on our souls.
-AvlDriver* delAvlDriver(AvlDriver *pTree, char *str) {
+AvlTown* delAvlTown(AvlTown *pTree, char *str) {
   static int h = 0;
-  return _delAvlDriver(pTree, str, &h);
+  return _delAvlTown(pTree, str, &h);
 }
 */
 
-AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h) {
+AvlTown* delAvlTown(AvlTown *pTree, char *str, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
@@ -78,25 +80,25 @@ AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h) {
   }
   // Recursively search through the BST
   else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = delAvlDriver(pTree->pR, str, h);
+    pTree->pR = delAvlTown(pTree->pR, str, h);
   } else if (strcmp(str, pTree->name) < 0) {
-    pTree->pL = delAvlDriver(pTree->pL, str, h);
+    pTree->pL = delAvlTown(pTree->pL, str, h);
     *h = -*h;
   }
   // Element found, replace as needed
-  else if (!checkLeftAvlDriver(pTree)){
-    AvlDriver *tmp;
+  else if (!checkLeftAvlTown(pTree)){
+    AvlTown *tmp;
     tmp = pTree;
     pTree = pTree->pR;
     free(tmp);
     *h = -1;
   }
   else {
-    pTree->pL = delAvlLargestStr(pTree->pL, &(pTree->name));
+    pTree->pL = delAvlTownLargestStr(pTree->pL, &(pTree->name));
   }
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlDriver(pTree);
+    pTree = balanceAvlTown(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -107,10 +109,10 @@ AvlDriver* delAvlDriver(AvlDriver *pTree, char *str, int *h) {
 }
 
 
-AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str) {
-  AvlDriver *tmp;
-  if (checkRightAvlDriver(pTree)) {
-    delAvlLargestStr(pTree->pR, str);
+AvlTown* delAvlTownLargestStr(AvlTown *pTree, char **str) {
+  AvlTown *tmp;
+  if (checkRightAvlTown(pTree)) {
+    delAvlTownLargestStr(pTree->pR, str);
   } else {
     *str = pTree->name;
     tmp = pTree;
@@ -120,8 +122,8 @@ AvlDriver* delAvlLargestStr(AvlDriver *pTree, char **str) {
   return pTree;
 }
 
-AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
-  AvlDriver* ret = NULL;
+AvlTown* isInAvlTown(AvlTown *pTree, char *str){
+  AvlTown* ret = NULL;
   if (pTree == NULL) {
     // Return NULL if not found
     // printf("isinavl null\n");
@@ -130,11 +132,11 @@ AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
     // printf("strcmp retourne %i", i);
   } else if (strcmp(str, pTree->name) < 0) {
     // Search value lower than current value, go left
-    ret = isInAvlDriver(pTree->pL, str);
+    ret = isInAvlTown(pTree->pL, str);
     // printf("isinavl go left\n");
   } else if (strcmp(str, pTree->name) > 0) {
     // Search value higher than current value, go right
-    ret = isInAvlDriver(pTree->pR, str);
+    ret = isInAvlTown(pTree->pR, str);
     // printf("isinavl go right\n");
   } else {
     // Return the current node if found
@@ -145,53 +147,36 @@ AvlDriver* isInAvlDriver(AvlDriver *pTree, char *str){
 }
 
 
-int checkLeftAvlDriver(AvlDriver *ptr) {
+int checkLeftAvlTown(AvlTown *ptr) {
   return !checkPtr(ptr) && !checkPtr(ptr->pL);
 }
 
 
-int checkRightAvlDriver(AvlDriver *ptr) {
+int checkRightAvlTown(AvlTown *ptr) {
   return !checkPtr(ptr) && !checkPtr(ptr->pR);
 }
 
 
-int avlDriverHeight(AvlDriver *ptr) { // hauteur
+int avlTownHeight(AvlTown *ptr) { // hauteur
   int countL = 0, countR = 0;
   if (ptr == NULL) {
     return 0;
   }
-  if (!checkLeftAvlDriver(ptr) && !checkRightAvlDriver(ptr)) {
+  if (!checkLeftAvlTown(ptr) && !checkRightAvlTown(ptr)) {
     return 1;
   } else {
-    if (checkLeftAvlDriver(ptr)) {
-      countL = avlDriverHeight(ptr->pL);
+    if (checkLeftAvlTown(ptr)) {
+      countL = avlTownHeight(ptr->pL);
     }
-    if (checkRightAvlDriver(ptr)) {
-      countR = avlDriverHeight(ptr->pR);
+    if (checkRightAvlTown(ptr)) {
+      countR = avlTownHeight(ptr->pR);
     }
   }
   return MAX(countL, countR) + 1;
 }
 
-int avlDriverNodeCount(AvlDriver *ptr) {
-  int countL = 0, countR = 0;
-  if (ptr == NULL) {
-    return 0;
-  }
-  if (!checkLeftAvlDriver(ptr) && !checkRightAvlDriver(ptr)) {
-    return 1;
-  } else {
-    if (checkLeftAvlDriver(ptr)) {
-      countL = avlDriverNodeCount(ptr->pL);
-    }
-    if (checkRightAvlDriver(ptr)) {
-      countR = avlDriverNodeCount(ptr->pR);
-    }
-  }
-  return countL + countR + 1;
-}
 
-AvlDriver *balanceAvlDriver(AvlDriver *pTree) {
+AvlTown *balanceAvlTown(AvlTown *pTree) {
   if (pTree == NULL) {
     return pTree;
   } else if (pTree->bFactor >= 2) {
@@ -199,29 +184,29 @@ AvlDriver *balanceAvlDriver(AvlDriver *pTree) {
       exit(1);
     }
     if (pTree->pR->bFactor >= 0) {
-      return avlDriverRotationL(pTree);
+      return avlTownRotationL(pTree);
     } else {
-      return avlDriverRotationRL(pTree);
+      return avlTownRotationRL(pTree);
     }
   } else if (pTree->bFactor <= -2) {
     if (pTree->pL == NULL) {
       exit(1);
     }
     if (pTree->pL->bFactor <= 0) {
-      return avlDriverRotationR(pTree);
+      return avlTownRotationR(pTree);
     } else {
-      return avlDriverRotationLR(pTree);
+      return avlTownRotationLR(pTree);
     }
   }
   return pTree;
 }
 
 
-AvlDriver *avlDriverRotationL(AvlDriver *pTree) {
+AvlTown *avlTownRotationL(AvlTown *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
-  AvlDriver *Pivot = pTree->pR;
+  AvlTown *Pivot = pTree->pR;
   pTree->pR = Pivot->pL;
   Pivot->pL = pTree;
 
@@ -234,11 +219,11 @@ AvlDriver *avlDriverRotationL(AvlDriver *pTree) {
 }
 
 
-AvlDriver *avlDriverRotationR(AvlDriver *pTree) {
+AvlTown *avlTownRotationR(AvlTown *pTree) {
   if (pTree == NULL || pTree->pL == NULL) {
     return 0;
   }
-  AvlDriver *Pivot = pTree->pL;
+  AvlTown *Pivot = pTree->pL;
   pTree->pL = Pivot->pR;
   Pivot->pR = pTree;
 
@@ -251,29 +236,29 @@ AvlDriver *avlDriverRotationR(AvlDriver *pTree) {
 }
 
 
-AvlDriver *avlDriverRotationRL(AvlDriver *pTree) {
+AvlTown *avlTownRotationRL(AvlTown *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pR = avlDriverRotationR(pTree->pR);
-  return avlDriverRotationL(pTree);
+  pTree->pR = avlTownRotationR(pTree->pR);
+  return avlTownRotationL(pTree);
 }
 
 
-AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
+AvlTown *avlTownRotationLR(AvlTown *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pL = avlDriverRotationL(pTree->pL);
-  return avlDriverRotationR(pTree);
+  pTree->pL = avlTownRotationL(pTree->pL);
+  return avlTownRotationR(pTree);
 }
 
 
-void infixe(AvlDriver *pTree){
+void inorderTown(AvlTown *pTree){
   if(!checkPtr(pTree)){
-    infixe(pTree->pL);
-    printf("  %s\n",pTree->name);
-    infixe(pTree->pR);
+    inorderTown(pTree->pL);
+    printf("name: %s, passes: %i\n",pTree->name, pTree->nPass);
+    inorderTown(pTree->pR);
   }
 }
 

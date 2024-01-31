@@ -1,4 +1,5 @@
 #include "process.h"
+#include "AVL/AVL_Driver.h"
 #include "FIFO.h"
 
 
@@ -94,6 +95,158 @@ int readLine(FILE* fFile, DataLine* pLine){
   return (string[0] != EOF); // Part of a little complicated way to know when we trully hit the EOF
 }
 
+
+void T_Init(FILE* fData){
+  if (fData == NULL) {
+    exit(122);
+  }
+  DataLine* pLine = init_ReadLine(fData);
+  int *h = 0;
+  AvlTown* pTown = NULL;
+  AvlTown* pNew = malloc(sizeof(AvlTown));
+  if (checkPtr(pNew)) exit (1);
+
+  // 
+  // PASS 1 : FILL THE AVL
+  //
+  while (readLine(fData, pLine)) {
+    // read the current line
+    char* townName = malloc(sizeof(char)*50);
+    if (checkPtr(townName)) exit (220);
+    townName = strcpy(townName, pLine->town_B);
+    AvlTown* pNew = NULL;
+
+    // check if the town is logged
+    AvlTown* pTemp = isInAvlTown(pTown, townName);
+    if (pTown == NULL) {
+      // case 1 : the AVL isn't initialized
+      pTown = createAvlTown(townName);
+      pTown->nPass++;
+      if (pLine->step_ID == 1) pTown->nFirst++;
+    } else if (pTemp == NULL) {
+      // case 2 : the town isn't logged
+      pTown = addAvlTown(pTown, townName);
+      pNew = isInAvlTown(pTown, townName);
+      pNew->nPass++;
+      if (pLine->step_ID == 1) pNew->nFirst++;
+    } else {
+      // case 3 : the town was logged, simply append
+      pTemp->nPass++;
+      if (pLine->step_ID == 1) pTemp->nFirst++;
+    }
+  }
+  T_Process(pTown);
+}
+
+
+void T_Process(AvlTown* pTown) {
+  if (pTown != NULL) {
+    T_Process(pTown->pL);
+    printf("%s, %i, %i\n", pTown->name, pTown->nPass, pTown->nFirst);
+    T_Process(pTown->pR);
+  }
+}
+
+
+void T2_Init(FILE* fData){
+  if (fData == NULL) {
+    exit(122);
+  }
+  DataLine* pLine = init_ReadLine(fData);
+  int *h = 0;
+  AvlTown* pTown = NULL;
+  AvlTown* pNew = malloc(sizeof(AvlTown));
+  if (checkPtr(pNew)) exit (1);
+
+  // 
+  // PASS 1 : FILL THE AVL
+  //
+  while (readLine(fData, pLine)) {
+    // read the current line
+    char* townName = malloc(sizeof(char)*50);
+    if (checkPtr(townName)) exit (220);
+    townName = strcpy(townName, pLine->town_B);
+    AvlTown* pNew = NULL;
+
+    // check if the town is logged
+    AvlTown* pTemp = isInAvlTown(pTown, townName);
+    if (pTown == NULL) {
+      // case 1 : the AVL isn't initialized
+      pTown = createAvlTown(townName);
+      pTown->nPass++;
+      char* driverName = malloc(sizeof(char)*50);
+      if (checkPtr(driverName)) exit (200);
+      driverName = strcpy(driverName, pLine->name);
+      pTown->pDrivers = createAvlDriver(driverName);
+    } else if (pTemp == NULL) {
+      // case 2 : the town isn't logged
+      pTown = addAvlTown(pTown, townName);
+      pNew = isInAvlTown(pTown, townName);
+      pNew->nPass++;
+      char* driverName = malloc(sizeof(char)*50);
+      if (checkPtr(driverName)) exit (200);
+      driverName = strcpy(driverName, pLine->name);
+      pNew->pDrivers = createAvlDriver(driverName);
+    } else {
+      // case 3 : the town was logged, simply append
+      pTemp->nPass++;
+      char* driverName = malloc(sizeof(char)*50);
+      if (checkPtr(driverName)) exit (200);
+      driverName = strcpy(driverName, pLine->name);
+      pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
+    }
+
+
+    // If on the first step of a route, also log the starting town
+    if (pLine->step_ID == 1) {
+      // read the current line
+      char* townName = malloc(sizeof(char)*50);
+      if (checkPtr(townName)) exit (220);
+      townName = strcpy(townName, pLine->town_A);
+      AvlTown* pNew = NULL;
+
+      // check if the town is logged
+      AvlTown* pTemp = isInAvlTown(pTown, townName);
+      if (pTown == NULL) {
+        // case 1 : the AVL isn't initialized
+        pTown = createAvlTown(townName);
+        pTown->nPass++;
+        char* driverName = malloc(sizeof(char)*50);
+        if (checkPtr(driverName)) exit (200);
+        driverName = strcpy(driverName, pLine->name);
+        pTown->pDrivers = createAvlDriver(driverName);
+      } else if (pTemp == NULL) {
+        // case 2 : the town isn't logged
+        pTown = addAvlTown(pTown, townName);
+        pNew = isInAvlTown(pTown, townName);
+        pNew->nPass++;
+        char* driverName = malloc(sizeof(char)*50);
+        if (checkPtr(driverName)) exit (200);
+        driverName = strcpy(driverName, pLine->name);
+        pNew->pDrivers = createAvlDriver(driverName);
+      } else {
+        // case 3 : the town was logged, simply append
+        pTemp->nPass++;
+        char* driverName = malloc(sizeof(char)*50);
+        if (checkPtr(driverName)) exit (200);
+        driverName = strcpy(driverName, pLine->name);
+        pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
+      }
+    }
+  }
+  T2_Process(pTown);
+}
+
+
+void T2_Process(AvlTown* pTown) {
+  if (pTown != NULL) {
+    T2_Process(pTown->pL);
+    printf("%s, %i, %i\n", pTown->name, pTown->nPass, avlDriverNodeCount(pTown->pDrivers));
+    T2_Process(pTown->pR);
+  }
+}
+
+
 // Holy crap finally some good code
 void S_Init(FILE* fData){
   if (fData == NULL) {
@@ -108,7 +261,6 @@ void S_Init(FILE* fData){
   // 
   // PASS 1 : FILL THE AVL
   //
-  int DEBUG=0;
   while (readLine(fData, pLine)) {
     // read the current line
     long routeID = pLine->route_ID;

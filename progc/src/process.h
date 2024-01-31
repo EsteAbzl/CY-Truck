@@ -13,7 +13,7 @@
 
 #include "AVL/AVL_Common.h"
 #include "AVL/AVL_Route.h"
-
+#include "AVL/AVL_Town.h"
 
 
 
@@ -32,7 +32,10 @@ DataLine* init_ReadLine(FILE* fFile);
 int readLine(FILE* fFile, DataLine* pLine);
 // Return 0 if the end of the file is reached
 // and 1 if not
-
+void T_Init(FILE* fData);
+void T_Process(AvlTown* pTown);
+void T2_Init(FILE* fData);
+void T2_Process(AvlTown* pTown);
 void S_Init(FILE* fData);
 void S_Process(AvlRoute* pRoute);
 
