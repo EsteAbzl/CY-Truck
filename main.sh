@@ -59,8 +59,8 @@ FLAG_s=0x10000
 
 
 # Create directories. -v option print the creation of the folders
-mkdir -v temp
-mkdir -v images
+mkdir -v -p temp
+mkdir -v -p images
 echo ---
 
 # Compile C code in the "progc" directory
@@ -78,13 +78,16 @@ echo ---
 for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
 	option=${!i}
   UseShellInstead=0 # Set to 1 if we use Bash process instead of C process
+  oldActiveFlags=$activeFlags
 
-  # Activating the Flags for the curent option
+  echo
+  # Activating the Flags for the current option
 	case $option in
     '-d1')
       if ! (( $activeFlags & $FLAG_d1)) ; then
         activeFlags=$(( activeFlags + FLAG_d1 ))
 
+        echo "> Starting $option process.."
         bash progc/d1.sh $data
         #exitNumber=$?
         UseShellInstead=1
@@ -94,6 +97,7 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
       if ! (( $activeFlags & $FLAG_d2)) ; then
         activeFlags=$(( activeFlags + FLAG_d2 ))
 
+        echo "> Starting $option process.."
         bash progc/d2.sh $data
         #exitNumber=$?
         UseShellInstead=1
@@ -103,6 +107,7 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
       if ! (( $activeFlags & $FLAG_l)) ; then
         activeFlags=$(( activeFlags + FLAG_l ))
 
+        echo "> Starting $option process.."
         bash progc/l.sh $data
         #exitNumber=$?
         UseShellInstead=1
@@ -127,10 +132,11 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
 
   # If the Flags are uptaded:
   if (( $oldActiveFlags != $activeFlags)) ; then
-
+     
     if (( ! $UseShellInstead )) ; then
       # We give the curent option to the process
-      ./progc/bin/cy-trucks.exe $data $option > OUTPUT.TXT
+      echo "> Doing $option process in C.."
+      time ./progc/bin/cy-trucks.exe $data $option > OUTPUT.TXT
       exitNumber=$?
     fi
 
@@ -138,9 +144,10 @@ for(( i=2 ; i<=$# && ! (( $activeFlags == 0x11111 )) ; i++)) ; do
       echo
       echo "$0: The process for $option didn't work as expected and ended with: $exitNumber"
     fi
+
+    echo
+    echo "$option done"
   fi
-  
-  oldActiveFlags=$activeFlags
   
 done
 echo ---
