@@ -8,25 +8,25 @@
 .SH OPTIONS
 	-d1
 
-		get the list all the driver with the number of route they have driven. From that list, it only show the 10 driver with the biggest path number in reverse order
+		This option get the list of all the driver with the number of route they have driven. From that list, it will only sohw the 10 driver with the most route (placed from the most route number to the least) in a graphic with the route number on the x-axis the full driver name on the y-axis.
 
 	-d2
 
-		get the total distance (sum each step the drove) of each driver. Only show the 10 driver with biggest total distance in reverse order.
+		This option get the total distance (sum each step the drove) of each driver. From that list, it will only show the 10 driver with biggest total distance (placed from the biggest to the lowest) in a graphic with total distance on the x-axis the full driver name on the y-axis.
 
 	-l
 
-		get the total distance of each route (sum each step the drove for one route). Only show the 10 driver with biggest total distance in reverse order. ordered by the id number.
+		This option get the total distance of each route (sum each step the driver made for one route). From that list, it will only show the 10 route with the biggest total distance (sorted by id number) in a graphic with the route id on the x-axis and the distance on the y-axis.
 
 	-t
 
-		to finish.
+		This option get all the steps from all route and all their informations. From that list, it will only show the 10 most crossed city (ordered by the Alphabetical character) in a graphic with the cities on the x-axis and the route number on the y-axis.
 
 	-s
 
-		to finish.
+		This option get all the steps from all route and all their informations. From that list, it will display a graphic with the id of the route on the x-axis and the distance on the y-axis.
 		
 .SH BUGS
 	No known bugs (for now :) ).
 .SH AUTHOR
-	Alouhette (evan.lippens@etu.cyu.fr)
+	Groupe projet mi2 Evan Waally Esteban ( pls contact evan.lippens@etu.cyu.fr if u got any question or suggestion about the man )

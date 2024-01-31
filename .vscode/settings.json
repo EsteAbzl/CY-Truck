@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "process.h": "c",
-        "avl_driver.h": "c"
-    }
-}
