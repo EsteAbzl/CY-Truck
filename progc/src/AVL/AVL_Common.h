@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../FIFO.h"
-#include "AVL_Int.h"
 #include "AVL_Driver.h"
 
 #ifndef MIN

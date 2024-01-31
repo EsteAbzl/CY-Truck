@@ -25,9 +25,9 @@ AvlRoute* createAvlRoute(long id);
 // Out : Pointer to modified Avl
 // Adds in a new node to a BST. If the BST is an Avl,
 // it will remain balanced.
-AvlRoute* addAvlRoute(AvlRoute *pTree, long id, AvlRoute* pNew);
+AvlRoute* addAvlRoute(AvlRoute *pTree, long id);
 // Private ! Do not use !
-AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h, AvlRoute* pNew);
+AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h);
 
 
 // In : Pointer to Avl, String
@@ -92,6 +92,6 @@ AvlRoute *balanceAvlRoute(AvlRoute *pTree);
 
 // In : Pointer to Avl to balance
 // print val of the avl in infixe order
-void infixeRoute(AvlRoute *pTree);
+void inorderRoute(AvlRoute *pTree);
 
 #endif

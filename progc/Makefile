@@ -1,6 +1,6 @@
 # Vars
 CC := gcc
-override CFLAGS += -Wno-everything -lm -O0
+override CFLAGS += -Wno-everything -lm -O2
 SOURCEDIR := ./src
 BINDIR := ./bin
 FILES := $(shell find $(SOURCEDIR) -name '*.c')

@@ -18,7 +18,9 @@ int main(int argc, char *argv[]) {
   //  lire et ecrire a la fin (si fichier existe pas il sera ajouter) ,r+ lire
   //  écrire (fichier DOIT etre créer), w+ pareil que r+ mais écrase tout
   // AvlDriver* Result = D2(fData);
-  S_Init(fData);
+  //S_Init(fData);
+  //T2_Init(fData);
+  T_Init(fData);
   // Temporary code, show how the arguments work --
   //printf("There is %d argument to %s:", argc - 1, argv[0]);
   //for (int i = 1; i < argc; i++) {

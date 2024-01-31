@@ -1,6 +1,6 @@
 #!/bin/bash
 
-time cat data.csv | sed -e 1d | cut -f5,6 -d";" | awk -F';' '{dist[$2] += $1} END{for (name in dist) printf "%s %.6f\n", name, dist[name]}' | sort -nr -k3 | head -n10
+cat data.csv time | sed -e 1d | cut -f5,6 -d";" | awk -F';' '{dist[$2] += $1} END{for (name in dist) printf "%s %.6f\n", name, dist[name]}' | sort -nr -k3 | head -n10
 
 # So, this definitely deserves an explaination. For most of these, see d1.sh. 
 # The preceding commands obviously return something of the form "DISTANCE;NAME"

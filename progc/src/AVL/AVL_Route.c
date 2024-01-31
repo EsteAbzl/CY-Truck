@@ -23,26 +23,25 @@ AvlRoute* createAvlRoute(long id) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlRoute* addAvlRoute(AvlRoute *pTree, long id, AvlRoute* pNew) {
+AvlRoute* addAvlRoute(AvlRoute *pTree, long id) {
   static int h = 0;
-  return _addAvlRoute(pTree, id, &h, pNew);
+  return _addAvlRoute(pTree, id, &h);
 }
 
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h, AvlRoute* pNew) {
+AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
-    pNew = createAvlRoute(id);
-    return pNew;
+    return createAvlRoute(id);
   } else if (id > pTree->id) {
-    pTree->pR = _addAvlRoute(pTree->pR, id, h, pNew);
+    pTree->pR = _addAvlRoute(pTree->pR, id, h);
   }else if (id < pTree->id) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlRoute(pTree->pL, id, h, pNew);
+    pTree->pL = _addAvlRoute(pTree->pL, id, h);
     // balance factor needs to be inverted
     *h = -*h;
   } else {
@@ -129,10 +128,7 @@ AvlRoute* isInAvlRoute(AvlRoute *pTree, long id){
   AvlRoute* ret = NULL;
   if (pTree == NULL) {
     // Return NULL if not found
-    // printf("isinavl null\n");
     ret = NULL;
-    // int i = strcmp("test", "test");
-    // printf("strcmp retourne %i", i);
   } else if (id < pTree->id) {
     // Search value lower than current value, go left
     ret = isInAvlRoute(pTree->pL, id);
@@ -257,11 +253,11 @@ AvlRoute *avlRouteRotationLR(AvlRoute *pTree) {
 }
 
 
-void infixeRoute(AvlRoute *pTree){
+void inorderRoute(AvlRoute *pTree){
   if(!checkPtr(pTree)){
-    infixeRoute(pTree->pL);
-    printf("%ld", pTree->id);
-    infixeRoute(pTree->pR);
+    inorderRoute(pTree->pL);
+    printf("%ld, nSteps: %i, distTot: %f\n", pTree->id, pTree->nSteps, pTree->distTot);
+    inorderRoute(pTree->pR);
   }
 }
 
