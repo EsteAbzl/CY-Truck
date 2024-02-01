@@ -10,12 +10,13 @@ AvlInt* init_AvlInt(){
   return pNew;
 }
 
-NodeAvlInt* create_NodeAvlInt(int value, Route* pRoute) {
-    NodeAvlInt *pNew = malloc(sizeof(NodeAvlInt));
+NodeAvlInt* create_NodeAvlInt(int id, Route* pRoute){
+  NodeAvlInt *pNew = malloc(sizeof(NodeAvlInt));
   if (CHECK_PTR(pNew)) exit(1);
 
-  pNew->value = value;
-  pNew->pRoute = pRoute; // Can be set to 
+  pNew->value = id;
+
+  pNew->pRoute = pRoute; // Can be set to NULL
 
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -24,42 +25,71 @@ NodeAvlInt* create_NodeAvlInt(int value, Route* pRoute) {
   return pNew;
 }
 
-// First function gets called as our main BST adding function.
-// This is necessary to set a default value for the balance factor h,
-// the alternative being a f_args function, which would be way too
-// much effort for the same outcome.
-AvlRoute* addAvlRoute(AvlRoute *pTree, int id) {
-  static int h = 0;
-  return _addAvlRoute(pTree, id, &h);
+void free_SingularNodeAvlInt(NodeAvlInt* pTree){
+  if(pTree){
+    if(pTree->pRoute){
+      free(pTree->pRoute);
+    }
+
+    free(pTree);
+  }
 }
 
+void free_NodeAvlInt(NodeAvlInt* pTree){
+  if(pTree){
+    if(pTree->pRoute){
+      free(pTree->pRoute);
+    }
+
+    free_NodeAvlInt(pTree->pL);
+    free_NodeAvlInt(pTree->pR);
+
+    free(pTree);
+  }
+}
+
+void free_AvlInt(AvlInt* pAvl){
+  if(pAvl){
+    free_NodeAvlInt(pAvl->pRoot);
+
+    free(pAvl);
+  }
+}
+
+
+
+void add_AvlInt(AvlInt *pAvl, Route* pRoute, int id){
+  pAvl->pRoot = add_NodeAvlInt(pAvl->pRoot, id, pRoute, &pAvl->h);
+}
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h) {
-  if (pTree == NULL) {
-    // If in a leaf, add the node there
+NodeAvlInt* add_NodeAvlInt(NodeAvlInt *pTree, int id, Route* pRoute, int *h) {
+  if(pTree == NULL){                // If in a leaf, add the node there
     *h = 1;
-    return create_NodeAvlInt(id);
-  } else if (id > pTree->id) {
-    pTree->pR = _addAvlRoute(pTree->pR, id, h);
-  }else if (id < pTree->id) {
+    return create_NodeAvlInt(id, pRoute);
+  } 
+  else if(id > pTree->value){
+    pTree->pR = add_NodeAvlInt(pTree->pR, id, pRoute, h);
+  }
+  else if(id < pTree->value){
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlRoute(pTree->pL, id, h);
+    pTree->pL = add_NodeAvlInt(pTree->pL, id, pRoute, h);
     // balance factor needs to be inverted
     *h = -*h;
-  } else {
+  } 
+  else{
     // If the new node's value is equal, abort the insertion,
     // This prevent duplicate entries.
     *h = 0;
     return pTree;
   }
-  // printf("DEBUG 500\n");
-  if (*h != 0) {
+
+  if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
     pTree = balanceAvlRoute(pTree);
-    if (pTree->bFactor == 0) {
+    if(pTree->bFactor == 0){
       *h = 0;
     } else {
       *h = 1;
@@ -68,149 +98,133 @@ AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h) {
   return pTree;
 }
 
-/*
-// Same Hack
-// When I wrote this code, only me and God knew why we had to do
-  // it that way. Now, days later, only God knows.
-// May Richie have mercy on our souls.
-AvlRoute* delAvlRoute(AvlRoute *pTree, char *str) {
-  static int h = 0;
-  return _delAvlRoute(pTree, str, &h);
-}
-*/
 
-AvlRoute* delAvlRoute(AvlRoute *pTree, int* id, int *h) {
-  // Element not in tree
-  if (pTree == NULL) {
+
+void del_AvlInt(AvlInt *pAvl, int id){
+  pAvl->pRoot = del_NodeAvlInt(pAvl->pRoot, &id, &pAvl->h);
+}
+
+NodeAvlInt* del_NodeAvlInt(NodeAvlInt *pTree, int *id, int *h){
+  if(pTree == NULL){   // Element not in tree
     *h = 1;
     return pTree;
   }
-  // Recursively search through the BST
-  else if (*id > pTree->id) {
-    pTree->pR = delAvlRoute(pTree->pR, id, h);
-  } else if (*id < pTree->id) {
-    pTree->pL = delAvlRoute(pTree->pL, id, h);
+  else if(*id > pTree->value){   // Recursively search through the BST
+    pTree->pR = del_NodeAvlInt(pTree->pR, id, h);
+  } 
+  else if(*id < pTree->value){
+    pTree->pL = del_NodeAvlInt(pTree->pL, id, h);
     *h = -*h;
   }
+
   // Element found, replace as needed
-  else if (!checkLeftAvlRoute(pTree)){
-    AvlRoute *tmp;
+  if(!(pTree->pL)){
+    NodeAvlInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
-    free(tmp);
+    free_SingularNodeAvlInt(tmp);
     *h = -1;
   }
   else {
-    pTree->pL = delAvlLargestLong(pTree->pL, id);
+    pTree->pL = del_AvlLargestInt(pTree->pL, id);
   }
-  if (*h != 0) {
+
+  if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
     pTree = balanceAvlRoute(pTree);
-    if (pTree->bFactor == 0) {
+    if(pTree->bFactor == 0){
       *h = 0;
-    } else {
+    } 
+    else{
       *h = 1;
     }
   }
+
   return pTree;
 }
 
-
-AvlRoute* delAvlLargestLong(AvlRoute *pTree, int *id) {
-  AvlRoute *tmp;
-  if (checkRightAvlRoute(pTree)) {
-    delAvlLargestLong(pTree->pR, id);
-  } else {
-    *id = pTree->id;
+NodeAvlInt* del_AvlLargestInt(NodeAvlInt *pTree, int *id) {
+  NodeAvlInt *tmp;
+  if(checkRightAvlRoute(pTree)){
+    del_AvlLargestInt(pTree->pR, id);
+  } 
+  else{
+    *id = pTree->value;
     tmp = pTree;
     pTree = pTree->pL;
-    free(tmp);
+    free_SingularNodeAvlInt(tmp);
   }
+
   return pTree;
 }
 
-AvlRoute* isInAvlRoute(AvlRoute *pTree, int id){
-  AvlRoute* ret = NULL;
-  if (pTree == NULL) {
-    // Return NULL if not found
+
+NodeAvlInt* isInAvlInt(NodeAvlInt *pTree, int id){
+  NodeAvlInt* ret = NULL;
+  if(pTree == NULL){            // Return NULL if not found
     ret = NULL;
-  } else if (id < pTree->id) {
-    // Search value lower than current value, go left
+  } 
+  else if(id < pTree->value) {  // Search value lower than current value, go left
     ret = isInAvlRoute(pTree->pL, id);
-    // printf("isinavl go left\n");
-  } else if (id > pTree->id) {
-    // Search value higher than current value, go right
+  } 
+  else if (id > pTree->value) { // Search value higher than current value, go right
     ret = isInAvlRoute(pTree->pR, id);
-    // printf("isinavl go right\n");
-  } else {
-    // Return the current node if found
+  } 
+  else {                        // Return the current node if found
     ret = pTree;
-    // printf("isinavl found\n");
   }
   return ret;
 }
 
 
-int checkLeftAvlRoute(AvlRoute *ptr) {
+int checkLeftAvlInt(NodeAvlInt *ptr){
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
-
-int checkRightAvlRoute(AvlRoute *ptr) {
+int checkRightAvlInt(NodeAvlInt *ptr){
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
-int avlRouteHeight(AvlRoute *ptr) { // hauteur
-  int countL = 0, countR = 0;
-  if (ptr == NULL) {
-    return 0;
-  }
-  if (!checkLeftAvlRoute(ptr) && !checkRightAvlRoute(ptr)) {
-    return 1;
-  } else {
-    if (checkLeftAvlRoute(ptr)) {
-      countL = avlRouteHeight(ptr->pL);
-    }
-    if (checkRightAvlRoute(ptr)) {
-      countR = avlRouteHeight(ptr->pR);
-    }
-  }
-  return MAX(countL, countR) + 1;
-}
-
-
-AvlRoute *balanceAvlRoute(AvlRoute *pTree) {
-  if (pTree == NULL) {
+NodeAvlInt *balanceAvlInt(NodeAvlInt *pTree){
+  if(pTree == NULL){
     return pTree;
-  } else if (pTree->bFactor >= 2) {
-    if (pTree->pR == NULL) {
+  }
+  else if(pTree->bFactor >= 2){
+    if(pTree->pR == NULL){
       exit(1);
     }
-    if (pTree->pR->bFactor >= 0) {
-      return avlRouteRotationL(pTree);
-    } else {
-      return avlRouteRotationRL(pTree);
+
+    if(pTree->pR->bFactor >= 0){
+      return avlIntRotationL(pTree);
     }
-  } else if (pTree->bFactor <= -2) {
-    if (pTree->pL == NULL) {
+    else{
+      return avlIntRotationRL(pTree);
+    }
+  } 
+  else if(pTree->bFactor <= -2){
+    if(pTree->pL == NULL){
       exit(1);
     }
-    if (pTree->pL->bFactor <= 0) {
-      return avlRouteRotationR(pTree);
-    } else {
-      return avlRouteRotationLR(pTree);
+
+    if(pTree->pL->bFactor <= 0){
+      return avlIntRotationR(pTree);
+    }
+    else{
+      return avlIntRotationLR(pTree);
     }
   }
+
   return pTree;
 }
 
 
-AvlRoute *avlRouteRotationL(AvlRoute *pTree) {
-  if (pTree == NULL || pTree->pR == NULL) {
+NodeAvlInt *avlIntRotationL(NodeAvlInt *pTree){
+  if(!checkRightAvlInt(pTree)){
     return 0;
   }
-  AvlRoute *Pivot = pTree->pR;
+
+  NodeAvlInt *Pivot = pTree->pR;
   pTree->pR = Pivot->pL;
   Pivot->pL = pTree;
 
@@ -219,15 +233,16 @@ AvlRoute *avlRouteRotationL(AvlRoute *pTree) {
   pTree->bFactor = eq_Ptree - MAX(eq_Pivot, 0) - 1;
   Pivot->bFactor = MIN(eq_Ptree + eq_Pivot - 2, MIN(eq_Ptree - 2, eq_Pivot - 1));
   pTree = Pivot;
+
   return pTree;
 }
 
-
-AvlRoute *avlRouteRotationR(AvlRoute *pTree) {
-  if (pTree == NULL || pTree->pL == NULL) {
+NodeAvlInt *avlIntRotationR(NodeAvlInt *pTree){
+  if(!checkLeftAvlInt(pTree)){
     return 0;
   }
-  AvlRoute *Pivot = pTree->pL;
+
+  NodeAvlInt *Pivot = pTree->pL;
   pTree->pL = Pivot->pR;
   Pivot->pR = pTree;
 
@@ -236,32 +251,35 @@ AvlRoute *avlRouteRotationR(AvlRoute *pTree) {
   pTree->bFactor = eq_Ptree - MIN(eq_Pivot, 0) + 1;
   Pivot->bFactor = MAX(eq_Ptree + eq_Pivot + 2, MAX(eq_Ptree + 2, eq_Pivot + 1));
   pTree = Pivot;
+
   return pTree;
 }
 
-
-AvlRoute *avlRouteRotationRL(AvlRoute *pTree) {
-  if (pTree == NULL) {
+NodeAvlInt *avlIntRotationRL(NodeAvlInt *pTree){
+  if(CHECK_PTR(pTree)){
     return 0;
   }
-  pTree->pR = avlRouteRotationR(pTree->pR);
-  return avlRouteRotationL(pTree);
+
+  pTree->pR = avlIntRotationR(pTree->pR);
+  return avlIntRotationL(pTree);
+}
+
+NodeAvlInt *avlIntRotationLR(NodeAvlInt *pTree){
+  if(CHECK_PTR(pTree)){
+    return 0;
+  }
+
+  pTree->pL = avlIntRotationL(pTree->pL);
+  return avlIntRotationR(pTree);
 }
 
 
-AvlRoute *avlRouteRotationLR(AvlRoute *pTree) {
-  if (pTree == NULL) {
-    return 0;
-  }
-  pTree->pL = avlRouteRotationL(pTree->pL);
-  return avlRouteRotationR(pTree);
-}
-
-
-void inorderRoute(AvlRoute *pTree){
+void inorderInt(NodeAvlInt *pTree){
   if(!CHECK_PTR(pTree)){
-    inorderRoute(pTree->pL);
-    printf("%d, nSteps: %i, distTot: %f\n", pTree->id, pTree->nSteps, pTree->distTot);
-    inorderRoute(pTree->pR);
+    inorderInt(pTree->pL);
+    printf("%d, nSteps: %i, distTot: %f\n", pTree->pRoute->id, 
+                                            pTree->pRoute->nSteps,
+                                            pTree->pRoute->distTot);
+    inorderInt(pTree->pR);
   }
 }

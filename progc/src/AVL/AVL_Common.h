@@ -6,9 +6,6 @@
     #include <stdlib.h>
     #include <string.h>
 
-    #include "AVL_Char.h"
-    #include "AVL_Int.h"
-
 // MACRO
     #ifndef MIN
     #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -30,15 +27,43 @@
 
 // STRUCTURES
     // Defined in AVL_Int.h and AVL_Char.h
-    struct _AvlInt;
-    struct _AvlChar;
+    typedef struct _NodeBasicAvlInt{
+        int value;           // Sort value.
+
+        int bFactor;            // Balance factor
+        struct _NodeBasicAvlInt* pL;
+        struct _NodeBasicAvlInt* pR;
+    }NodeBasicAvlInt;
+
+    typedef struct _BasicAvlInt{
+        int h;
+
+        NodeBasicAvlInt* pRoot;
+    }BasicAvlInt;
+
+    /* This structure isn't needed
+    typedef struct _NodeBasicAvlChar{
+        char* value;           // Sort value.
+
+        int bFactor;            // Balance factor
+        struct _NodeBasicAvlChar* pL;
+        struct _NodeBasicAvlChar* pR;
+    }NodeBasicAvlChar;
+
+    typedef struct _BasicAvlChar{
+        int h;
+
+        NodeBasicAvlChar* pRoot;
+    }BasicAvlChar;
+    */
+
 
     typedef struct Driver{
         char* name;
 
         // -d1
         int nPath;              // Number of routes stored in AvlPath
-        struct _AvlInt* AvlPath;// Record all the path readed
+        BasicAvlInt* AvlPath;// Record all the path readed
         
         // -d2
         float totalDist;        // Explicit
@@ -51,7 +76,7 @@
         int nStartingTown;      
         
         int nPath;                  // Number of routes stored in AvlPath
-        struct _AvlInt* AvlPath;    // Record all the path readed
+        BasicAvlInt* AvlPath;    // Record all the path readed
 
     }Town;
 
@@ -69,11 +94,14 @@
     }Route;
 
 // PROTOTYPES
+    BasicAvlInt* init_BasicAvlInt();
+
+
     Driver* create_Driver();
     void free_Driver(Driver* pDriver);
 
     Town* create_Town();
     void free_Town(Town* pTown);
 
-    Route* create_Route();
+    Route* create_Route(int id, float dist);
 #endif

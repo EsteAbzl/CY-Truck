@@ -23,80 +23,51 @@
 //PROTOTYPES
 
     AvlInt* init_AvlInt();
-    
-    /* pRoute: 
-    Can be set to NULL or the result of 'create_Route()' in AVL_Common.h*/
-    NodeAvlInt* create_NodeAvlInt(int value, Route* pRoute);
+    //use as follow:
+    //1) create_NodeAvlInt(id_route, create_Route(id_route, step_lenth));
+    //2) create_NodeAvlInt(id_route, NULL);
+    NodeAvlInt* create_NodeAvlInt(int id, Route* pRoute);
 
-    void free_AvlInt(AvlInt* pAvlInt);
+    void free_SingularNodeAvlInt(NodeAvlInt* pTree);
     void free_NodeAvlInt(NodeAvlInt* pTree);
+    void free_AvlInt(AvlInt* pAvlInt);
 
-    void add_AvlInt(AvlInt pAvlInt, int value);
-    NodeAvlInt add_NodeAvlInt(NodeAvlInt pTree, int value, int *h);
+    void add_AvlInt(AvlInt *pAvl, Route* pRoute, int id);
+    NodeAvlInt* add_NodeAvlInt(NodeAvlInt *pTree, int id, Route* pRoute, int *h);
 
-
-    // In : Pointer to Avl, String
-    // Out : Pointer to modified Avl
-    // Deletes the specified element from the tree.
-    //AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
-    // Private ! Do not use !
-    AvlRoute* delAvlRoute(AvlRoute *pTree, int *id, int *h);
-    AvlRoute* delAvlLargestLong(AvlRoute *pTree, int *id);
+    void del_AvlInt(AvlInt *pAvl, int id);
+    NodeAvlInt* del_NodeAvlInt(NodeAvlInt *pTree, int *id, int *h);
+    NodeAvlInt* del_AvlLargestInt(NodeAvlInt *pTree, int *id);
 
 
     // In : Pointer to Avl, String
     // Out : Pointer to found node or NULL if not found
-    AvlRoute* isInAvlRoute(AvlRoute *pTree, int id);
+    NodeAvlInt* isInAvlInt(NodeAvlInt *pTree, int id)
 
 
     // In : Pointer to BST
     // Out : int (read as bool)
     // Checks if left child exists
-    int checkLeftAvlRoute(AvlRoute *ptr);
-
+    int checkLeftAvlInt(NodeAvlInt *ptr);
 
     // In : Pointer to BST
     // Out : int (read as bool)
     // Checks if right child exists
-    int checkRightAvlRoute(AvlRoute *ptr);
-
-
-    // In : Pointer to BST
-    // Out : int
-    // Returns height of a BST
-    int avlRouteHeight(AvlRoute *ptr);
-
-
-    // In : Pointer to root of rotation
-    // Out : Modified root subtree
-    // Explicit
-    AvlRoute *avlRouteRotationL(AvlRoute *pTree);
-
-
-    // In : Pointer to root of rotation
-    // Out : Modified root subtree
-    // Explicit
-    AvlRoute *avlRouteRotationR(AvlRoute *pTree);
-
-    // In : Pointer to root of rotation
-    // Out : Modified root subtree
-    // Explicit
-    AvlRoute *avlRouteRotationRL(AvlRoute *pTree);
-
-
-    // In : Pointer to root of rotation
-    // Out : Modified root subtree
-    // Explicit
-    AvlRoute *avlRouteRotationLR(AvlRoute *pTree);
+    int checkRightAvlInt(NodeAvlInt *ptr);
 
 
     // In : Pointer to Avl to balance
     // Out : Pointer to modified Avl
     // Rebalances an Avl
-    AvlRoute *balanceAvlRoute(AvlRoute *pTree);
+    NodeAvlInt *balanceAvlInt(NodeAvlInt *pTree);
+
+    NodeAvlInt *avlIntRotationL(NodeAvlInt *pTree);
+    NodeAvlInt *avlIntRotationR(NodeAvlInt *pTree);
+    NodeAvlInt *avlIntRotationRL(NodeAvlInt *pTree);
+    NodeAvlInt *avlIntRotationLR(NodeAvlInt *pTree);
 
     // In : Pointer to Avl to balance
     // print val of the avl in infixe order
-    void inorderRoute(AvlRoute *pTree);
+    void inorderInt(NodeAvlInt *pTree);
 
 #endif
