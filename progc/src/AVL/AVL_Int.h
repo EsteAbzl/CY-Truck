@@ -1,5 +1,5 @@
-#ifndef _AVLROUTE_H
-#define _AVLROUTE_H
+#ifndef _AVLINT_H
+#define _AVLINT_H
 
 // INCLUDES
     #include "AVL_Common.h"
@@ -42,7 +42,7 @@
 
     // In : Pointer to Avl, String
     // Out : Pointer to found node or NULL if not found
-    NodeAvlInt* isInAvlInt(NodeAvlInt *pTree, int id)
+    NodeAvlInt* isInAvlInt(NodeAvlInt *pTree, int id);
 
 
     // In : Pointer to BST

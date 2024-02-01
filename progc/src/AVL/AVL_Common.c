@@ -1,35 +1,31 @@
 #include "AVL_Common.h"
 
-BasicAvlInt* init_BasicAvlInt(){
-  BasicAvlInt *pNew = malloc(sizeof(BasicAvlInt));
-  if (CHECK_PTR(pNew)) exit(1);
 
-  pNew->h = 0;
-  pNew->pRoot = NULL;
-
-  return pNew;
-}
-
- 
-Driver* create_Driver(char* name, int bool_AvlPath, int id_Path){
+Driver* create_Driver(char* name, int path, float dist){
     if(CHECK_PTR(name)) exit(4);
 
     Driver* pNew = malloc(sizeof(Driver));
     if(CHECK_PTR(pNew)) exit(5);
 
-    pNew->name = name;
-    pNew->nPath = 1;
-    if(bool_AvlPath){
-        pNew->AvlPath = init_AvlInt();
-        add_AvlInt(pNew->AvlPath, id_Path);
-    }
-    else{
-        pNew->AvlPath = NULL;
-    }
+    char* pNewName = malloc(sizeof(char) * strlen(name));
+    if(CHECK_PTR(pNewName)) exit(5);
+    pNew->name = pNewName;
 
+    pNew->nPath = 1;
+    pNew->AvlPath = init_AvlBasicInt();
+    add_AvlBasicInt(pNew->AvlPath, path);
+    
+    pNew->totalDist = dist;
 }
 
-void free_Driver(Driver* pDriver);
+void free_Driver(Driver* pDriver){
+    if(pDriver){
+        if(pDriver->name) free(pDriver->name);
+        free_AvlBasicInt(pDriver->AvlPath);
+
+        free(pDriver);
+    }
+}
 
 Town* create_Town();
 void free_Town(Town* pTown);

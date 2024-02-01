@@ -27,19 +27,19 @@
 
 // STRUCTURES
     // Defined in AVL_Int.h and AVL_Char.h
-    typedef struct _NodeBasicAvlInt{
+    typedef struct _NodeAvlBasicInt{
         int value;           // Sort value.
 
         int bFactor;            // Balance factor
-        struct _NodeBasicAvlInt* pL;
-        struct _NodeBasicAvlInt* pR;
-    }NodeBasicAvlInt;
+        struct _NodeAvlBasicInt* pL;
+        struct _NodeAvlBasicInt* pR;
+    }NodeAvlBasicInt;
 
-    typedef struct _BasicAvlInt{
+    typedef struct _AvlInt{
         int h;
 
-        NodeBasicAvlInt* pRoot;
-    }BasicAvlInt;
+        NodeAvlBasicInt* pRoot;
+    }AvlBasicInt;
 
     /* This structure isn't needed
     typedef struct _NodeBasicAvlChar{
@@ -63,7 +63,7 @@
 
         // -d1
         int nPath;              // Number of routes stored in AvlPath
-        BasicAvlInt* AvlPath;// Record all the path readed
+        AvlBasicInt* AvlPath;// Record all the path readed
         
         // -d2
         float totalDist;        // Explicit
@@ -76,7 +76,7 @@
         int nStartingTown;      
         
         int nPath;                  // Number of routes stored in AvlPath
-        BasicAvlInt* AvlPath;    // Record all the path readed
+        AvlBasicInt* AvlPath;    // Record all the path readed
 
     }Town;
 
@@ -94,9 +94,6 @@
     }Route;
 
 // PROTOTYPES
-    BasicAvlInt* init_BasicAvlInt();
-
-
     Driver* create_Driver();
     void free_Driver(Driver* pDriver);
 
