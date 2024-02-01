@@ -3,15 +3,14 @@
 
 // INCLUDES
     #include "AVL_Common.h"
-    
+
 // STRUCTURES
     // Route Avl node
     typedef struct _AvlRoute {
       struct _AvlRoute *pL;
       struct _AvlRoute *pR;
-      long id;           // We use a long as our sort value.
-                              // This makes no sense, but the guy that coded
-                              // ReadLine refused to make route IDs into ints.  \r ^^'
+      int id;           // Sort value.
+      
       int bFactor;            // Balance factor
       float distTot;          // Total Distance
       float distMin;          // I sincerely hope that these are explicit enough.
@@ -23,16 +22,16 @@
     // In : string
     // Out : AvlDriver
     // Creates a new initialized node from a string
-    AvlRoute* createAvlRoute(long id);
+    AvlRoute* createAvlRoute(int id);
 
 
     // In : Pointer to Avl, String
     // Out : Pointer to modified Avl
     // Adds in a new node to a BST. If the BST is an Avl,
     // it will remain balanced.
-    AvlRoute* addAvlRoute(AvlRoute *pTree, long id);
+    AvlRoute* addAvlRoute(AvlRoute *pTree, int id);
     // Private ! Do not use !
-    AvlRoute* _addAvlRoute(AvlRoute *pTree, long id, int *h);
+    AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h);
 
 
     // In : Pointer to Avl, String
@@ -40,13 +39,13 @@
     // Deletes the specified element from the tree.
     //AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
     // Private ! Do not use !
-    AvlRoute* delAvlRoute(AvlRoute *pTree, long *id, int *h);
-    AvlRoute* delAvlLargestLong(AvlRoute *pTree, long *id);
+    AvlRoute* delAvlRoute(AvlRoute *pTree, int *id, int *h);
+    AvlRoute* delAvlLargestLong(AvlRoute *pTree, int *id);
 
 
     // In : Pointer to Avl, String
     // Out : Pointer to found node or NULL if not found
-    AvlRoute* isInAvlRoute(AvlRoute *pTree, long id);
+    AvlRoute* isInAvlRoute(AvlRoute *pTree, int id);
 
 
     // In : Pointer to BST

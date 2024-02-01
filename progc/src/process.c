@@ -53,7 +53,7 @@ int readLine(FILE* fFile, DataLine* pLine){
     
     switch (column) {
     case ROUTE_ID:
-        pLine->route_ID = atol(string);
+        pLine->route_ID = atoi(string);
         break;
     case STEP_ID:
         pLine->step_ID = atoi(string);
@@ -394,7 +394,7 @@ void S_Init(FILE* fData){
 void S_Process(AvlRoute* pRoute) {
   if (pRoute != NULL) {
     S_Process(pRoute->pL);
-    printf("%ld:%f:%f:%f\n", pRoute->id, pRoute->distTot / pRoute->nSteps, pRoute->distMax, pRoute->distMin);
+    printf("%d:%f:%f:%f\n", pRoute->id, pRoute->distTot / pRoute->nSteps, pRoute->distMax, pRoute->distMin);
     S_Process(pRoute->pR);
   }
 }

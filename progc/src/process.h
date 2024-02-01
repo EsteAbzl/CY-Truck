@@ -25,7 +25,7 @@
 
 // STRUCTURES
     typedef struct{
-        long route_ID;
+        int route_ID;
         int step_ID;
         char town_A[COLUMN_SIZE];
         char town_B[COLUMN_SIZE];
