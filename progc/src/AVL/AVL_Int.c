@@ -1,19 +1,28 @@
-#include "AVL_Route.h"
+#include "AVL_Int.h"
 
-AvlRoute* createAvlRoute(int id) {
-  AvlRoute *pNew = malloc(sizeof(AvlRoute));
+AvlInt* init_AvlInt(){
+  AvlInt *pNew = malloc(sizeof(AvlInt));
   if (CHECK_PTR(pNew)) exit(1);
-  pNew->id = id;
-  pNew->bFactor = 0;
-  pNew->pL = NULL;
-  pNew->pR = NULL;
-  pNew->distTot = 0;
-  pNew->distMax = 0;
-  pNew->distMin = 0;
-  pNew->nSteps = 0;
+
+  pNew->h = 0;
+  pNew->pRoot = NULL;
+
   return pNew;
 }
 
+NodeAvlInt* create_NodeAvlInt(int value, Route* pRoute) {
+    NodeAvlInt *pNew = malloc(sizeof(NodeAvlInt));
+  if (CHECK_PTR(pNew)) exit(1);
+
+  pNew->value = value;
+  pNew->pRoute = pRoute; // Can be set to 
+
+  pNew->bFactor = 0;
+  pNew->pL = NULL;
+  pNew->pR = NULL;
+  
+  return pNew;
+}
 
 // First function gets called as our main BST adding function.
 // This is necessary to set a default value for the balance factor h,
@@ -32,7 +41,7 @@ AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
-    return createAvlRoute(id);
+    return create_NodeAvlInt(id);
   } else if (id > pTree->id) {
     pTree->pR = _addAvlRoute(pTree->pR, id, h);
   }else if (id < pTree->id) {

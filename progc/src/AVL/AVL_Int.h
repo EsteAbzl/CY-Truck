@@ -7,23 +7,26 @@
 // STRUCTURES
     typedef struct _NodeAvlInt{
         int value;           // Sort value.
-        // +any struct or value of use
+        Route* pRoute;
 
         int bFactor;            // Balance factor
-
         struct _NodeAvlInt* pL;
         struct _NodeAvlInt* pR;
     }NodeAvlInt;
 
-    typedef struct AvlInt{
+    typedef struct _AvlInt{
         int h;
 
-        NodeAvlInt pRoot;
+        NodeAvlInt* pRoot;
     }AvlInt;
 
 //PROTOTYPES
 
-    AvlInt init_AvlInt();
+    AvlInt* init_AvlInt();
+    
+    /* pRoute: 
+    Can be set to NULL or the result of 'create_Route()' in AVL_Common.h*/
+    NodeAvlInt* create_NodeAvlInt(int value, Route* pRoute);
 
     void free_AvlInt(AvlInt* pAvlInt);
     void free_NodeAvlInt(NodeAvlInt* pTree);
