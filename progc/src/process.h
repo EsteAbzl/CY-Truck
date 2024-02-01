@@ -11,6 +11,7 @@
     #include "AVL/AVL_Route.h"
     #include "AVL/AVL_Town.h"
     #include "AVL/AVL_Driver.h"
+    #include "AVL/AVL_TownSteps.h"
 
 // DEFINES
     #define ROUTE_ID 0
@@ -41,7 +42,8 @@
 
 
     void T_Init(FILE* fData);
-    void T_Process(AvlTown* pTown);
+    AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown);
+    AvlTown* T_Process2(AvlTownsteps* sortedpTown, AvlTown* targetpTown, int* extract);
 
     void T2_Init(FILE* fData);
     void T2_Process(AvlTown* pTown);

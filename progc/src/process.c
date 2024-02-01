@@ -1,4 +1,6 @@
 #include "process.h"
+#include "AVL/AVL_Town.h"
+#include "AVL/AVL_TownSteps.h"
 
 DataLine* init_ReadLine(FILE* fFile){
   if(fFile == NULL){
@@ -118,29 +120,125 @@ void T_Init(FILE* fData){
       // case 1 : the AVL isn't initialized
       pTown = createAvlTown(townName);
       pTown->nPass++;
-      if (pLine->step_ID == 1) pTown->nFirst++;
     } else if (pTemp == NULL) {
       // case 2 : the town isn't logged
       pTown = addAvlTown(pTown, townName);
       pNew = isInAvlTown(pTown, townName);
       pNew->nPass++;
-      if (pLine->step_ID == 1) pNew->nFirst++;
     } else {
       // case 3 : the town was logged, simply append
       pTemp->nPass++;
-      if (pLine->step_ID == 1) pTemp->nFirst++;
+    }
+    // This is awful. It's disgusting. it works, and it's optimized,
+    // but code-wise, it looks horrendous. We need to correctly log
+    // the first town of a step. Yes, I hate it too. Yes, it works.
+    if (pLine->step_ID == 1) { 
+      char* townName = malloc(sizeof(char)*50);
+      if (CHECK_PTR(townName)) exit (220);
+      townName = strcpy(townName, pLine->town_A);
+      AvlTown* pNew = NULL;
+
+      // check if the town is logged
+      AvlTown* pTemp = isInAvlTown(pTown, townName);
+      if (pTown == NULL) {
+        // case 1 : the AVL isn't initialized
+        pTown = createAvlTown(townName);
+        pTown->nPass++;
+        pTown->nFirst++;
+      } else if (pTemp == NULL) {
+        // case 2 : the town isn't logged
+        pTown = addAvlTown(pTown, townName);
+        pNew = isInAvlTown(pTown, townName);
+        pNew->nPass++;
+        pNew->nFirst++;
+      } else {
+        // case 3 : the town was logged, simply append
+        pTemp->nPass++;
+        pTemp->nFirst++;
+      }
     }
   }
-  T_Process(pTown);
+
+  //
+  // PASS 2 : Sort the data by the most visited towns
+  //
+  AvlTownsteps* sortedpTown = NULL;
+  sortedpTown = T_Process1(pTown, sortedpTown);
+  if (CHECK_PTR(sortedpTown)) exit (69);
+  //
+  // PASS 3 : Now, sort the ten most visited towns alphabetically.
+  //
+  int extract = 10;
+  AvlTown* top10pTown = NULL;
+  top10pTown = T_Process2(sortedpTown, top10pTown, &extract);
+  inorderTown(top10pTown);
 }
 
 
-void T_Process(AvlTown* pTown) {
-  if (pTown != NULL) {
-    T_Process(pTown->pL);
-    printf("%s, %i, %i\n", pTown->name, pTown->nPass, pTown->nFirst);
-    T_Process(pTown->pR);
+AvlTown* T_Process2(AvlTownsteps* pTown, AvlTown* targetpTown, int* extract) {
+  if (CHECK_PTR(extract) || CHECK_PTR(pTown)) {
+    return NULL;
   }
+  
+  if (!CHECK_PTR(pTown->pR)) targetpTown = T_Process2(pTown->pR, targetpTown, extract);
+
+
+  if (*extract == 0) return targetpTown;
+  if (CHECK_PTR(targetpTown)) {
+    char* townName = malloc(sizeof(char)*32);
+    if (CHECK_PTR(townName)) exit (200);
+    townName = strcpy(townName, pTown->name);
+    targetpTown = createAvlTown(townName);
+    targetpTown->nPass = pTown->nPass;
+    targetpTown->nFirst = pTown->nFirst;
+    *extract = *extract - 1;
+  } else {
+    AvlTown* pNew = NULL;
+    char* townName = malloc(sizeof(char)*32);
+    if (CHECK_PTR(townName)) exit (200);
+    townName = strcpy(townName, pTown->name);
+    targetpTown = addAvlTown(targetpTown, townName);
+    pNew = isInAvlTown(targetpTown, townName);
+    pNew->nPass = pTown->nPass;
+    pNew->nFirst = pTown->nFirst;
+    *extract = *extract - 1;
+  } 
+
+  if (!CHECK_PTR(pTown->pL)) targetpTown = T_Process2(pTown->pL, targetpTown, extract);
+  
+  return targetpTown;
+}
+
+
+AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown) {  
+  if (pTown != NULL) {
+    if (!CHECK_PTR(pTown->pL)) sortedpTown = T_Process1(pTown->pL, sortedpTown);
+    if (!CHECK_PTR(pTown->pR)) sortedpTown = T_Process1(pTown->pR, sortedpTown);
+    char* townName = malloc(sizeof(char)*32);
+    if (CHECK_PTR(townName)) exit (200);
+    townName = strcpy(townName, pTown->name);
+    AvlTownsteps* pNew = NULL;
+    if (CHECK_PTR(sortedpTown)) {
+      sortedpTown = createAvlTownsteps(pTown->nPass);
+      sortedpTown->nFirst = pTown->nFirst;
+      sortedpTown->name = townName;
+    } else {
+      sortedpTown = addAvlTownsteps(sortedpTown, pTown->nPass); 
+      pNew = isInAvlTownsteps(sortedpTown, pTown->nPass);
+      // THIS is the workaround for inserting equal nodes to the right.
+      // THIS COMPLETELY BREAKS IF WE GET THE SAME TOWN NAME TWICE IN
+      // PTOWN. However, if pTown ever has the same town in it twice,
+      // something has gone CATASTROPHICALLY wrong.
+      if (!CHECK_PTR(pNew->name) && strcmp(pNew->name, townName) != 0) {
+        while (!CHECK_PTR(pNew->name)) {
+          pNew = isInAvlTownsteps(pNew->pR, pTown->nPass);
+        }
+      }
+      pNew->nFirst = pTown->nFirst;
+      pNew->name = townName;
+    }
+  }
+  return sortedpTown;
 }
 
 
