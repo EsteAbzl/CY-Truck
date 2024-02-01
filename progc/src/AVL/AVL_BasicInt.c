@@ -1,7 +1,7 @@
-#include "AVL_Char.h"
+#include "AVL_BasicInt.h"
 
-AvlChar* init_AvlChar(){
-  AvlChar *pNew = malloc(sizeof(AvlChar));
+AvlBasicInt* init_AvlBasicInt(){
+  AvlBasicInt *pNew = malloc(sizeof(AvlBasicInt));
   if (CHECK_PTR(pNew)) exit(1);
 
   pNew->h = 0;
@@ -10,13 +10,11 @@ AvlChar* init_AvlChar(){
   return pNew;
 }
 
-NodeAvlChar* create_NodeAvlChar(int id, Route* pRoute){
-  NodeAvlChar *pNew = malloc(sizeof(NodeAvlChar));
-  if (CHECK_PTR(pNew)) exit(1);
+NodeAvlBasicInt* create_NodeAvlBasicInt(int id){
+  NodeAvlBasicInt *pNew = malloc(sizeof(NodeAvlBasicInt));
+  if(CHECK_PTR(pNew)) exit(1);
 
   pNew->value = id;
-
-  pNew->pRoute = pRoute; // Can be set to NULL
 
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -25,32 +23,24 @@ NodeAvlChar* create_NodeAvlChar(int id, Route* pRoute){
   return pNew;
 }
 
-void free_SingularNodeAvlChar(NodeAvlChar* pTree){
+void free_SingularNodeAvlBasicInt(NodeAvlBasicInt* pTree){
   if(pTree){
-    if(pTree->pRoute){
-      free(pTree->pRoute);
-    }
+    free(pTree);
+  }
+}
+
+void free_NodeAvlBasicInt(NodeAvlBasicInt* pTree){
+  if(pTree){
+    free_NodeAvlBasicInt(pTree->pL);
+    free_NodeAvlBasicInt(pTree->pR);
 
     free(pTree);
   }
 }
 
-void free_NodeAvlChar(NodeAvlChar* pTree){
-  if(pTree){
-    if(pTree->pRoute){
-      free(pTree->pRoute);
-    }
-
-    free_NodeAvlChar(pTree->pL);
-    free_NodeAvlChar(pTree->pR);
-
-    free(pTree);
-  }
-}
-
-void free_AvlChar(AvlChar* pAvl){
+void free_AvlBasicInt(AvlBasicInt* pAvl){
   if(pAvl){
-    free_NodeAvlChar(pAvl->pRoot);
+    free_NodeAvlBasicInt(pAvl->pRoot);
 
     free(pAvl);
   }
@@ -58,24 +48,21 @@ void free_AvlChar(AvlChar* pAvl){
 
 
 
-void add_AvlChar(AvlChar *pAvl, Route* pRoute, int id){
-  pAvl->pRoot = add_NodeAvlChar(pAvl->pRoot, id, pRoute, &pAvl->h);
+void add_AvlBasicInt(AvlBasicInt *pAvl, int id){
+  pAvl->pRoot = add_NodeAvlBasicInt(pAvl->pRoot, id, &pAvl->h);
 }
 
-// It's a bit hacky, but as they say...
-// https://www.youtube.com/watch?v=YPN0qhSyWy8
-
-NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, int id, Route* pRoute, int *h) {
+NodeAvlBasicInt* add_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int id, int *h) {
   if(pTree == NULL){                // If in a leaf, add the node there
     *h = 1;
-    return create_NodeAvlChar(id, pRoute);
+    return create_NodeAvlBasicInt(id);
   } 
   else if(id > pTree->value){
-    pTree->pR = add_NodeAvlChar(pTree->pR, id, pRoute, h);
+    pTree->pR = add_NodeAvlBasicInt(pTree->pR, id, h);
   }
   else if(id < pTree->value){
     // If the new node's value is lesser, check the left branch
-    pTree->pL = add_NodeAvlChar(pTree->pL, id, pRoute, h);
+    pTree->pL = add_NodeAvlBasicInt(pTree->pL, id, h);
     // balance factor needs to be inverted
     *h = -*h;
   } 
@@ -100,29 +87,29 @@ NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, int id, Route* pRoute, int *h) 
 
 
 
-void del_AvlChar(AvlChar *pAvl, int id){
-  pAvl->pRoot = del_NodeAvlChar(pAvl->pRoot, &id, &pAvl->h);
+void del_AvlBasicInt(AvlBasicInt *pAvl, int id){
+  pAvl->pRoot = del_NodeAvlBasicInt(pAvl->pRoot, &id, &pAvl->h);
 }
 
-NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, int *id, int *h){
+NodeAvlBasicInt* del_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int *id, int *h){
   if(pTree == NULL){   // Element not in tree
     *h = 1;
     return pTree;
   }
   else if(*id > pTree->value){   // Recursively search through the BST
-    pTree->pR = del_NodeAvlChar(pTree->pR, id, h);
+    pTree->pR = del_NodeAvlBasicInt(pTree->pR, id, h);
   } 
   else if(*id < pTree->value){
-    pTree->pL = del_NodeAvlChar(pTree->pL, id, h);
+    pTree->pL = del_NodeAvlBasicInt(pTree->pL, id, h);
     *h = -*h;
   }
 
   // Element found, replace as needed
   if(!(pTree->pL)){
-    NodeAvlChar *tmp;
+    NodeAvlBasicInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
-    free_SingularNodeAvlChar(tmp);
+    free_SingularNodeAvlBasicInt(tmp);
     *h = -1;
   }
   else {
@@ -143,8 +130,8 @@ NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, int *id, int *h){
   return pTree;
 }
 
-NodeAvlChar* del_AvlLargestInt(NodeAvlChar *pTree, int *id) {
-  NodeAvlChar *tmp;
+NodeAvlBasicInt* del_AvlLargestInt(NodeAvlBasicInt *pTree, int *id) {
+  NodeAvlBasicInt *tmp;
   if(checkRightAvlRoute(pTree)){
     del_AvlLargestInt(pTree->pR, id);
   } 
@@ -152,15 +139,15 @@ NodeAvlChar* del_AvlLargestInt(NodeAvlChar *pTree, int *id) {
     *id = pTree->value;
     tmp = pTree;
     pTree = pTree->pL;
-    free_SingularNodeAvlChar(tmp);
+    free_SingularNodeAvlBasicInt(tmp);
   }
 
   return pTree;
 }
 
 
-NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, int id){
-  NodeAvlChar* ret = NULL;
+NodeAvlBasicInt* isInAvlBasicInt(NodeAvlBasicInt *pTree, int id){
+  NodeAvlBasicInt* ret = NULL;
   if(pTree == NULL){            // Return NULL if not found
     ret = NULL;
   } 
@@ -177,16 +164,16 @@ NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, int id){
 }
 
 
-int checkLeftAvlChar(NodeAvlChar *ptr){
+int checkLeftAvlBasicInt(NodeAvlBasicInt *ptr){
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
-int checkRightAvlChar(NodeAvlChar *ptr){
+int checkRightAvlBasicInt(NodeAvlBasicInt *ptr){
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
-NodeAvlChar *balanceAvlChar(NodeAvlChar *pTree){
+NodeAvlBasicInt *balanceAvlBasicInt(NodeAvlBasicInt *pTree){
   if(pTree == NULL){
     return pTree;
   }
@@ -196,10 +183,10 @@ NodeAvlChar *balanceAvlChar(NodeAvlChar *pTree){
     }
 
     if(pTree->pR->bFactor >= 0){
-      return AvlCharRotationL(pTree);
+      return avlBasicIntRotationL(pTree);
     }
     else{
-      return AvlCharRotationRL(pTree);
+      return avlBasicIntRotationRL(pTree);
     }
   } 
   else if(pTree->bFactor <= -2){
@@ -208,10 +195,10 @@ NodeAvlChar *balanceAvlChar(NodeAvlChar *pTree){
     }
 
     if(pTree->pL->bFactor <= 0){
-      return AvlCharRotationR(pTree);
+      return avlBasicIntRotationR(pTree);
     }
     else{
-      return AvlCharRotationLR(pTree);
+      return avlBasicIntRotationLR(pTree);
     }
   }
 
@@ -219,12 +206,12 @@ NodeAvlChar *balanceAvlChar(NodeAvlChar *pTree){
 }
 
 
-NodeAvlChar *AvlCharRotationL(NodeAvlChar *pTree){
-  if(!checkRightAvlChar(pTree)){
+NodeAvlBasicInt *avlBasicIntRotationL(NodeAvlBasicInt *pTree){
+  if(!checkRightAvlBasicInt(pTree)){
     return 0;
   }
 
-  NodeAvlChar *Pivot = pTree->pR;
+  NodeAvlBasicInt *Pivot = pTree->pR;
   pTree->pR = Pivot->pL;
   Pivot->pL = pTree;
 
@@ -237,12 +224,12 @@ NodeAvlChar *AvlCharRotationL(NodeAvlChar *pTree){
   return pTree;
 }
 
-NodeAvlChar *AvlCharRotationR(NodeAvlChar *pTree){
-  if(!checkLeftAvlChar(pTree)){
+NodeAvlBasicInt *avlBasicIntRotationR(NodeAvlBasicInt *pTree){
+  if(!checkLeftAvlBasicInt(pTree)){
     return 0;
   }
 
-  NodeAvlChar *Pivot = pTree->pL;
+  NodeAvlBasicInt *Pivot = pTree->pL;
   pTree->pL = Pivot->pR;
   Pivot->pR = pTree;
 
@@ -255,31 +242,29 @@ NodeAvlChar *AvlCharRotationR(NodeAvlChar *pTree){
   return pTree;
 }
 
-NodeAvlChar *AvlCharRotationRL(NodeAvlChar *pTree){
+NodeAvlBasicInt *avlBasicIntRotationRL(NodeAvlBasicInt *pTree){
   if(CHECK_PTR(pTree)){
     return 0;
   }
 
-  pTree->pR = AvlCharRotationR(pTree->pR);
-  return AvlCharRotationL(pTree);
+  pTree->pR = avlBasicIntRotationR(pTree->pR);
+  return avlBasicIntRotationL(pTree);
 }
 
-NodeAvlChar *AvlCharRotationLR(NodeAvlChar *pTree){
+NodeAvlBasicInt *avlBasicIntRotationLR(NodeAvlBasicInt *pTree){
   if(CHECK_PTR(pTree)){
     return 0;
   }
 
-  pTree->pL = AvlCharRotationL(pTree->pL);
-  return AvlCharRotationR(pTree);
+  pTree->pL = avlBasicIntRotationL(pTree->pL);
+  return avlBasicIntRotationR(pTree);
 }
 
 
-void inorderChar(NodeAvlChar *pTree){
+void inorderBasicInt(NodeAvlBasicInt *pTree){
   if(!CHECK_PTR(pTree)){
-    inorderChar(pTree->pL);
-    //WIP
-    //if Driver, if Step, if Town: printf..
-    //printf("%d, nSteps: %i, distTot: %f\n", );
-    inorderChar(pTree->pR);
+    inorderBasicInt(pTree->pL);
+    printf("value:%d\n", pTree->value);
+    inorderBasicInt(pTree->pR);
   }
 }

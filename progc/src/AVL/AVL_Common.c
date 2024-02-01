@@ -1,38 +1,45 @@
 #include "AVL_Common.h"
 
-BasicAvlInt* init_BasicAvlInt(){
-  BasicAvlInt *pNew = malloc(sizeof(BasicAvlInt));
-  if (CHECK_PTR(pNew)) exit(1);
 
-  pNew->h = 0;
-  pNew->pRoot = NULL;
-
-  return pNew;
-}
-
- 
-Driver* create_Driver(char* name, int bool_AvlPath, int id_Path){
+Driver* create_Driver(char* name, int path, float dist){
     if(CHECK_PTR(name)) exit(4);
 
     Driver* pNew = malloc(sizeof(Driver));
     if(CHECK_PTR(pNew)) exit(5);
 
-    pNew->name = name;
-    pNew->nPath = 1;
-    if(bool_AvlPath){
-        pNew->AvlPath = init_AvlInt();
-        add_AvlInt(pNew->AvlPath, id_Path);
-    }
-    else{
-        pNew->AvlPath = NULL;
-    }
+    char* pNewName = malloc(sizeof(char) * strlen(name)+1);
+    if(CHECK_PTR(pNewName)) exit(5);
+    pNew->name = pNewName;
+    strncpy(pNew->name, name, strlen(name));
 
+    pNew->nPath = 1;
+    pNew->AvlPath = init_AvlBasicInt();
+    add_AvlBasicInt(pNew->AvlPath, path);
+    
+    pNew->totalDist = dist;
+
+    return pNew;
 }
 
-void free_Driver(Driver* pDriver);
+Town* create_Town(char* name, int path){
+    if(CHECK_PTR(name)) exit(4);
 
-Town* create_Town();
-void free_Town(Town* pTown);
+    Town* pNew = malloc(sizeof(Town));
+    if(CHECK_PTR(pNew)) exit(5);
+
+    char* pNewName = malloc(sizeof(char) * strlen(name)+1);
+    if(CHECK_PTR(pNewName)) exit(5);
+    pNew->name = pNewName;
+    strncpy(pNew->name, name, strlen(name));
+
+    pNew->nPath = 1;
+    pNew->AvlPath = init_AvlBasicInt();
+    add_AvlBasicInt(pNew->AvlPath, path);
+    
+    pNew->nStartingTown = 0;
+
+    return pNew;
+}
 
 Route* create_Route(int id, float dist){
     Route* pNew = malloc(sizeof(Route));
@@ -46,4 +53,23 @@ Route* create_Route(int id, float dist){
     pNew->distMin = dist;
 
     return pNew;
+}
+
+
+void free_Driver(Driver* pDriver){
+    if(pDriver){
+        if(pDriver->name) free(pDriver->name);
+        free_AvlBasicInt(pDriver->AvlPath);
+
+        free(pDriver);
+    }
+}
+
+void free_Town(Town* pTown){
+    if(pTown){
+        if(pTown->name) free(pTown->name);
+        free_AvlBasicInt(pTown->AvlPath);
+
+        free(pTown);
+    }
 }
