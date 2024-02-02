@@ -91,6 +91,132 @@ int readLine(FILE* fFile, DataLine* pLine){
   return (string[0] != EOF); // Part of a little complicated way to know when we trully hit the EOF
 }
 
+NodeTop *create_NodeTop(){
+  NodeTop* pNew = malloc(sizeof(NodeTop));
+  if(CHECK_PTR(pNew)) exit(5);
+
+  pNew->i_Val = 0;
+  pNew->f_Val = 0.0;
+  pNew->c_Val[0] = 0;
+  
+  pNew->caption[0] = 0;
+
+  pNew->f1 = 0;
+  pNew->f2 = 0;
+  pNew->f3 = 0;
+
+  pNew->i1 = 0;
+  pNew->i2 = 0;
+
+  pNew->pNext = NULL;
+
+  return pNew;
+}
+
+NodeTop* insertInt(NodeTop* pNode, int val){
+  if(pNode){
+
+  }
+  else{
+    
+  }
+
+}
+
+void init_Top(Top* pTop){
+  pTop->pFist = NULL;
+  pTop->pFist = NULL;
+  pTop->size = 0;
+}
+
+void compute_t_Top(NodeAvlChar* pTree, Top* pTop){
+  if(pTree){
+    if(pTop->size < 10){
+    
+    }
+
+    pTown->nPass = avlIntSize(pTown->pRoutes); 
+
+    if(pTown->nPass > top10[9]->nPass){
+      int i = 0;
+      while((pTown->nPass < top10[i]->nPass) && i<10){
+        i++;
+      }
+    
+      for(int j = 8; j > i+1 ; j--){
+        top10[j]->nFirst = top10[j-1]->nFirst;
+        top10[j]->nPass = top10[j-1]->nPass;
+        top10[j]->name = top10[j-1]->name;
+      }
+      top10[i]->nPass = pTown->nPass;
+      top10[i]->name = pTown->name;
+      top10[i]->nFirst = pTown->nFirst;
+    }
+
+    T_Process1(pTown->pL, AvlTown** top10)
+    T_Process1(pTown->pR, AvlTown** top10)
+  }
+}
+
+void print_t_Top(Top* pTop){
+
+}
+
+void t_Top(AvlChar* pAvlTown){
+  Top top;
+  init_Top(&top);
+
+
+  
+}
+
+
+void t_Process(FILE* fFile){
+  if(CHECK_PTR(fFile)) exit(4);
+
+  DataLine* pLine = init_ReadLine(fFile);
+  AvlChar* pAvlTown = init_AvlChar();
+
+  NodeAvlChar* pTempNodeTown = NULL;
+
+// STEP 1 : FILL THE AVL
+  while(readLine(fFile, pLine)){
+    
+    if(pLine->step_ID == 1){
+
+      pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_A);
+      if(CHECK_PTR(pTempNodeTown)){
+        add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_A, pLine->route_ID), pLine->town_A);
+        pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_A);
+      }
+
+      pTempNodeTown->pTown->nStartingTown++;
+      pTempNodeTown->pTown->nPath++;
+    }
+
+
+    pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_B);
+
+    if(CHECK_PTR(pTempNodeTown)){
+      add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_B, pLine->route_ID), pLine->town_B);
+      pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_B);
+
+      pTempNodeTown->pTown->nPath++;
+    }
+    else{
+      if(!isInAvlBasicInt(pTempNodeTown->pTown->AvlPath, pLine->route_ID)){
+        add_AvlBasicInt(pTempNodeTown->pTown->AvlPath, pLine->route_ID);
+
+        pTempNodeTown->pTown->nPath++;
+      }
+    }
+  }
+
+
+
+  free_AvlChar(pAvlTown);
+  free(pLine);
+}
 /*
 void T_Init(FILE* fData){
   if (fData == NULL) {

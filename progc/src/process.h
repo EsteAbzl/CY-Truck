@@ -39,9 +39,35 @@
 
     }DataLine;
 
+    typedef struct _nodeTop{
+        int i_Val;
+        float f_Val;
+        char c_Val[COLUMN_SIZE];;
+
+        char caption[COLUMN_SIZE];
+        
+        float f1, f2, f3;
+        int i1, i2;
+
+        struct _nodeTop* pNext;
+    }NodeTop;
+
+    typedef struct Top{
+        int size;
+
+        NodeTop* pFist;
+        NodeTop* pLast;
+    }Top;
+
+    
+
+
+
 // PROTOTYPES
     DataLine* init_ReadLine(FILE* fFile);
     int readLine(FILE* fFile, DataLine* pLine);
+
+    void t_Process(FILE* fFile);
     // Return 0 if the end of the file is reached
     // and 1 if not
 
