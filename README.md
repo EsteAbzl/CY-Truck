@@ -21,6 +21,15 @@ _example from the first few lines of the CSV file provided to us as the file tha
 
 where ``DATA_LOCATION`` is the path to your CSV file (will be copied under data/data.csv) and ``ARG`` is either ``-d1``, ``-d2``, ``-l``, ``-s`` or ``-t``. See ``-h`` or ``man ./help`` for more information.
 
+# Manual building of C code
+
+Go to the [progc/](progc/) directory, and simply run ``make``. You may run ``make clean`` to remove the build binary. The binary will be dropped in ``progc/bin`` under the name ``cy-trucks.exe``. The .exe extension is to mainatin WSL compatibility, it is perfectly runnable under any Linux-based system.
+
+### cy-trucks.exe usage :
+
+```cy-trucks.exe DATA_LOCATION ARG```
+
+where ``DATA_LOCATION`` is the path to your CSV file and ``ARG`` is either ``-s`` or ``-t``.
 
 # Expected output :
 
