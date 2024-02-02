@@ -2,7 +2,22 @@
 #define _AVLBASICINT_H
 
 // INCLUDES
-    #include "AVL_Common.h"
+    #include "tools.h"
+
+// STRUCURES
+    typedef struct _NodeAvlBasicInt{
+        int value;           // Sort value.
+
+        int bFactor;            // Balance factor
+        struct _NodeAvlBasicInt* pL;
+        struct _NodeAvlBasicInt* pR;
+    }NodeAvlBasicInt;
+
+    typedef struct _AvlBasicInt{
+        int h;
+
+        NodeAvlBasicInt* pRoot;
+    }AvlBasicInt;
 
 //PROTOTYPES
 

@@ -25,10 +25,10 @@ int main(int argc, char *argv[]) {
 
   }
   else if(strcmp(argv[2], "-t") == 0){
-    T_Init(fData);
+    //T_Init(fData);
   }
   else if(strcmp(argv[2], "-s") == 0){
-    S_Init(fData);
+    //S_Init(fData);
   }
   else{
     printf("C ERROR: Option wasn't found");

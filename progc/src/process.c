@@ -91,7 +91,7 @@ int readLine(FILE* fFile, DataLine* pLine){
   return (string[0] != EOF); // Part of a little complicated way to know when we trully hit the EOF
 }
 
-
+/*
 void T_Init(FILE* fData){
   if (fData == NULL) {
     exit(122);
@@ -346,3 +346,5 @@ void S_Process(AvlRoute* pRoute) {
   free(pLine);
 }
 */
+
+

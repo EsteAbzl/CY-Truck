@@ -45,7 +45,7 @@
     // Return 0 if the end of the file is reached
     // and 1 if not
 
-
+/*
     void T_Init(FILE* fData);
     AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown);
     AvlTown* T_Process2(AvlTownsteps* sortedpTown, AvlTown* targetpTown, int* extract);
@@ -56,4 +56,5 @@
     void S_Init(FILE* fData);
     void S_Process(AvlRoute* pRoute);
 
+*/
 #endif

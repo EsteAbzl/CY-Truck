@@ -88,7 +88,7 @@ NodeAvlInt* add_NodeAvlInt(NodeAvlInt *pTree, int id, Route* pRoute, int *h) {
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlInt(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } else {
@@ -131,7 +131,7 @@ NodeAvlInt* del_NodeAvlInt(NodeAvlInt *pTree, int *id, int *h){
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlInt(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } 

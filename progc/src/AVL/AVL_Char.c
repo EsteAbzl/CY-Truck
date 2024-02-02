@@ -95,7 +95,7 @@ NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, char* id, Driver* pDriver, Town
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlChar(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } else {
@@ -133,12 +133,12 @@ NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, char *id, int *h){
     *h = -1;
   }
   else {
-    pTree->pL = del_AvlLargestInt(pTree->pL, id);
+    pTree->pL = del_AvlLargestStr(pTree->pL, &id);
   }
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlChar(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } 
@@ -153,7 +153,7 @@ NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, char *id, int *h){
 NodeAvlChar* del_AvlLargestStr(NodeAvlChar *pTree, char** id) {
   NodeAvlChar *tmp;
   if(checkRightAvlChar(pTree)){
-    del_AvlLargestInt(pTree->pR, id);
+    del_AvlLargestStr(pTree->pR, id);
   } 
   else{
     *id = pTree->value;

@@ -75,7 +75,7 @@ NodeAvlBasicInt* add_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int id, int *h) {
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlBasicInt(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } else {
@@ -113,12 +113,12 @@ NodeAvlBasicInt* del_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int *id, int *h){
     *h = -1;
   }
   else {
-    pTree->pL = del_AvlLargestInt(pTree->pL, id);
+    pTree->pL = del_AvlLargestBasicInt(pTree->pL, id);
   }
 
   if(*h != 0){
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlRoute(pTree);
+    pTree = balanceAvlBasicInt(pTree);
     if(pTree->bFactor == 0){
       *h = 0;
     } 
