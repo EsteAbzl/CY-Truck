@@ -202,8 +202,7 @@ void t_Process(FILE* fFile){
 
   NodeAvlChar* pTempNodeTown = NULL;
 
-// STEP 1 : FILL THE AVL
-
+// STEP 1 : Fill the AVL
   while(readLine(fFile, pLine)){
     pTempNodeTown = NULL;
     
@@ -242,11 +241,15 @@ void t_Process(FILE* fFile){
     }
   }
 
-  //t_Top(pAvlTown);
+// STEP 2 : Print the top 10
+  t_Top(pAvlTown);
 
   free_AvlChar(pAvlTown);
   free(pLine);
 }
+
+
+
 /*
 void T_Init(FILE* fData){
   if (fData == NULL) {
