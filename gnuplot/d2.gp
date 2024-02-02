@@ -11,7 +11,7 @@ set xlabel "DRIVER NAMES" rotate by 180
 unset ytics
 set y2label "DISTANCE (Km)"
 set y2tics mirror rotate by 90 center
-set label "Option -d1 : Nb routes = f(Driver)" rotate by 90 at graph -0.025,0.5 center
+set label "Option -d2 : Distance = f(Driver)" rotate by 90 at graph -0.025,0.5 center
 set xtics right rotate by 90
 
 # Because [0:*] doesn't work here for SOME reason we need to use the stats command

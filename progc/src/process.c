@@ -1,6 +1,4 @@
 #include "process.h"
-#include "AVL/AVL_Town.h"
-#include "AVL/AVL_TownSteps.h"
 
 DataLine* init_ReadLine(FILE* fFile){
   if(fFile == NULL){

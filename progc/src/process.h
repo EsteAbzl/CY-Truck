@@ -11,8 +11,6 @@
     #include "AVL/AVL_Route.h"
     #include "AVL/AVL_Town.h"
     #include "AVL/AVL_Driver.h"
-    #include "AVL/AVL_TownSteps.h"
-    #include "AVL/AVL_Route2.h"
 // DEFINES
     #define ROUTE_ID 0
     #define STEP_ID 1
