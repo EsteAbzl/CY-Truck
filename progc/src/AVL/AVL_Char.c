@@ -171,11 +171,11 @@ NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, char* id){
   if(pTree == NULL){            // Return NULL if not found
     ret = NULL;
   } 
-  else if(id < pTree->value) {  // Search value lower than current value, go left
-    ret = isInAvlChar(pTree->pL, id);
-  } 
-  else if (id > pTree->value) { // Search value higher than current value, go right
+  else if(strcmp(id, pTree->value) > 0) {  // Search value lower than current value, go left
     ret = isInAvlChar(pTree->pR, id);
+  } 
+  else if(strcmp(id, pTree->value) < 0) { // Search value higher than current value, go right
+    ret = isInAvlChar(pTree->pL, id);
   } 
   else {                        // Return the current node if found
     ret = pTree;

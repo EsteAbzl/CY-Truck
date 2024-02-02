@@ -6,7 +6,6 @@
     #include <stdio.h>
 
     
-    #include "FIFO.h"
     #include "AVL/AVL_Common.h"
     #include "AVL/AVL_Int.h"
     #include "AVL/AVL_BasicInt.h"
@@ -67,7 +66,7 @@
     NodeTopT *create_NodeTopT(NodeAvlChar* pNodeAvlTown);
     void free_NodeTopT(NodeTopT* pNode);
     NodeTopT* insertTopT(NodeTopT* pNode, int val, NodeAvlChar* pNodeAvlTown);
-    int popLastTopT(NodeTopT* pNode);
+    void popLastTopT(NodeTopT* pNode, int* valMin);
     void compute_t_Top(NodeAvlChar* pTree, Top_T* pTop);
     void print_t_Top(Top_T* pTop);
     void t_Top(AvlChar* pAvlTown);

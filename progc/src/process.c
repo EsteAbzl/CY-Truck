@@ -144,26 +144,30 @@ NodeTopT* insertTopT(NodeTopT* pNode, int val, NodeAvlChar* pNodeAvlTown){
   return pNew;
 }
 
-int popLastTopT(NodeTopT* pNode){
+void popLastTopT(NodeTopT* pNode, int* valMin){
   if(CHECK_PTR(pNode)) exit(4);
+  if(CHECK_PTR(pNode->pNext)) exit(4);
 
-  if(CHECK_PTR(pNode->pNext)){
-    return pNode->i_Val;
+  if(CHECK_PTR(pNode->pNext->pNext)){
+    free(pNode->pNext);
+    pNode->pNext = NULL;
+    *valMin = pNode->i_Val;
   }
   else{
-    return popLastTopT(pNode->pNext);
+    popLastTopT(pNode->pNext, valMin);
   }
 }
 
 void compute_t_Top(NodeAvlChar* pTree, Top_T* pTop){
   if(pTree){
+
     if(pTop->size < 10){
       pTop->pFist = insertTopT(pTop->pFist, pTree->pTown->nPath, pTree);
       pTop->size++;
     }
     else if(pTree->pTown->nPath > pTop->i_ValMin){
       pTop->pFist = insertTopT(pTop->pFist, pTree->pTown->nPath, pTree);
-      pTop->i_ValMin = popLastTopT(pTop->pFist);
+      popLastTopT(pTop->pFist, &pTop->i_ValMin);
     }
 
     compute_t_Top(pTree->pL, pTop);
@@ -199,28 +203,36 @@ void t_Process(FILE* fFile){
   NodeAvlChar* pTempNodeTown = NULL;
 
 // STEP 1 : FILL THE AVL
+
   while(readLine(fFile, pLine)){
     
+    pTempNodeTown = NULL;
+    
+    // Town A
     if(pLine->step_ID == 1){
-
       pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_A);
       if(CHECK_PTR(pTempNodeTown)){
         add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_A, pLine->route_ID), pLine->town_A);
+      
         pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_A);
       }
+      else{
+        if(!isInAvlBasicInt(pTempNodeTown->pTown->AvlPath->pRoot, pLine->route_ID)){
+          add_AvlBasicInt(pTempNodeTown->pTown->AvlPath, pLine->route_ID);
 
+          pTempNodeTown->pTown->nPath++;
+        }
+      }
+      
       pTempNodeTown->pTown->nStartingTown++;
-      pTempNodeTown->pTown->nPath++;
+      pTempNodeTown = NULL;
     }
 
-
+    // Town B
     pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_B);
-
     if(CHECK_PTR(pTempNodeTown)){
       add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_B, pLine->route_ID), pLine->town_B);
-      pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_B);
 
-      pTempNodeTown->pTown->nPath++;
     }
     else{
       if(!isInAvlBasicInt(pTempNodeTown->pTown->AvlPath->pRoot, pLine->route_ID)){
