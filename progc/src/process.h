@@ -42,8 +42,7 @@
 
 
     void T_Init(FILE* fData);
-    AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown);
-    AvlTown* T_Process2(AvlTownsteps* sortedpTown, AvlTown* targetpTown, int* extract);
+    AvlTown** T_Process1(AvlTown* pTown, AvlTown** top10);
 
     void T2_Init(FILE* fData);
     void T2_Process(AvlTown* pTown);

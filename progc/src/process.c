@@ -110,23 +110,12 @@ void T_Init(FILE* fData){
   // 
   // PASS 1 : FILL THE AVL
   //
-  // The idea here is simple, we just do a while loop for every line of data in our
-  // data.csv file.
-  // While the algorithm itself is sequencial, the reasoning behind it is recursive :
-  // We want to first log the first town of the first step in a route. To do this,
-  // we log the first town, add a pass to it and add to it one start. Then, we process 
-  // the step's second town.
-  // Now, if we're not on the first step of a route, we only process the second town.
-  // This means that we effecitvely turn a path of A->B, B->C, C->D into one linear
-  // path of A->B->C->D. By recursion, the last town will have its last town logged,
-  // and we went through the whole dataset !
-  // Of course, if we see that a step's first and second town are the same, we don't
-  // add a pass to it.
   while (readLine(fData, pLine)) {
-    // read the current line
+
+    // read TOWN A
     char* townName = malloc(sizeof(char)*50);
     if (CHECK_PTR(townName)) exit (220);
-    townName = strcpy(townName, pLine->town_B);
+    townName = strcpy(townName, pLine->town_A);
     AvlTown* pNew = NULL;
 
     // check if the town is logged
@@ -134,140 +123,83 @@ void T_Init(FILE* fData){
     if (pTown == NULL) {
       // case 1 : the AVL isn't initialized, so make it
       pTown = createAvlTown(townName);
-      pTown->nPass++;
+      pTown->pRoutes = createAvlInt(pLine->route_ID);
+      // if first step, add a nFirst
+      if (pLine->step_ID == 1) pTown->nFirst++;
     } else if (pTemp == NULL) {
       // case 2 : the town isn't logged in the avl, so add it
       pTown = addAvlTown(pTown, townName);
       pNew = isInAvlTown(pTown, townName);
-      pNew->nPass++;
+      pNew->pRoutes = createAvlInt(pLine->route_ID);
+      // if first step, add a nFirst
+      if (pLine->step_ID == 1) pNew->nFirst++;
     } else {
       // case 3 : the town is logged in the avl, so append another pass
-      pTemp->nPass++;
-    }
-    // I've unfortunately not found a more elegant way to mix the above code
-    // and this one that just re-runs it for the first town of a step.
-    // Oh well. It works.
-    if (pLine->step_ID == 1) { 
-      char* townName = malloc(sizeof(char)*50);
-      if (CHECK_PTR(townName)) exit (220);
-      townName = strcpy(townName, pLine->town_A);
-      AvlTown* pNew = NULL;
-
-      // check if the town is logged
-      AvlTown* pTemp = isInAvlTown(pTown, townName);
-      if (pTown == NULL) {
-        // case 1 : the AVL isn't initialized
-        pTown = createAvlTown(townName);
-        pTown->nPass++;
-        pTown->nFirst++;
-      } else if (pTemp == NULL) {
-        // case 2 : the town isn't logged
-        pTown = addAvlTown(pTown, townName);
-        pNew = isInAvlTown(pTown, townName);
-        pNew->nPass++;
-        pNew->nFirst++;
-      } else {
-        // case 3 : the town is logged
-        pTemp->nPass++;
+      pTemp->pRoutes = addAvlInt(pTemp->pRoutes, pLine->route_ID);
+      // if first step, add a nFirst
+      if (pLine->step_ID == 1) {
         pTemp->nFirst++;
       }
     }
-  }
+    // read TOWN B
+    townName = malloc(sizeof(char)*50);
+    if (CHECK_PTR(townName)) exit (220);
+    townName = strcpy(townName, pLine->town_B);
+    pNew = NULL;
 
-  //
-  // PASS 2 : Sort the data by the most visited towns
-  //
-  // This is just a sorting AVL step, no need for big fancy explainations.
-  // Our first AVL worked with the town's name as the search key, we just
-  // put all the data in an AVL that will use the number of passes as 
-  // the key so we can sort them by most visited. 
-  AvlTownsteps* sortedpTown = NULL;
-  sortedpTown = T_Process1(pTown, sortedpTown);
-  if (CHECK_PTR(sortedpTown)) exit (69);
-  //
-  // PASS 3 : Now, sort the ten most visited towns alphabetically.
-  //
-  // Now that we sorted the data by the most visited towns, we re-sort it
-  // in a string-based AVL again. We got all of the most visited towns,
-  // but we want to have them outputed in alphabetical order, so string
-  // AVL it is !
-  int extract = 10;
-  AvlTown* top10pTown = NULL;
-  // This just returns a tree of extract nodes. Nothing too fancy.
-  top10pTown = T_Process2(sortedpTown, top10pTown, &extract);
-  inorderTown(top10pTown);
-}
-
-
-AvlTown* T_Process2(AvlTownsteps* pTown, AvlTown* targetpTown, int* extract) {
-  if (CHECK_PTR(extract) || CHECK_PTR(pTown)) {
-    return NULL;
-  }
-  
-  if (!CHECK_PTR(pTown->pR)) targetpTown = T_Process2(pTown->pR, targetpTown, extract);
-
-
-  if (*extract == 0) return targetpTown;
-  if (CHECK_PTR(targetpTown)) {
-    char* townName = malloc(sizeof(char)*32);
-    if (CHECK_PTR(townName)) exit (200);
-    townName = strcpy(townName, pTown->name);
-    targetpTown = createAvlTown(townName);
-    targetpTown->nPass = pTown->nPass;
-    targetpTown->nFirst = pTown->nFirst;
-    *extract = *extract - 1;
-  } else {
-    AvlTown* pNew = NULL;
-    char* townName = malloc(sizeof(char)*32);
-    if (CHECK_PTR(townName)) exit (200);
-    townName = strcpy(townName, pTown->name);
-    targetpTown = addAvlTown(targetpTown, townName);
-    pNew = isInAvlTown(targetpTown, townName);
-    pNew->nPass = pTown->nPass;
-    pNew->nFirst = pTown->nFirst;
-    *extract = *extract - 1;
-  } 
-
-  if (!CHECK_PTR(pTown->pL)) targetpTown = T_Process2(pTown->pL, targetpTown, extract);
-  
-  return targetpTown;
-}
-
-
-AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown) {  
-  if (pTown != NULL) {
-    if (!CHECK_PTR(pTown->pL)) sortedpTown = T_Process1(pTown->pL, sortedpTown);
-    if (!CHECK_PTR(pTown->pR)) sortedpTown = T_Process1(pTown->pR, sortedpTown);
-    char* townName = malloc(sizeof(char)*32);
-    if (CHECK_PTR(townName)) exit (200);
-    townName = strcpy(townName, pTown->name);
-    AvlTownsteps* pNew = NULL;
-    if (CHECK_PTR(sortedpTown)) {
-      sortedpTown = createAvlTownsteps(pTown->nPass);
-      sortedpTown->nFirst = pTown->nFirst;
-      sortedpTown->name = townName;
+    // check if the town is logged
+    pTemp = isInAvlTown(pTown, townName);
+    if (pTown == NULL) {
+      // case 1 : the AVL isn't initialized, so make it
+      pTown = createAvlTown(townName);
+      pTown->pRoutes = createAvlInt(pLine->route_ID);
+    } else if (pTemp == NULL) {
+      // case 2 : the town isn't logged in the avl, so add it
+      pTown = addAvlTown(pTown, townName);
+      pNew = isInAvlTown(pTown, townName);
+      pNew->pRoutes = createAvlInt(pLine->route_ID);
     } else {
-      sortedpTown = addAvlTownsteps(sortedpTown, pTown->nPass); 
-      pNew = isInAvlTownsteps(sortedpTown, pTown->nPass);
-      // THIS is the workaround for inserting equal nodes to the right.
-      // THIS COMPLETELY BREAKS IF WE GET THE SAME TOWN NAME TWICE IN
-      // PTOWN. However, if pTown ever has the same town in it twice,
-      // something has gone CATASTROPHICALLY wrong.
-      // TODO TODO TODO TODO TODO TODO TODO TODO
-      //    FIX AVLS WITH DUPLICATE VALUES !!!
-      // TODO TODO TODO TODO TODO TODO TODO TODO
-      //if (!CHECK_PTR(pNew->name) && strcmp(pNew->name, townName) != 0) {
-      //  while (!CHECK_PTR(pNew->name)) {
-      //    pNew = isInAvlTownsteps(pNew->pR, pTown->nPass);
-      //  }
-      //}
-      pNew->nFirst = pTown->nFirst;
-      pNew->name = townName;
+      // case 3 : the town is logged in the avl, so append another pass
+      pTemp->pRoutes = addAvlInt(pTemp->pRoutes, pLine->route_ID);
     }
   }
-  return sortedpTown;
+  //inorderTown(pTown);
+  //return;
+  AvlTown** top10;
+  top10 = malloc(10*sizeof(AvlTown*));
+  for (int i = 0; i < 10; i++) {
+    top10[i] = malloc(sizeof(AvlTown));
+    if (CHECK_PTR(top10[i])) exit (200);
+    top10[i]->nFirst = 0;
+    top10[i]->nPass = 0;
+    top10[i]->name = NULL;
+  }
+  if (!CHECK_PTR(pTown)) top10 = T_Process1(pTown, top10);
+
+  for (int i = 0; i < 10; i++) {
+    printf("%s, %i, %i\n", top10[i]->name, top10[i]->nPass, top10[i]->nFirst);
+  }
 }
 
+AvlTown** T_Process1(AvlTown* pTown, AvlTown** top10) {
+  if (!CHECK_PTR(pTown->pL)) top10 = T_Process1(pTown->pL, top10);
+  if (!CHECK_PTR(pTown->pR)) top10 = T_Process1(pTown->pR, top10);
+  pTown->nPass = avlIntSize(pTown->pRoutes); 
+  for (int i = 0; i < 10; i++) {
+    if (pTown->nPass > top10[i]->nPass) {
+      for (int j = i+1; j < 9; j++) {
+        top10[j]->nFirst = top10[j-1]->nFirst;
+        top10[j]->nPass = top10[j-1]->nPass;
+        top10[j]->name = top10[j-1]->name;
+      }
+      top10[i]->nPass = pTown->nPass;
+      top10[i]->name = pTown->name;
+      top10[i]->nFirst = pTown->nFirst;
+      break;
+    }
+  }
+  return top10;
+}
 
 // VESTIGIAL !
 // This was the code for the 1.0.0 version of T2. In fact, it works ! It's not sorted,

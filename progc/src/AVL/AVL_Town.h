@@ -4,6 +4,7 @@
 // INCLUDES
     #include "AVL_Common.h"
     #include "AVL_Driver.h"
+    #include "AVL_Int.h"
 
 // STRUCTURES
     // Driver Avl node
@@ -16,6 +17,7 @@
       int nPass;              // Number of times a city was driven through
       AvlDriver* pDrivers;    // Drivers that passed throug the town
       int nFirst;             // Times that the town was the first of a route
+      AvlInt* pRoutes;
     } AvlTown;
 
 // PROTOTYPES

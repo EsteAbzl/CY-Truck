@@ -38,9 +38,9 @@ cp $data data/data.csv
 data=data/data.csv
 
 # Compile C code in the "progc" directory
-make -s -C progc/
-exitNumber=$?
-if (( $exitNumber != 0 )) ; then
+ make -s -C progc/
+ exitNumber=$?
+ if (( $exitNumber != 0 )) ; then
   echo
   echo "$0: Make didn't work as expected and ended with: $exitNumber"
   exit 3
@@ -83,6 +83,7 @@ case $2 in
 #   All of this just to remove leading white spaces btw  
     
     gnuplot gnuplot/d1.gp
+    exit
     # Hash is a built-in bash command that checks if a command exists
     # just redirect both stdout and stderr to null, we just want the exit code
     # if we don't have Imagemagick installed... eh, tough luck. It's a standard

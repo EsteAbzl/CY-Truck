@@ -1,15 +1,12 @@
-#include "AVL_Town.h"
+#include "AVL_Int.h"
 
-AvlTown* createAvlTown(char *str) {
-  AvlTown *pNew = malloc(sizeof(AvlTown));
+AvlInt* createAvlInt(int id) {
+  AvlInt *pNew = malloc(sizeof(AvlInt));
   if (CHECK_PTR(pNew)) exit(1);
-  pNew->name = str;
+  pNew->id = id;
   pNew->bFactor = 0;
   pNew->pL = NULL;
   pNew->pR = NULL;
-  pNew->pDrivers = NULL;
-  pNew->nFirst = 0;
-  pNew->pRoutes = NULL;
   return pNew;
 }
 
@@ -18,25 +15,25 @@ AvlTown* createAvlTown(char *str) {
 // This is necessary to set a default value for the balance factor h,
 // the alternative being a f_args function, which would be way too
 // much effort for the same outcome.
-AvlTown* addAvlTown(AvlTown *pTree, char *str) {
+AvlInt* addAvlInt(AvlInt *pTree, int id) {
   static int h = 0;
-  return _addAvlTown(pTree, str, &h);
+  return _addAvlInt(pTree, id, &h);
 }
 
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-AvlTown* _addAvlTown(AvlTown *pTree, char *str, int *h) {
+AvlInt* _addAvlInt(AvlInt *pTree, int id, int *h) {
   if (pTree == NULL) {
     // If in a leaf, add the node there
     *h = 1;
-    return createAvlTown(str);
-  } else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = _addAvlTown(pTree->pR, str, h);
-  }else if (strcmp(str, pTree->name) < 0) {
+    return createAvlInt(id);
+  } else if (id > pTree->id) {
+    pTree->pR = _addAvlInt(pTree->pR, id, h);
+  }else if (id < pTree->id) {
     // If the new node's value is lesser, check the left branch
-    pTree->pL = _addAvlTown(pTree->pL, str, h);
+    pTree->pL = _addAvlInt(pTree->pL, id, h);
     // balance factor needs to be inverted
     *h = -*h;
   } else {
@@ -48,7 +45,7 @@ AvlTown* _addAvlTown(AvlTown *pTree, char *str, int *h) {
   // printf("DEBUG 500\n");
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlTown(pTree);
+    pTree = balanceAvlInt(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -61,41 +58,41 @@ AvlTown* _addAvlTown(AvlTown *pTree, char *str, int *h) {
 /*
 // Same Hack
 // When I wrote this code, only me and God knew why we had to do
-// it that way. Now, days later, only God knows.
+  // it that way. Now, days later, only God knows.
 // May Richie have mercy on our souls.
-AvlTown* delAvlTown(AvlTown *pTree, char *str) {
+AvlInt* delAvlInt(AvlInt *pTree, char *str) {
   static int h = 0;
-  return _delAvlTown(pTree, str, &h);
+  return _delAvlInt(pTree, str, &h);
 }
 */
 
-AvlTown* delAvlTown(AvlTown *pTree, char *str, int *h) {
+AvlInt* delAvlInt(AvlInt *pTree, int* id, int *h) {
   // Element not in tree
   if (pTree == NULL) {
     *h = 1;
     return pTree;
   }
   // Recursively search through the BST
-  else if (strcmp(str, pTree->name) > 0) {
-    pTree->pR = delAvlTown(pTree->pR, str, h);
-  } else if (strcmp(str, pTree->name) < 0) {
-    pTree->pL = delAvlTown(pTree->pL, str, h);
+  else if (*id > pTree->id) {
+    pTree->pR = delAvlInt(pTree->pR, id, h);
+  } else if (*id < pTree->id) {
+    pTree->pL = delAvlInt(pTree->pL, id, h);
     *h = -*h;
   }
   // Element found, replace as needed
-  else if (!checkLeftAvlTown(pTree)){
-    AvlTown *tmp;
+  else if (!checkLeftAvlInt(pTree)){
+    AvlInt *tmp;
     tmp = pTree;
     pTree = pTree->pR;
     free(tmp);
     *h = -1;
   }
   else {
-    pTree->pL = delAvlTownLargestStr(pTree->pL, &(pTree->name));
+    pTree->pL = delAvlLargestInt(pTree->pL, id);
   }
   if (*h != 0) {
     pTree->bFactor = pTree->bFactor + *h;
-    pTree = balanceAvlTown(pTree);
+    pTree = balanceAvlInt(pTree);
     if (pTree->bFactor == 0) {
       *h = 0;
     } else {
@@ -106,12 +103,12 @@ AvlTown* delAvlTown(AvlTown *pTree, char *str, int *h) {
 }
 
 
-AvlTown* delAvlTownLargestStr(AvlTown *pTree, char **str) {
-  AvlTown *tmp;
-  if (checkRightAvlTown(pTree)) {
-    delAvlTownLargestStr(pTree->pR, str);
+AvlInt* delAvlLargestInt(AvlInt *pTree, int *id) {
+  AvlInt *tmp;
+  if (checkRightAvlInt(pTree)) {
+    delAvlLargestInt(pTree->pR, id);
   } else {
-    *str = pTree->name;
+    *id = pTree->id;
     tmp = pTree;
     pTree = pTree->pL;
     free(tmp);
@@ -119,21 +116,18 @@ AvlTown* delAvlTownLargestStr(AvlTown *pTree, char **str) {
   return pTree;
 }
 
-AvlTown* isInAvlTown(AvlTown *pTree, char *str){
-  AvlTown* ret = NULL;
+AvlInt* isInAvlInt(AvlInt *pTree, int id){
+  AvlInt* ret = NULL;
   if (pTree == NULL) {
     // Return NULL if not found
-    // printf("isinavl null\n");
     ret = NULL;
-    // int i = strcmp("test", "test");
-    // printf("strcmp retourne %i", i);
-  } else if (strcmp(str, pTree->name) < 0) {
+  } else if (id < pTree->id) {
     // Search value lower than current value, go left
-    ret = isInAvlTown(pTree->pL, str);
+    ret = isInAvlInt(pTree->pL, id);
     // printf("isinavl go left\n");
-  } else if (strcmp(str, pTree->name) > 0) {
+  } else if (id > pTree->id) {
     // Search value higher than current value, go right
-    ret = isInAvlTown(pTree->pR, str);
+    ret = isInAvlInt(pTree->pR, id);
     // printf("isinavl go right\n");
   } else {
     // Return the current node if found
@@ -144,36 +138,45 @@ AvlTown* isInAvlTown(AvlTown *pTree, char *str){
 }
 
 
-int checkLeftAvlTown(AvlTown *ptr) {
+int checkLeftAvlInt(AvlInt *ptr) {
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pL);
 }
 
 
-int checkRightAvlTown(AvlTown *ptr) {
+int checkRightAvlInt(AvlInt *ptr) {
   return !CHECK_PTR(ptr) && !CHECK_PTR(ptr->pR);
 }
 
 
-int avlTownHeight(AvlTown *ptr) { // hauteur
+int avlIntHeight(AvlInt *ptr) { // hauteur
   int countL = 0, countR = 0;
   if (ptr == NULL) {
     return 0;
   }
-  if (!checkLeftAvlTown(ptr) && !checkRightAvlTown(ptr)) {
+  if (!checkLeftAvlInt(ptr) && !checkRightAvlInt(ptr)) {
     return 1;
   } else {
-    if (checkLeftAvlTown(ptr)) {
-      countL = avlTownHeight(ptr->pL);
+    if (checkLeftAvlInt(ptr)) {
+      countL = avlIntHeight(ptr->pL);
     }
-    if (checkRightAvlTown(ptr)) {
-      countR = avlTownHeight(ptr->pR);
+    if (checkRightAvlInt(ptr)) {
+      countR = avlIntHeight(ptr->pR);
     }
   }
   return MAX(countL, countR) + 1;
 }
 
 
-AvlTown *balanceAvlTown(AvlTown *pTree) {
+int avlIntSize(AvlInt *ptr) { // size
+  if (ptr == NULL) return 0;
+  int i = 1;
+  i += avlIntSize(ptr->pL);
+  i += avlIntSize(ptr->pR);
+  return i;
+}
+
+
+AvlInt *balanceAvlInt(AvlInt *pTree) {
   if (pTree == NULL) {
     return pTree;
   } else if (pTree->bFactor >= 2) {
@@ -181,29 +184,29 @@ AvlTown *balanceAvlTown(AvlTown *pTree) {
       exit(1);
     }
     if (pTree->pR->bFactor >= 0) {
-      return avlTownRotationL(pTree);
+      return avlIntRotationL(pTree);
     } else {
-      return avlTownRotationRL(pTree);
+      return avlIntRotationRL(pTree);
     }
   } else if (pTree->bFactor <= -2) {
     if (pTree->pL == NULL) {
       exit(1);
     }
     if (pTree->pL->bFactor <= 0) {
-      return avlTownRotationR(pTree);
+      return avlIntRotationR(pTree);
     } else {
-      return avlTownRotationLR(pTree);
+      return avlIntRotationLR(pTree);
     }
   }
   return pTree;
 }
 
 
-AvlTown *avlTownRotationL(AvlTown *pTree) {
+AvlInt *avlIntRotationL(AvlInt *pTree) {
   if (pTree == NULL || pTree->pR == NULL) {
     return 0;
   }
-  AvlTown *Pivot = pTree->pR;
+  AvlInt *Pivot = pTree->pR;
   pTree->pR = Pivot->pL;
   Pivot->pL = pTree;
 
@@ -216,11 +219,11 @@ AvlTown *avlTownRotationL(AvlTown *pTree) {
 }
 
 
-AvlTown *avlTownRotationR(AvlTown *pTree) {
+AvlInt *avlIntRotationR(AvlInt *pTree) {
   if (pTree == NULL || pTree->pL == NULL) {
     return 0;
   }
-  AvlTown *Pivot = pTree->pL;
+  AvlInt *Pivot = pTree->pL;
   pTree->pL = Pivot->pR;
   Pivot->pR = pTree;
 
@@ -233,28 +236,28 @@ AvlTown *avlTownRotationR(AvlTown *pTree) {
 }
 
 
-AvlTown *avlTownRotationRL(AvlTown *pTree) {
+AvlInt *avlIntRotationRL(AvlInt *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pR = avlTownRotationR(pTree->pR);
-  return avlTownRotationL(pTree);
+  pTree->pR = avlIntRotationR(pTree->pR);
+  return avlIntRotationL(pTree);
 }
 
 
-AvlTown *avlTownRotationLR(AvlTown *pTree) {
+AvlInt *avlIntRotationLR(AvlInt *pTree) {
   if (pTree == NULL) {
     return 0;
   }
-  pTree->pL = avlTownRotationL(pTree->pL);
-  return avlTownRotationR(pTree);
+  pTree->pL = avlIntRotationL(pTree->pL);
+  return avlIntRotationR(pTree);
 }
 
 
-void inorderTown(AvlTown *pTree){
+void inorderInt(AvlInt *pTree){
   if(!CHECK_PTR(pTree)){
-    inorderTown(pTree->pL);
-    printf("%s;%i;%i\n",pTree->name, avlIntSize(pTree->pRoutes), pTree->nFirst);
-    inorderTown(pTree->pR);
+    inorderInt(pTree->pL);
+    printf("%d\n", pTree->id);
+    inorderInt(pTree->pR);
   }
 }
