@@ -20,12 +20,12 @@
 
 //PROTOTYPES
     // In : string
-    // Out : AvlDriver
-    // Creates a new initialized node from a string
+    // Out : AvlRoute
+    // Creates a new initialized node from an int
     AvlRoute* createAvlRoute(int id);
 
 
-    // In : Pointer to Avl, String
+    // In : Pointer to Avl, Int
     // Out : Pointer to modified Avl
     // Adds in a new node to a BST. If the BST is an Avl,
     // it will remain balanced.
@@ -34,16 +34,14 @@
     AvlRoute* _addAvlRoute(AvlRoute *pTree, int id, int *h);
 
 
-    // In : Pointer to Avl, String
+    // In : Pointer to Avl, Int, Int* with a value of 0
     // Out : Pointer to modified Avl
     // Deletes the specified element from the tree.
-    //AvlDriver* delAvlDriver(AvlDriver *pTree, char *str);
-    // Private ! Do not use !
     AvlRoute* delAvlRoute(AvlRoute *pTree, int *id, int *h);
     AvlRoute* delAvlLargestLong(AvlRoute *pTree, int *id);
 
 
-    // In : Pointer to Avl, String
+    // In : Pointer to Avl, Int
     // Out : Pointer to found node or NULL if not found
     AvlRoute* isInAvlRoute(AvlRoute *pTree, int id);
 

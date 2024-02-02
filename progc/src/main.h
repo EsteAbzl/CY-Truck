@@ -8,10 +8,4 @@
 
     #include "process.h"
 
-    /* TEST ZONE */
-    #include "AVL/AVL_Common.h"
-    #include "AVL/AVL_Driver.h"
-
-    /* -=-=-=- */
-
 #endif

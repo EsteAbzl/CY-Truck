@@ -32,16 +32,16 @@ AvlTownsteps* _addAvlTownsteps(AvlTownsteps *pTree, int val, int *h) {
     // If in a leaf, add the node there
     *h = 1;
     return createAvlTownsteps(val);
-  } else if (val >= pTree->nPass) {
-    // If the new node's value is equal, default to !!!RIGHT!!! insertion.
-    // This WILL create bugs if used normally. But I can't be bothered
-    // anymore. It's more effort to work around the bugs than to fix them.
+  } else if (val > pTree->nPass) {
     pTree->pR = _addAvlTownsteps(pTree->pR, val, h);
-  }else {
+  } else if (val < pTree->nPass) {
     // If the new node's value is lesser, check the left branch
     pTree->pL = _addAvlTownsteps(pTree->pL, val, h);
     // balance factor needs to be inverted
     *h = -*h;
+  } else {
+    *h = 0;
+    return pTree;
   }
   // printf("DEBUG 500\n");
   if (*h != 0) {

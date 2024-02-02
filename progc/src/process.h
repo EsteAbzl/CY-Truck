@@ -12,7 +12,7 @@
     #include "AVL/AVL_Town.h"
     #include "AVL/AVL_Driver.h"
     #include "AVL/AVL_TownSteps.h"
-
+    #include "AVL/AVL_Route2.h"
 // DEFINES
     #define ROUTE_ID 0
     #define STEP_ID 1
@@ -49,6 +49,6 @@
     void T2_Process(AvlTown* pTown);
 
     void S_Init(FILE* fData);
-    void S_Process(AvlRoute* pRoute);
+    AvlRoute2* S_Process(AvlRoute* pRoute, AvlRoute2* sortedpRoute);
 
 #endif

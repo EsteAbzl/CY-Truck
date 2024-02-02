@@ -49,19 +49,3 @@ FIFO* delFIFO(FIFO* pHead){
     }
     return pHead;
 }
-
-
-
-/*int main()
-{
-    FIFO* test=NULL;
-    test = addFIFO(test,1);
-    test = addFIFO(test,2);
-    test = addFIFO(test,3);
-    displayFIFO(test);
-    test = addFIFO(test,4);
-    test = delFIFO(test);
-    displayFIFO(test);
-
-    return 0;
-}*/

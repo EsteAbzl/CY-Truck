@@ -4,5 +4,8 @@
 replit.nix
 main.exe
 data.csv
+data/data.csv
 bin
 .vscode/settings.json
+temp
+images

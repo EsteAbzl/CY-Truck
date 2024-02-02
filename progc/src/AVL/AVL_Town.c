@@ -253,7 +253,7 @@ AvlTown *avlTownRotationLR(AvlTown *pTree) {
 void inorderTown(AvlTown *pTree){
   if(!CHECK_PTR(pTree)){
     inorderTown(pTree->pL);
-    printf("name: %s, passes: %i, starts: %i\n",pTree->name, pTree->nPass, pTree->nFirst);
+    printf("%s;%i;%i\n",pTree->name, pTree->nPass, pTree->nFirst);
     inorderTown(pTree->pR);
   }
 }

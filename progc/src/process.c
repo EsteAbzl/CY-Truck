@@ -94,7 +94,10 @@ int readLine(FILE* fFile, DataLine* pLine){
 }
 
 
+
+// T process start !
 void T_Init(FILE* fData){
+  // Just setting up the necessary pointers.
   if (fData == NULL) {
     exit(122);
   }
@@ -107,6 +110,18 @@ void T_Init(FILE* fData){
   // 
   // PASS 1 : FILL THE AVL
   //
+  // The idea here is simple, we just do a while loop for every line of data in our
+  // data.csv file.
+  // While the algorithm itself is sequencial, the reasoning behind it is recursive :
+  // We want to first log the first town of the first step in a route. To do this,
+  // we log the first town, add a pass to it and add to it one start. Then, we process 
+  // the step's second town.
+  // Now, if we're not on the first step of a route, we only process the second town.
+  // This means that we effecitvely turn a path of A->B, B->C, C->D into one linear
+  // path of A->B->C->D. By recursion, the last town will have its last town logged,
+  // and we went through the whole dataset !
+  // Of course, if we see that a step's first and second town are the same, we don't
+  // add a pass to it.
   while (readLine(fData, pLine)) {
     // read the current line
     char* townName = malloc(sizeof(char)*50);
@@ -117,21 +132,21 @@ void T_Init(FILE* fData){
     // check if the town is logged
     AvlTown* pTemp = isInAvlTown(pTown, townName);
     if (pTown == NULL) {
-      // case 1 : the AVL isn't initialized
+      // case 1 : the AVL isn't initialized, so make it
       pTown = createAvlTown(townName);
       pTown->nPass++;
     } else if (pTemp == NULL) {
-      // case 2 : the town isn't logged
+      // case 2 : the town isn't logged in the avl, so add it
       pTown = addAvlTown(pTown, townName);
       pNew = isInAvlTown(pTown, townName);
       pNew->nPass++;
     } else {
-      // case 3 : the town was logged, simply append
+      // case 3 : the town is logged in the avl, so append another pass
       pTemp->nPass++;
     }
-    // This is awful. It's disgusting. it works, and it's optimized,
-    // but code-wise, it looks horrendous. We need to correctly log
-    // the first town of a step. Yes, I hate it too. Yes, it works.
+    // I've unfortunately not found a more elegant way to mix the above code
+    // and this one that just re-runs it for the first town of a step.
+    // Oh well. It works.
     if (pLine->step_ID == 1) { 
       char* townName = malloc(sizeof(char)*50);
       if (CHECK_PTR(townName)) exit (220);
@@ -152,7 +167,7 @@ void T_Init(FILE* fData){
         pNew->nPass++;
         pNew->nFirst++;
       } else {
-        // case 3 : the town was logged, simply append
+        // case 3 : the town is logged
         pTemp->nPass++;
         pTemp->nFirst++;
       }
@@ -162,14 +177,23 @@ void T_Init(FILE* fData){
   //
   // PASS 2 : Sort the data by the most visited towns
   //
+  // This is just a sorting AVL step, no need for big fancy explainations.
+  // Our first AVL worked with the town's name as the search key, we just
+  // put all the data in an AVL that will use the number of passes as 
+  // the key so we can sort them by most visited. 
   AvlTownsteps* sortedpTown = NULL;
   sortedpTown = T_Process1(pTown, sortedpTown);
   if (CHECK_PTR(sortedpTown)) exit (69);
   //
   // PASS 3 : Now, sort the ten most visited towns alphabetically.
   //
+  // Now that we sorted the data by the most visited towns, we re-sort it
+  // in a string-based AVL again. We got all of the most visited towns,
+  // but we want to have them outputed in alphabetical order, so string
+  // AVL it is !
   int extract = 10;
   AvlTown* top10pTown = NULL;
+  // This just returns a tree of extract nodes. Nothing too fancy.
   top10pTown = T_Process2(sortedpTown, top10pTown, &extract);
   inorderTown(top10pTown);
 }
@@ -229,11 +253,14 @@ AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown) {
       // THIS COMPLETELY BREAKS IF WE GET THE SAME TOWN NAME TWICE IN
       // PTOWN. However, if pTown ever has the same town in it twice,
       // something has gone CATASTROPHICALLY wrong.
-      if (!CHECK_PTR(pNew->name) && strcmp(pNew->name, townName) != 0) {
-        while (!CHECK_PTR(pNew->name)) {
-          pNew = isInAvlTownsteps(pNew->pR, pTown->nPass);
-        }
-      }
+      // TODO TODO TODO TODO TODO TODO TODO TODO
+      //    FIX AVLS WITH DUPLICATE VALUES !!!
+      // TODO TODO TODO TODO TODO TODO TODO TODO
+      //if (!CHECK_PTR(pNew->name) && strcmp(pNew->name, townName) != 0) {
+      //  while (!CHECK_PTR(pNew->name)) {
+      //    pNew = isInAvlTownsteps(pNew->pR, pTown->nPass);
+      //  }
+      //}
       pNew->nFirst = pTown->nFirst;
       pNew->name = townName;
     }
@@ -242,6 +269,14 @@ AvlTownsteps* T_Process1(AvlTown* pTown, AvlTownsteps* sortedpTown) {
 }
 
 
+// VESTIGIAL !
+// This was the code for the 1.0.0 version of T2. In fact, it works ! It's not sorted,
+// but the AVL is indeed filled with every unique driver that went through a town as well
+// as the right ammount of passes !
+
+// We thought that we'd keep it in case we felt like working on this version of the assignment.
+// It was an, in my opinion, much more fun and interesting challenge mixing different data structures
+// than just asking us to do THREE AVLs, two of which are just sorting...
 void T2_Init(FILE* fData){
   if (fData == NULL) {
     exit(122);
@@ -331,17 +366,21 @@ void T2_Init(FILE* fData){
   T2_Process(pTown);
 }
 
-
+// Also vestigial...
 void T2_Process(AvlTown* pTown) {
   if (pTown != NULL) {
     T2_Process(pTown->pL);
-    printf("%s, %i, %i\n", pTown->name, pTown->nPass, avlDriverNodeCount(pTown->pDrivers));
+    printf("%s;%i;%i\n", pTown->name, pTown->nPass, avlDriverNodeCount(pTown->pDrivers));
     T2_Process(pTown->pR);
   }
 }
 
 
-// Holy crap finally some good code
+// S works pretty much the exact same way than T does, with a few data types of
+// difference. Same thing, put the data in a tree, process it, put it in another to
+// sort the processed data, return it, print it, you know the drill.
+// If this is unclear in how it works, check the explainations of T, this is just T
+// but simpler in execution.
 void S_Init(FILE* fData){
   if (fData == NULL) {
     exit(122);
@@ -376,71 +415,49 @@ void S_Init(FILE* fData){
       pNew->nSteps++;
     } else {
       pTemp->nSteps++;
-      //printf("To be added : %f\n", dist);
-      //printf("Current Value : %f\n", pTemp->distMax);
-      //printf("Should be : %f\n", pTemp->distMax + dist);
       if (pTemp->distMin > dist) pTemp->distMin = dist;
       if (pTemp->distMax < dist) pTemp->distMax = dist;
       pTemp->distTot += dist;
-      //printf("Is : %f\n", pTemp->distMax);
     }
   }
   //
   // PASS 2 : COMPUTE AVERAGES AND PRINT
   //
-  S_Process(pRoute);
+  AvlRoute2* sortedpRoute = NULL;
+  sortedpRoute = S_Process(pRoute, sortedpRoute);
+  int* i = malloc(sizeof(int));
+  if (CHECK_PTR(i)) exit (200);
+  *i = 0;
+  inorderRoute2(sortedpRoute, i);
 }
 
-void S_Process(AvlRoute* pRoute) {
+AvlRoute2* S_Process(AvlRoute* pRoute, AvlRoute2* sortedpRoute) {
   if (pRoute != NULL) {
-    S_Process(pRoute->pL);
-    printf("%d:%f:%f:%f\n", pRoute->id, pRoute->distTot / pRoute->nSteps, pRoute->distMax, pRoute->distMin);
-    S_Process(pRoute->pR);
-  }
-}
-// RIPBOZO PACKWATCH REST IN PISS YOU WONT BE MISSED
-// AWK REPLACED YOU YOU USELESS PILE OF HACKY CRAP
-/*AvlDriver *D2(FILE *fData) {
-  if (fData == NULL) {
-    exit(122);
-  }
-  AvlDriver *pDriver = NULL;
-  DataLine* pLine =  init_ReadLine(fData);
-  int *h = 0;
-  AvlDriver* pNew = malloc(sizeof(AvlDriver*));
-  if (CHECK_PTR(pNew)) exit (1);
-  while(readLine(fData, pLine)){
-    char * copy = malloc(sizeof(char)*32);
-    copy = strcpy(copy, pLine->name);
-    AvlDriver *pTemp = isInAvlDriver(pDriver,copy);
-    if(pDriver == NULL){
-      //printf("DEBUG1\n");
-      pDriver = createAvlDriver(copy);
-      pDriver->totalDist = pLine->distance;
-      // printf("%s,%f\n",pDriver->name,pDriver->totalDist);
-      //printf("DEBUG2\n");
-    } else if (pTemp == NULL){
-      //printf("DEBUG3\n");
-      pDriver = addAvlDriver(pDriver, copy, pNew);
-      //printf("%s\n", pDriver->pL->name);
-      //printf("DEBUG10\n");
-      // TODO FIX THIS THIS IS AWFUL AND INEFFICIENT
-      // pTemp = isInAvlDriver(pDriver, copy);
-      //printf("DEBUG11\n");
-      if(CHECK_PTR(pNew)) exit (69);
-      pNew->totalDist = pLine->distance;
-      //printf("DEBUG12\n");
-      // printf("%s,%f\n", pTemp->name, pTemp->totalDist);
-      //printf("DEBUG4\n");
+    S_Process(pRoute->pL, sortedpRoute);
+    AvlRoute2* pNew = NULL;
+    int routeID = pRoute->id;
+    float distMaxMin = pRoute->distMax - pRoute->distMin;
+    float distAvg = pRoute->distTot / pRoute->nSteps;
+    // Insert the data into the tree
+    if (sortedpRoute == NULL) {
+      sortedpRoute = createAvlRoute2(distMaxMin);
+      sortedpRoute->id = routeID;
+      sortedpRoute->distAvg = distAvg;
+      sortedpRoute->distMax = pRoute->distMax;
+      sortedpRoute->distMin = pRoute->distMin;
     } else {
-        //printf("DEBUG5\n");
-        pTemp->totalDist += pLine->distance;
-        // printf("%s,%f\n",pTemp->name,pTemp->totalDist);
-        //printf("existe deja\n");
-        //printf("DEBUG6\n");
+      // This suffers from the SAME BUG as the other AVLs.
+      // We really need to fix this...
+      sortedpRoute = addAvlRoute2(sortedpRoute, distMaxMin);
+      pNew = isInAvlRoute2(sortedpRoute, distMaxMin);
+      
+      pNew->distAvg = distAvg;
+      pNew->distMax = pRoute->distMax;
+      pNew->distMin = pRoute->distMin;
+      pNew->id = routeID;
     }
+
+    S_Process(pRoute->pR, sortedpRoute);
   }
-  infixe(pDriver);
-  free(pLine);
+  return sortedpRoute;
 }
-*/
