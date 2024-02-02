@@ -38,15 +38,17 @@ cp $data data/data.csv
 data=data/data.csv
 
 # Compile C code in the "progc" directory
- make -s -C progc/
- exitNumber=$?
- if (( $exitNumber != 0 )) ; then
-  echo
-  echo "$0: Make didn't work as expected and ended with: $exitNumber"
-  exit 3
+if [ ! -e progc/bin/cy-trucks.exe ]; then 
+  make -s -C progc/
+  exitNumber=$?
+  if (( $exitNumber != 0 )) ; then
+    echo
+    echo "$0: Make didn't work as expected and ended with: $exitNumber"
+    exit 3
+  fi
+  echo Compiled C code
 fi
 
-echo Compiled C code
 
 # Setting output format of time command
 TIMEFORMAT="Program ran in %E seconds."

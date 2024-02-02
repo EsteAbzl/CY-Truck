@@ -1,5 +1,5 @@
 # Projet-Info-S3
-A small project based on an assignment, see [Assignment.pdf](Assignment.pdf).
+A small project based on an assignment, see [Assignment.pdf](Assignment.pdf). See [Project Info]("Project Info.pdf") for more information about the assignment itself.
 
 The goal of the assignment is to study data from a trucking company. A database of every Routes taken by a driver as well as every individual step of this route, from one town to another, is provided to us. However, it is completely unsorted, and it is up to us to process it to extract useful information from it. Of course, once we're done, we need to display this information to the user, which we do using [GNU Plot](http://www.gnuplot.info/).
 
@@ -17,7 +17,9 @@ _example from the first few lines of the CSV file provided to us as the file tha
 
 # Syntax :
 
-```bash main.sh DATA_LOCATION ARG```
+```cy-trucks DATA_LOCATION ARG```
+
+_You may have to specify ``bash cy-trucks DATA_LOCATION ARG`` if the script isn't executable on your machine._
 
 where ``DATA_LOCATION`` is the path to your CSV file (will be copied under data/data.csv) and ``ARG`` is either ``-d1``, ``-d2``, ``-l``, ``-s`` or ``-t``. See ``-h`` or ``man ./help`` for more information.
 
@@ -55,7 +57,7 @@ Compiled C code
 Starting T process..
 Expect this one to take a while !
 Program ran in 17.757 seconds.
-``````
+```
 
 ### Expected plots available in Demo/
 

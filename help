@@ -1,37 +1,34 @@
-.TH man 1 "29 January 2024" "version 1.0" "main man page"
+.TH man 1 "February 2 2024" "version 1.1" "Cy-Trucks"
 .SH NAME
-    main.sh
+    cy-trucks
 .SH SYNOPSIS
-    main.sh [DATA.CSV PATH] [OPTION]
+    cy-trucks [DATA_PATH] [ARG]
 .SH DESCRIPTION
-    main.sh search, analyse, make graphic from data in a csv file.
+    Read through data, process it, and display human-readable graphs from unreadable, unsorted raw data. See README.MD for more information on the context, data format and purpose of this project. Every generated plot image will be output to images/. See demo/ for example outputs.
 .SH OPTIONS
     -d1
 
-        This option get the list of all the driver with the number of route they have driven. From that list, it will only sohw the 10 driver with the most route (placed from the most route number to the least) in a graphic with the route number on the x-axis the full driver name on the y-axis.
+        Plots the top 10 numbers of routes per driver, sorted by routes in descending order.
 
     -d2
 
-        This option get the total distance (sum each step the drove) of each driver. From that list, it will only show the 10 driver with biggest total distance (placed from the biggest to the lowest) in a graphic with total distance on the x-axis the full driver name on the y-axis.
-
+        Plots the top 10 distances per driver, sorted by distances in descending order.
+    
     -l
-
-        This option get the total distance of each route (sum each step the driver made for one route). From that list, it will only show the 10 route with the biggest total distance (sorted by id number) in a graphic with the route id on the x-axis and the distance on the y-axis.
-
+    
+        Plots the top 10 route distances, sorted by route ID in descending order.
+    
     -t
 
-        This option get all the steps from all route and all their informations. From that list, it will only show the 10 most crossed city (ordered by the Alphabetical character) in a graphic with the cities on the x-axis and the route number on the y-axis.
+        Plots the top 10 towns by number of routes passing by them, sorted by alphabetical order, in descending order.
 
     -s
-
-        This option get all the steps from all route and all their informations. From that list, it will display a graphic with the id of the route on the x-axis and the distance on the y-axis.
     
-    -h
-        
-        Prints this man page. Was this necessary ? No. But it's pretty !
+        Plots the graph of the top 50 of routes by the largest and smallest distance of their steps, as well as the average distance of a route's step. Sorted by the difference between the largest and smallest steps of a route, in descending order.
 
-.SH BUGS
-    -s and -t are BROKEN : Their code necessitates the use of an AVL with duplicate values, which we failed to implement. Everything else works fine, however. This issue specifically affects the sorting of the processed data, otherwise, the data is sucessfully processed. Most of the values of both of these ends up being close enough to the intended results, though that is only due to sheer luck. Please be aware of this while running these options. They shouldn't segfault, for what it's worth.
+    -h
+
+        Displays this page.
 
 .SH AUTHOR
     Groupe projet mi2 Evan Waally Esteban (contact evan.lippens@etu.cyu.fr for any additional questions).
