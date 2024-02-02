@@ -1,3 +1,5 @@
+# Copy-paste of D1.gp with some data tweaks.
+
 set terminal png size 863, 863
 set size 0.975,1
 set origin 0.025,0

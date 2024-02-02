@@ -1,3 +1,4 @@
+# Just a histogram. Move along I suppose.
 set terminal png size 863, 863
 set output "images/t.png"
 set style fill solid
