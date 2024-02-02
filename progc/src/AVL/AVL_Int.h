@@ -90,8 +90,12 @@
     // Rebalances an Avl
     AvlInt *balanceAvlInt(AvlInt *pTree);
 
-    // In : Pointer to Avl to balance
-    // print val of the avl in infixe order
+    // In : Pointer to Avl
+    // print val of the avl in inorder order
     void inorderInt(AvlInt *pTree);
 
+    
+    // In : AvlInt*
+    // Frees an AvlInt
+    void freeAvlInt(AvlInt *pTree);
 #endif

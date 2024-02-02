@@ -95,7 +95,11 @@
     AvlRoute *balanceAvlRoute(AvlRoute *pTree);
 
     // In : Pointer to Avl to balance
-    // print val of the avl in infixe order
+    // print val of the avl in inorder order
     void inorderRoute(AvlRoute *pTree);
 
+
+    // In : AvlRoute*
+    // frees an entire avlroute
+    void freeAvlRoute(AvlRoute *pTree);
 #endif

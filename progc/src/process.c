@@ -102,8 +102,6 @@ void T_Init(FILE* fData){
   DataLine* pLine = init_ReadLine(fData);
   int *h = 0;
   AvlTown* pTown = NULL;
-  AvlTown* pNew = malloc(sizeof(AvlTown));
-  if (CHECK_PTR(pNew)) exit (1);
 
   // 
   // PASS 1 : FILL THE AVL
@@ -113,7 +111,7 @@ void T_Init(FILE* fData){
     // read TOWN A
     char* townName = malloc(sizeof(char)*50);
     if (CHECK_PTR(townName)) exit (220);
-    townName = strcpy(townName, pLine->town_A);
+    townName = strncpy(townName, pLine->town_A, strlen(pLine->town_A));
     AvlTown* pNew = NULL;
 
     // check if the town is logged
@@ -138,11 +136,12 @@ void T_Init(FILE* fData){
       if (pLine->step_ID == 1) {
         pTemp->nFirst++;
       }
+      free(townName);
     }
     // read TOWN B
     townName = malloc(sizeof(char)*50);
     if (CHECK_PTR(townName)) exit (220);
-    townName = strcpy(townName, pLine->town_B);
+    townName = strncpy(townName, pLine->town_B, strlen(pLine->town_B));
     pNew = NULL;
 
     // check if the town is logged
@@ -159,6 +158,7 @@ void T_Init(FILE* fData){
     } else {
       // case 3 : the town is logged in the avl, so append another pass
       pTemp->pRoutes = addAvlInt(pTemp->pRoutes, pLine->route_ID);
+      free(townName);
     }
   }
   
@@ -180,6 +180,8 @@ void T_Init(FILE* fData){
     top10[i]->nFirst = 0;
     top10[i]->nPass = 0;
     top10[i]->name = NULL;
+    top10[i]->pDrivers = NULL;
+    top10[i]->pRoutes = NULL;
   }
   if (!CHECK_PTR(pTown)) T_Process(pTown, top10);
 
@@ -198,6 +200,15 @@ void T_Init(FILE* fData){
     pNew->nFirst = top10[i]->nFirst;
   }
   inorderTown(top10pTown);
+  if (!CHECK_PTR(pTown)) freeAvlTown(pTown);
+  for (int i = 0; i < 10; i++) {
+    // Safe because we never use pointers in the top10
+    // The exception is the name, but thats freed when we free
+    // the tree.
+    if (!CHECK_PTR(top10[i])) free(top10[i]);
+  }
+  if (!CHECK_PTR(top10)) free(top10);
+  if (!CHECK_PTR(pLine)) free(pLine);
 }
 
 
@@ -249,8 +260,6 @@ void T2_Init(FILE* fData){
   DataLine* pLine = init_ReadLine(fData);
   int *h = 0;
   AvlTown* pTown = NULL;
-  AvlTown* pNew = malloc(sizeof(AvlTown));
-  if (CHECK_PTR(pNew)) exit (1);
 
   // 
   // PASS 1 : FILL THE AVL
@@ -259,7 +268,7 @@ void T2_Init(FILE* fData){
     // read the current line
     char* townName = malloc(sizeof(char)*50);
     if (CHECK_PTR(townName)) exit (220);
-    townName = strcpy(townName, pLine->town_B);
+    townName = strncpy(townName, pLine->town_B, strlen(pLine->town_B));
     AvlTown* pNew = NULL;
 
     // check if the town is logged
@@ -270,7 +279,7 @@ void T2_Init(FILE* fData){
       pTown->nPass++;
       char* driverName = malloc(sizeof(char)*50);
       if (CHECK_PTR(driverName)) exit (200);
-      driverName = strcpy(driverName, pLine->name);
+      driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
       pTown->pDrivers = createAvlDriver(driverName);
     } else if (pTemp == NULL) {
       // case 2 : the town isn't logged
@@ -279,14 +288,14 @@ void T2_Init(FILE* fData){
       pNew->nPass++;
       char* driverName = malloc(sizeof(char)*50);
       if (CHECK_PTR(driverName)) exit (200);
-      driverName = strcpy(driverName, pLine->name);
+      driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
       pNew->pDrivers = createAvlDriver(driverName);
     } else {
       // case 3 : the town was logged, simply append
       pTemp->nPass++;
       char* driverName = malloc(sizeof(char)*50);
       if (CHECK_PTR(driverName)) exit (200);
-      driverName = strcpy(driverName, pLine->name);
+      driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
       pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
     }
 
@@ -296,7 +305,7 @@ void T2_Init(FILE* fData){
       // read the current line
       char* townName = malloc(sizeof(char)*50);
       if (CHECK_PTR(townName)) exit (220);
-      townName = strcpy(townName, pLine->town_A);
+      townName = strncpy(townName, pLine->town_A, strlen(pLine->town_A));
       AvlTown* pNew = NULL;
 
       // check if the town is logged
@@ -307,7 +316,7 @@ void T2_Init(FILE* fData){
         pTown->nPass++;
         char* driverName = malloc(sizeof(char)*50);
         if (CHECK_PTR(driverName)) exit (200);
-        driverName = strcpy(driverName, pLine->name);
+        driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
         pTown->pDrivers = createAvlDriver(driverName);
       } else if (pTemp == NULL) {
         // case 2 : the town isn't logged
@@ -316,14 +325,14 @@ void T2_Init(FILE* fData){
         pNew->nPass++;
         char* driverName = malloc(sizeof(char)*50);
         if (CHECK_PTR(driverName)) exit (200);
-        driverName = strcpy(driverName, pLine->name);
+        driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
         pNew->pDrivers = createAvlDriver(driverName);
       } else {
         // case 3 : the town was logged, simply append
         pTemp->nPass++;
         char* driverName = malloc(sizeof(char)*50);
         if (CHECK_PTR(driverName)) exit (200);
-        driverName = strcpy(driverName, pLine->name);
+        driverName = strncpy(driverName, pLine->name, strlen(pLine->name));
         pTemp->pDrivers = addAvlDriver(pTemp->pDrivers, driverName);
       }
     }
@@ -343,9 +352,6 @@ void S_Init(FILE* fData){
   DataLine* pLine = init_ReadLine(fData);
   int *h = 0;
   AvlRoute* pRoute = NULL;
-  AvlRoute* pNew = malloc(sizeof(AvlRoute));
-  if (CHECK_PTR(pNew)) exit (1);
-
   // 
   // PASS 1 : FILL THE AVL
   //
@@ -354,6 +360,7 @@ void S_Init(FILE* fData){
     int routeID = pLine->route_ID;
     AvlRoute* pTemp = isInAvlRoute(pRoute, routeID);
     float dist = pLine->distance;
+    AvlRoute* pNew = NULL;
     // Insert the data into the tree
     if (pRoute == NULL) {
       pRoute = createAvlRoute(routeID);
@@ -395,6 +402,13 @@ void S_Init(FILE* fData){
   for (int i = 0; i < 50; i++) {
     printf("%i;%f;%f;%f;%i\n", top50[i]->id, top50[i]->distMax, top50[i]->distMin, top50[i]->distAvg, i);
   }
+
+  freeAvlRoute(pRoute);
+  for (int i = 0; i<50; i++) {
+    if (!CHECK_PTR(top50[i])) freeAvlRoute(top50[i]);
+  }
+  if (!CHECK_PTR(top50)) free(top50);
+  if (!CHECK_PTR(pLine)) free(pLine);
 }
 
 

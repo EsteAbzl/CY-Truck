@@ -33,7 +33,7 @@
 
     // In : FIFO*
     // Out : Modified FIFO*
-    // Deletes the first element of a FIFO.
+    // Deletes the first element of a FIFO/FIFO.
     FIFO* delFIFO(FIFO* pHead);
 
 #endif

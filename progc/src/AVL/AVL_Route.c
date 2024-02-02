@@ -258,3 +258,12 @@ void inorderRoute(AvlRoute *pTree){
     inorderRoute(pTree->pR);
   }
 }
+
+
+void freeAvlRoute(AvlRoute *pTree){
+  if(!CHECK_PTR(pTree)){
+    freeAvlRoute(pTree->pL);
+    freeAvlRoute(pTree->pR);
+    if (!CHECK_PTR(pTree)) free(pTree);
+  }
+}

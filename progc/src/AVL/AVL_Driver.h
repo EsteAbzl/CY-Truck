@@ -93,8 +93,9 @@
     // Rebalances an Avl
     AvlDriver *balanceAvlDriver(AvlDriver *pTree);
 
-    // In : Pointer to Avl to balance
-    // print val of the avl in infixe order
-    void infixe(AvlDriver *pTree);
+
+    // In : AvlDriver*
+    // Frees an entire AvlDriver
+    void freeAvlDriver(AvlDriver *pTree);
 
 #endif

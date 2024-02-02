@@ -258,3 +258,14 @@ void inorderTown(AvlTown *pTree){
     inorderTown(pTree->pR);
   }
 }
+
+void freeAvlTown(AvlTown *pTree){
+  if(!CHECK_PTR(pTree)){
+    freeAvlTown(pTree->pL);
+    freeAvlTown(pTree->pR);
+    freeAvlDriver(pTree->pDrivers);
+    freeAvlInt(pTree->pRoutes);
+    if (!CHECK_PTR(pTree->name)) free(pTree->name);
+    if (!CHECK_PTR(pTree)) free(pTree);
+  }
+}

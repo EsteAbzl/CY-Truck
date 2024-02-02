@@ -261,3 +261,11 @@ void inorderInt(AvlInt *pTree){
     inorderInt(pTree->pR);
   }
 }
+
+void freeAvlInt(AvlInt *pTree){
+  if(!CHECK_PTR(pTree)){
+    freeAvlInt(pTree->pL);
+    freeAvlInt(pTree->pR);
+    if (!CHECK_PTR(pTree)) free(pTree);
+  }
+}

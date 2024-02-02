@@ -1,4 +1,5 @@
 #include "AVL_Driver.h"
+#include <complex.h>
 
 AvlDriver* createAvlDriver(char *str) {
   AvlDriver *pNew = malloc(sizeof(AvlDriver));
@@ -266,10 +267,11 @@ AvlDriver *avlDriverRotationLR(AvlDriver *pTree) {
 }
 
 
-void infixe(AvlDriver *pTree){
+void freeAvlDriver(AvlDriver *pTree){
   if(!CHECK_PTR(pTree)){
-    infixe(pTree->pL);
-    printf("  %s\n",pTree->name);
-    infixe(pTree->pR);
+    freeAvlDriver(pTree->pL);
+    freeAvlDriver(pTree->pR);
+    if (!CHECK_PTR(pTree->name)) free(pTree->name);
+    if (!CHECK_PTR(pTree)) free (pTree);
   }
 }

@@ -5,6 +5,7 @@
     #include "AVL_Common.h"
     #include "AVL_Driver.h"
     #include "AVL_Int.h"
+    #include "AVL_Route.h"
 
 // STRUCTURES
     // Driver Avl node
@@ -97,7 +98,11 @@
     AvlTown *balanceAvlTown(AvlTown *pTree);
 
     // In : Pointer to Avl to balance
-    // print val of the avl in infixe order
+    // print val of the avl in inorder order
     void inorderTown(AvlTown *pTree);
 
+
+    // In : AvlTown*
+    // Frees an entire AVLTown
+    void freeAvlTown(AvlTown *pTree);
 #endif
