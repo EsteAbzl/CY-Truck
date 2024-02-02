@@ -163,8 +163,8 @@ void T_Init(FILE* fData){
       pTemp->pRoutes = addAvlInt(pTemp->pRoutes, pLine->route_ID);
     }
   }
-  //inorderTown(pTown);
-  //return;
+  inorderTown(pTown);
+  return;
   AvlTown** top10;
   top10 = malloc(10*sizeof(AvlTown*));
   for (int i = 0; i < 10; i++) {
@@ -174,20 +174,37 @@ void T_Init(FILE* fData){
     top10[i]->nPass = 0;
     top10[i]->name = NULL;
   }
-  if (!CHECK_PTR(pTown)) top10 = T_Process1(pTown, top10);
+  if (!CHECK_PTR(pTown)) T_Process1(pTown, top10);
 
   for (int i = 0; i < 10; i++) {
     printf("%s, %i, %i\n", top10[i]->name, top10[i]->nPass, top10[i]->nFirst);
   }
+  return;
+  // Put our top10 in an AVL sorted by town name to sort the result when printing
+  AvlTown* top10pTown = createAvlTown(top10[0]->name);
+  top10pTown->nPass = top10[0]->nPass;
+  top10pTown->nFirst = top10[0]->nFirst;
+  for (int i = 1; i<10; i++) {
+    top10pTown = addAvlTown(top10pTown, top10[i]->name);
+    top10pTown->nPass = top10[0]->nPass;
+    top10pTown->nFirst = top10[0]->nFirst;
+  }
+  inorderTown(top10pTown);
 }
 
-AvlTown** T_Process1(AvlTown* pTown, AvlTown** top10) {
-  if (!CHECK_PTR(pTown->pL)) top10 = T_Process1(pTown->pL, top10);
-  if (!CHECK_PTR(pTown->pR)) top10 = T_Process1(pTown->pR, top10);
-  pTown->nPass = avlIntSize(pTown->pRoutes); 
-  for (int i = 0; i < 10; i++) {
-    if (pTown->nPass > top10[i]->nPass) {
-      for (int j = i+1; j < 9; j++) {
+
+// Very simple code that just gets a top 10 of the values in pTown.
+void T_Process1(AvlTown* pTown, AvlTown** top10){
+  if(pTown){
+    pTown->nPass = avlIntSize(pTown->pRoutes); 
+
+    if(pTown->nPass > top10[9]->nPass){
+      int i = 0;
+      while((pTown->nPass < top10[i]->nPass) && i<10){
+        i++;
+      }
+    
+      for(int j = i+1; j < 9; j++) {
         top10[j]->nFirst = top10[j-1]->nFirst;
         top10[j]->nPass = top10[j-1]->nPass;
         top10[j]->name = top10[j-1]->name;
@@ -195,10 +212,11 @@ AvlTown** T_Process1(AvlTown* pTown, AvlTown** top10) {
       top10[i]->nPass = pTown->nPass;
       top10[i]->name = pTown->name;
       top10[i]->nFirst = pTown->nFirst;
-      break;
     }
+
+    T_Process1(pTown->pL, top10);
+    T_Process1(pTown->pR, top10);
   }
-  return top10;
 }
 
 // VESTIGIAL !

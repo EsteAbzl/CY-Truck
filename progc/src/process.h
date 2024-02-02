@@ -42,7 +42,7 @@
 
 
     void T_Init(FILE* fData);
-    AvlTown** T_Process1(AvlTown* pTown, AvlTown** top10);
+    void T_Process1(AvlTown* pTown, AvlTown** top10);
 
     void T2_Init(FILE* fData);
     void T2_Process(AvlTown* pTown);
