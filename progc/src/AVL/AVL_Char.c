@@ -2,7 +2,7 @@
 
 AvlChar* init_AvlChar(){
   AvlChar *pNew = malloc(sizeof(AvlChar));
-  if (CHECK_PTR(pNew)) exit(1);
+  if(CHECK_PTR(pNew)) exit(1);
 
   pNew->h = 0;
   pNew->pRoot = NULL;
@@ -10,13 +10,17 @@ AvlChar* init_AvlChar(){
   return pNew;
 }
 
-NodeAvlChar* create_NodeAvlChar(int id, Route* pRoute){
+NodeAvlChar* create_NodeAvlChar(char* id, Driver* pDriver, Town* pTown){
   NodeAvlChar *pNew = malloc(sizeof(NodeAvlChar));
   if (CHECK_PTR(pNew)) exit(1);
 
-  pNew->value = id;
+  char* pNewId = malloc(sizeof(char) * strlen(id)+1);
+  if(CHECK_PTR(pNewId)) exit(5);
+  pNew->value = pNewId;
+  strncpy(pNew->value, id, strlen(id));
 
-  pNew->pRoute = pRoute; // Can be set to NULL
+  pNew->pDriver = pDriver; // Can be set to NULL
+  pNew->pTown = pTown;
 
   pNew->bFactor = 0;
   pNew->pL = NULL;
@@ -27,9 +31,11 @@ NodeAvlChar* create_NodeAvlChar(int id, Route* pRoute){
 
 void free_SingularNodeAvlChar(NodeAvlChar* pTree){
   if(pTree){
-    if(pTree->pRoute){
-      free(pTree->pRoute);
-    }
+    if(pTree->value) free(pTree->value);
+
+    free_Driver(pTree->pDriver);
+    free_Town(pTree->pTown);
+
 
     free(pTree);
   }
@@ -37,9 +43,10 @@ void free_SingularNodeAvlChar(NodeAvlChar* pTree){
 
 void free_NodeAvlChar(NodeAvlChar* pTree){
   if(pTree){
-    if(pTree->pRoute){
-      free(pTree->pRoute);
-    }
+    if(pTree->value) free(pTree->value);
+
+    free_Driver(pTree->pDriver);
+    free_Town(pTree->pTown);
 
     free_NodeAvlChar(pTree->pL);
     free_NodeAvlChar(pTree->pR);
@@ -58,24 +65,24 @@ void free_AvlChar(AvlChar* pAvl){
 
 
 
-void add_AvlChar(AvlChar *pAvl, Route* pRoute, int id){
-  pAvl->pRoot = add_NodeAvlChar(pAvl->pRoot, id, pRoute, &pAvl->h);
+void add_AvlChar(AvlChar *pAvl, Driver* pDriver, Town* pTown, char* id){
+  pAvl->pRoot = add_NodeAvlChar(pAvl->pRoot, id, pDriver, pTown, &pAvl->h);
 }
 
 // It's a bit hacky, but as they say...
 // https://www.youtube.com/watch?v=YPN0qhSyWy8
 
-NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, int id, Route* pRoute, int *h) {
+NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, char* id, Driver* pDriver, Town* pTown, int *h) {
   if(pTree == NULL){                // If in a leaf, add the node there
     *h = 1;
-    return create_NodeAvlChar(id, pRoute);
+    return create_NodeAvlChar(id, pDriver, pTown);
   } 
-  else if(id > pTree->value){
-    pTree->pR = add_NodeAvlChar(pTree->pR, id, pRoute, h);
+  else if(strcmp(id, pTree->value) > 0){
+    pTree->pR = add_NodeAvlChar(pTree->pR, id, pDriver, pTown, h);
   }
-  else if(id < pTree->value){
+  else if(strcmp(id, pTree->value) < 0){
     // If the new node's value is lesser, check the left branch
-    pTree->pL = add_NodeAvlChar(pTree->pL, id, pRoute, h);
+    pTree->pL = add_NodeAvlChar(pTree->pL, id, pDriver, pTown, h);
     // balance factor needs to be inverted
     *h = -*h;
   } 
@@ -100,19 +107,19 @@ NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, int id, Route* pRoute, int *h) 
 
 
 
-void del_AvlChar(AvlChar *pAvl, int id){
-  pAvl->pRoot = del_NodeAvlChar(pAvl->pRoot, &id, &pAvl->h);
+void del_AvlChar(AvlChar *pAvl, char* id){
+  pAvl->pRoot = del_NodeAvlChar(pAvl->pRoot, id, &pAvl->h);
 }
 
-NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, int *id, int *h){
+NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, char *id, int *h){
   if(pTree == NULL){   // Element not in tree
     *h = 1;
     return pTree;
   }
-  else if(*id > pTree->value){   // Recursively search through the BST
+  else if(strcmp(id, pTree->value) > 0){   // Recursively search through the BST
     pTree->pR = del_NodeAvlChar(pTree->pR, id, h);
   } 
-  else if(*id < pTree->value){
+  else if(strcmp(id, pTree->value) < 0){
     pTree->pL = del_NodeAvlChar(pTree->pL, id, h);
     *h = -*h;
   }
@@ -143,9 +150,9 @@ NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, int *id, int *h){
   return pTree;
 }
 
-NodeAvlChar* del_AvlLargestInt(NodeAvlChar *pTree, int *id) {
+NodeAvlChar* del_AvlLargestStr(NodeAvlChar *pTree, char** id) {
   NodeAvlChar *tmp;
-  if(checkRightAvlRoute(pTree)){
+  if(checkRightAvlChar(pTree)){
     del_AvlLargestInt(pTree->pR, id);
   } 
   else{
@@ -159,16 +166,16 @@ NodeAvlChar* del_AvlLargestInt(NodeAvlChar *pTree, int *id) {
 }
 
 
-NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, int id){
+NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, char* id){
   NodeAvlChar* ret = NULL;
   if(pTree == NULL){            // Return NULL if not found
     ret = NULL;
   } 
   else if(id < pTree->value) {  // Search value lower than current value, go left
-    ret = isInAvlRoute(pTree->pL, id);
+    ret = isInAvlChar(pTree->pL, id);
   } 
   else if (id > pTree->value) { // Search value higher than current value, go right
-    ret = isInAvlRoute(pTree->pR, id);
+    ret = isInAvlChar(pTree->pR, id);
   } 
   else {                        // Return the current node if found
     ret = pTree;

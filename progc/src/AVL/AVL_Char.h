@@ -6,7 +6,7 @@
 
 // STRUCTURES
     typedef struct _NodeAvlChar{
-        int value;           // Sort value.
+        char* value;           // Sort value.
         Driver* pDriver;
         Town* pTown;
 
@@ -28,23 +28,23 @@
     //1) create_NodeAvlChar(name, create_Driver(name, info), NULL);
     //2) create_NodeAvlChar(name, NULL, create_Town(name, info));
     //2) create_NodeAvlChar(name, NULL, NULL);
-    NodeAvlChar* create_NodeAvlChar(int id, Driver* pDriver, Town* pTown);
+    NodeAvlChar* create_NodeAvlChar(char* id, Driver* pDriver, Town* pTown);
 
     void free_SingularNodeAvlChar(NodeAvlChar* pTree);
     void free_NodeAvlChar(NodeAvlChar* pTree);
-    void free_AvlChar(AvlChar* pAvlChar);
+    void free_AvlChar(AvlChar* pAvl);
 
-    void add_AvlChar(AvlChar *pAvl, Route* pRoute, int id);
-    NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, int id, Route* pRoute, int *h);
+    void add_AvlChar(AvlChar *pAvl, Driver* pDriver, Town* pTown, char* id);
+    NodeAvlChar* add_NodeAvlChar(NodeAvlChar *pTree, char* id, Driver* pDriver, Town* pTown, int *h);
 
-    void del_AvlChar(AvlChar *pAvl, int id);
-    NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, int *id, int *h);
-    NodeAvlChar* del_AvlLargestInt(NodeAvlChar *pTree, int *id);
+    void del_AvlChar(AvlChar *pAvl, char* id);
+    NodeAvlChar* del_NodeAvlChar(NodeAvlChar *pTree, char* id, int *h);
+    NodeAvlChar* del_AvlLargestStr(NodeAvlChar *pTree, char** id);
 
 
     // In : Pointer to Avl, String
     // Out : Pointer to found node or NULL if not found
-    NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, int id);
+    NodeAvlChar* isInAvlChar(NodeAvlChar *pTree, char* id);
 
 
     // In : Pointer to BST
@@ -70,6 +70,6 @@
 
     // In : Pointer to Avl to balance
     // print val of the avl in infixe order
-    void inorderInt(NodeAvlChar *pTree);
+    void inorderChar(NodeAvlChar *pTree);
 
 #endif

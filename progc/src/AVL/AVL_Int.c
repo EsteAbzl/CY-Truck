@@ -145,7 +145,7 @@ NodeAvlInt* del_NodeAvlInt(NodeAvlInt *pTree, int *id, int *h){
 
 NodeAvlInt* del_AvlLargestInt(NodeAvlInt *pTree, int *id) {
   NodeAvlInt *tmp;
-  if(checkRightAvlRoute(pTree)){
+  if(checkRightAvlInt(pTree)){
     del_AvlLargestInt(pTree->pR, id);
   } 
   else{
@@ -165,10 +165,10 @@ NodeAvlInt* isInAvlInt(NodeAvlInt *pTree, int id){
     ret = NULL;
   } 
   else if(id < pTree->value) {  // Search value lower than current value, go left
-    ret = isInAvlRoute(pTree->pL, id);
+    ret = isInAvlInt(pTree->pL, id);
   } 
   else if (id > pTree->value) { // Search value higher than current value, go right
-    ret = isInAvlRoute(pTree->pR, id);
+    ret = isInAvlInt(pTree->pR, id);
   } 
   else {                        // Return the current node if found
     ret = pTree;

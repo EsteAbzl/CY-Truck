@@ -8,10 +8,15 @@
     
     #include "FIFO.h"
     #include "AVL/AVL_Common.h"
+    #include "AVL/AVL_Int.h"
+    #include "AVL/AVL_BasicInt.h"
+    #include "AVL/AVL_Char.h"
+    
+    /* old
     #include "AVL/AVL_Route.h"
     #include "AVL/AVL_Town.h"
     #include "AVL/AVL_Driver.h"
-    #include "AVL/AVL_TownSteps.h"
+    #include "AVL/AVL_TownSteps.h"*/
 
 // DEFINES
     #define ROUTE_ID 0

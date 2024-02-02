@@ -18,7 +18,7 @@
 
     void del_AvlBasicInt(AvlBasicInt *pAvl, int id);
     NodeAvlBasicInt* del_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int *id, int *h);
-    NodeAvlBasicInt* del_AvlLargestInt(NodeAvlBasicInt *pTree, int *id);
+    NodeAvlBasicInt* del_AvlLargestBasicInt(NodeAvlBasicInt *pTree, int *id);
 
 
     // In : Pointer to Avl, String

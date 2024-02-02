@@ -130,10 +130,10 @@ NodeAvlBasicInt* del_NodeAvlBasicInt(NodeAvlBasicInt *pTree, int *id, int *h){
   return pTree;
 }
 
-NodeAvlBasicInt* del_AvlLargestInt(NodeAvlBasicInt *pTree, int *id) {
+NodeAvlBasicInt* del_AvlLargestBasicInt(NodeAvlBasicInt *pTree, int *id) {
   NodeAvlBasicInt *tmp;
-  if(checkRightAvlRoute(pTree)){
-    del_AvlLargestInt(pTree->pR, id);
+  if(checkRightAvlBasicInt(pTree)){
+    del_AvlLargestBasicInt(pTree->pR, id);
   } 
   else{
     *id = pTree->value;
@@ -152,10 +152,10 @@ NodeAvlBasicInt* isInAvlBasicInt(NodeAvlBasicInt *pTree, int id){
     ret = NULL;
   } 
   else if(id < pTree->value) {  // Search value lower than current value, go left
-    ret = isInAvlRoute(pTree->pL, id);
+    ret = isInAvlBasicInt(pTree->pL, id);
   } 
   else if (id > pTree->value) { // Search value higher than current value, go right
-    ret = isInAvlRoute(pTree->pR, id);
+    ret = isInAvlBasicInt(pTree->pR, id);
   } 
   else {                        // Return the current node if found
     ret = pTree;
