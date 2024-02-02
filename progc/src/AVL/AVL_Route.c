@@ -10,6 +10,8 @@ AvlRoute* createAvlRoute(int id) {
   pNew->distTot = 0;
   pNew->distMax = 0;
   pNew->distMin = 0;
+  pNew->distMaxMin = 0;
+  pNew->distAvg = 0;
   pNew->nSteps = 0;
   return pNew;
 }

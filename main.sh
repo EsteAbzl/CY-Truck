@@ -83,8 +83,6 @@ case $2 in
 #   All of this just to remove leading white spaces btw  
     
     gnuplot gnuplot/d1.gp
-    exit
-    # Hash is a built-in bash command that checks if a command exists
     # just redirect both stdout and stderr to null, we just want the exit code
     # if we don't have Imagemagick installed... eh, tough luck. It's a standard
     # on most common distributions. I mean my Arch install didn't have it, but
@@ -181,12 +179,13 @@ case $2 in
   ;;
   '-t')
   echo "Starting T process.."
+  echo "Expect this one to take a while !"
     time ./progc/bin/cy-trucks.exe $data -t > temp/OUTPUT.txt
     gnuplot gnuplot/t.gp
   ;;
   '-s')
   echo "Starting S process.."
-    time ./progc/bin/cy-trucks.exe $data -s | head -n50 > temp/OUTPUT.txt
+    time ./progc/bin/cy-trucks.exe $data -s > temp/OUTPUT.txt
     gnuplot gnuplot/s.gp
   ;;
   *)

@@ -163,8 +163,17 @@ void T_Init(FILE* fData){
       pTemp->pRoutes = addAvlInt(pTemp->pRoutes, pLine->route_ID);
     }
   }
-  inorderTown(pTown);
-  return;
+  
+  //
+  // PASS 2 : get 10 most visited towns
+  // 
+  // To prevent previous issues with duplicate nPass values,
+  // We're going to avoid making an nPath AVL altogether.
+  // This is a bit hacky as using a sequential array to sort is
+  // slow, but we should only need to sort an array of size 10
+  // Since we'll only compare a value to the smallest of the array
+  // to not even compare our input values should we not need to
+  // add them to the top 10.
   AvlTown** top10;
   top10 = malloc(10*sizeof(AvlTown*));
   for (int i = 0; i < 10; i++) {
@@ -174,50 +183,58 @@ void T_Init(FILE* fData){
     top10[i]->nPass = 0;
     top10[i]->name = NULL;
   }
-  if (!CHECK_PTR(pTown)) T_Process1(pTown, top10);
+  if (!CHECK_PTR(pTown)) T_Process(pTown, top10);
 
-  for (int i = 0; i < 10; i++) {
-    printf("%s, %i, %i\n", top10[i]->name, top10[i]->nPass, top10[i]->nFirst);
-  }
-  return;
-  // Put our top10 in an AVL sorted by town name to sort the result when printing
+  // 
+  // PASS 3 : Alphabetical sorting
+  // 
+  // Now that we have our top 10 cities, sorting them
+  // by alphabetical order is trivial.
   AvlTown* top10pTown = createAvlTown(top10[0]->name);
   top10pTown->nPass = top10[0]->nPass;
   top10pTown->nFirst = top10[0]->nFirst;
   for (int i = 1; i<10; i++) {
     top10pTown = addAvlTown(top10pTown, top10[i]->name);
-    top10pTown->nPass = top10[0]->nPass;
-    top10pTown->nFirst = top10[0]->nFirst;
+    AvlTown* pNew = isInAvlTown(top10pTown, top10[i]->name);
+    pNew->nPass = top10[i]->nPass;
+    pNew->nFirst = top10[i]->nFirst;
   }
   inorderTown(top10pTown);
 }
 
 
 // Very simple code that just gets a top 10 of the values in pTown.
-void T_Process1(AvlTown* pTown, AvlTown** top10){
-  if(pTown){
-    pTown->nPass = avlIntSize(pTown->pRoutes); 
+// In theory, this is O(scary), but in practice, it should be fast
+// enough since our array is of size 10.
+void T_Process(AvlTown* pTown, AvlTown** top10) {
+  if (pTown) {
+    pTown->nPass = avlIntSize(pTown->pRoutes);
 
-    if(pTown->nPass > top10[9]->nPass){
+    // If pTown->nPass is large enough to be allowed in the top 10...
+    if (pTown->nPass > top10[9]->nPass) {
+      // ... Get where it can go to not break the sorting...
       int i = 0;
-      while((pTown->nPass < top10[i]->nPass) && i<10){
+      while ((pTown->nPass < top10[i]->nPass) && i < 10) {
         i++;
       }
-    
-      for(int j = i+1; j < 9; j++) {
-        top10[j]->nFirst = top10[j-1]->nFirst;
-        top10[j]->nPass = top10[j-1]->nPass;
-        top10[j]->name = top10[j-1]->name;
+
+      // "Sliiiiide to the right ! Cha cha real smooth  !""
+      for (int j = 8; j >= i; j--) {
+        top10[j+1]->name = top10[j]->name;
+        top10[j+1]->nPass = top10[j]->nPass;
+        top10[j+1]->nFirst = top10[j]->nFirst;
       }
+      // Add it to the newly made spot
       top10[i]->nPass = pTown->nPass;
       top10[i]->name = pTown->name;
       top10[i]->nFirst = pTown->nFirst;
     }
 
-    T_Process1(pTown->pL, top10);
-    T_Process1(pTown->pR, top10);
+    T_Process(pTown->pL, top10);
+    T_Process(pTown->pR, top10);
   }
 }
+
 
 // VESTIGIAL !
 // This was the code for the 1.0.0 version of T2. In fact, it works ! It's not sorted,
@@ -313,16 +330,6 @@ void T2_Init(FILE* fData){
       }
     }
   }
-  T2_Process(pTown);
-}
-
-// Also vestigial...
-void T2_Process(AvlTown* pTown) {
-  if (pTown != NULL) {
-    T2_Process(pTown->pL);
-    printf("%s;%i;%i\n", pTown->name, pTown->nPass, avlDriverNodeCount(pTown->pDrivers));
-    T2_Process(pTown->pR);
-  }
 }
 
 
@@ -346,7 +353,7 @@ void S_Init(FILE* fData){
   //
   while (readLine(fData, pLine)) {
     // read the current line
-    long routeID = pLine->route_ID;
+    int routeID = pLine->route_ID;
     AvlRoute* pTemp = isInAvlRoute(pRoute, routeID);
     float dist = pLine->distance;
     // Insert the data into the tree
@@ -356,6 +363,7 @@ void S_Init(FILE* fData){
       pRoute->distTot = dist;
       pRoute->distMax = dist;
       pRoute->distMin = dist;
+      pRoute->distMaxMin = pRoute->distMax - pRoute->distMin;
     } else if (pTemp == NULL) {
       pRoute = addAvlRoute(pRoute, routeID);
       pNew = isInAvlRoute(pRoute, routeID);
@@ -367,47 +375,63 @@ void S_Init(FILE* fData){
       pTemp->nSteps++;
       if (pTemp->distMin > dist) pTemp->distMin = dist;
       if (pTemp->distMax < dist) pTemp->distMax = dist;
+      pTemp->distMaxMin = pTemp->distMax - pTemp->distMin; 
       pTemp->distTot += dist;
     }
   }
   //
-  // PASS 2 : COMPUTE AVERAGES AND PRINT
+  // PASS 2 : COMPUTE AVERAGES
   //
-  AvlRoute2* sortedpRoute = NULL;
-  sortedpRoute = S_Process(pRoute, sortedpRoute);
-  int* i = malloc(sizeof(int));
-  if (CHECK_PTR(i)) exit (200);
-  *i = 0;
-  inorderRoute2(sortedpRoute, i);
+  AvlRoute** top50;
+  top50 = malloc(50*sizeof(AvlRoute*));
+  for (int i = 0; i < 50; i++) {
+    top50[i] = malloc(sizeof(AvlRoute));
+    if (CHECK_PTR(top50[i])) exit (200);
+    top50[i]->distMax = 0;
+    top50[i]->distMin = 0;
+    top50[i]->id = 0;
+    top50[i]->distMaxMin = 0;
+    top50[i]->distAvg = 0;
+  }
+  if (!CHECK_PTR(pRoute)) S_Process(pRoute, top50);
+  for (int i = 0; i < 50; i++) {
+    printf("%i;%f;%f;%f;%i\n", top50[i]->id, top50[i]->distMax, top50[i]->distMin, top50[i]->distAvg, i);
+  }
 }
 
-AvlRoute2* S_Process(AvlRoute* pRoute, AvlRoute2* sortedpRoute) {
-  if (pRoute != NULL) {
-    S_Process(pRoute->pL, sortedpRoute);
-    AvlRoute2* pNew = NULL;
-    int routeID = pRoute->id;
-    float distMaxMin = pRoute->distMax - pRoute->distMin;
-    float distAvg = pRoute->distTot / pRoute->nSteps;
-    // Insert the data into the tree
-    if (sortedpRoute == NULL) {
-      sortedpRoute = createAvlRoute2(distMaxMin);
-      sortedpRoute->id = routeID;
-      sortedpRoute->distAvg = distAvg;
-      sortedpRoute->distMax = pRoute->distMax;
-      sortedpRoute->distMin = pRoute->distMin;
-    } else {
-      // This suffers from the SAME BUG as the other AVLs.
-      // We really need to fix this...
-      sortedpRoute = addAvlRoute2(sortedpRoute, distMaxMin);
-      pNew = isInAvlRoute2(sortedpRoute, distMaxMin);
-      
-      pNew->distAvg = distAvg;
-      pNew->distMax = pRoute->distMax;
-      pNew->distMin = pRoute->distMin;
-      pNew->id = routeID;
+
+// See : T_process
+void S_Process(AvlRoute* pRoute, AvlRoute** top50) {
+  if (pRoute) {
+    pRoute->distAvg = pRoute->distTot / pRoute->nSteps;
+
+    // If pRoute->distMaxMin is large enough to be allowed in the top 50...
+    if (pRoute->distMaxMin > top50[49]->distMaxMin) {
+      // ... Get where it can go to not break the sorting...
+      int i = 0;
+      while ((pRoute->distMaxMin < top50[i]->distMaxMin) && i < 50) {
+        i++;
+      }
+
+      // "Sliiiiide to the right ! Cha cha real smooth  !""
+      for (int j = 48; j >= i; j--) {
+        // The very thought of doing this makes me feel gross.
+        // But eh, it's only size 50. Again, O(scary), but quick enough in practice.
+        top50[j+1]->distMax = top50[j]->distMax;
+        top50[j+1]->distMin = top50[j]->distMin;
+        top50[j+1]->id = top50[j]->id;
+        top50[j+1]->distMaxMin = top50[j]->distMaxMin;
+        top50[j+1]->distAvg = top50[j]->distAvg;  
+      }
+      // Add it to the newly made spot
+      top50[i]->distMax = pRoute->distMax;
+      top50[i]->distMin = pRoute->distMin;
+      top50[i]->id = pRoute->id;
+      top50[i]->distMaxMin = pRoute->distMaxMin;
+      top50[i]->distAvg = pRoute->distAvg; 
     }
 
-    S_Process(pRoute->pR, sortedpRoute);
+    S_Process(pRoute->pL, top50);
+    S_Process(pRoute->pR, top50);
   }
-  return sortedpRoute;
 }

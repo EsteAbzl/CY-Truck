@@ -42,12 +42,11 @@
 
 
     void T_Init(FILE* fData);
-    void T_Process1(AvlTown* pTown, AvlTown** top10);
+    void T_Process(AvlTown* pTown, AvlTown** top10);
 
     void T2_Init(FILE* fData);
-    void T2_Process(AvlTown* pTown);
 
     void S_Init(FILE* fData);
-    AvlRoute2* S_Process(AvlRoute* pRoute, AvlRoute2* sortedpRoute);
+    void S_Process(AvlRoute* pRoute, AvlRoute** top50);
 
 #endif

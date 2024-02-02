@@ -28,4 +28,4 @@ set ylabel "DISTANCE (Km)"
 # That's just a general idea, there's plenty of plot types. The default types are histograms for strings against numbers,
 # and typical graphs for numbers against numbers.
 plot "temp/OUTPUT.txt" using 5:2:3:xtic(1) with filledcurve title "Distances Max/Min (Km)" fc rgb "#A349A4",\
-     "temp/OUTPUT.txt" using 5:4:xtic(1) smooth csplines title "Distances Average" lc rgb "#732E73" linewidth 3
+     "temp/OUTPUT.txt" using 5:4:xtic(1) with lines title "Distances Average" lc rgb "#732E73" linewidth 3

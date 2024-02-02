@@ -15,6 +15,8 @@
       float distTot;          // Total Distance
       float distMin;          // I sincerely hope that these are explicit enough.
       float distMax;
+      float distMaxMin;
+      float distAvg;
       int nSteps;
     } AvlRoute;
 
