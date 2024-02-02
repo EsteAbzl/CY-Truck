@@ -1,5 +1,5 @@
 # Projet-Info-S3
-A small project based on an assignment, see [Assignment.pdf](Assignment.pdf). See [Project Info]("Project Info.pdf") for more information about the assignment itself.
+A small project based on an assignment, see [Assignment.pdf](Assignment.pdf). See [Project Info](Project Info.pdf) for more information about the assignment itself.
 
 The goal of the assignment is to study data from a trucking company. A database of every Routes taken by a driver as well as every individual step of this route, from one town to another, is provided to us. However, it is completely unsorted, and it is up to us to process it to extract useful information from it. Of course, once we're done, we need to display this information to the user, which we do using [GNU Plot](http://www.gnuplot.info/).
 
