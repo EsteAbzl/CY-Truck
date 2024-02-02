@@ -39,33 +39,38 @@
 
     }DataLine;
 
-    typedef struct _nodeTop{
+    typedef struct _nodeTopT{
         int i_Val;
-        float f_Val;
-        char c_Val[COLUMN_SIZE];;
+        char c_Val[COLUMN_SIZE];
 
         char caption[COLUMN_SIZE];
-        
-        float f1, f2, f3;
-        int i1, i2;
+        int nPath, nFirstPath;
 
-        struct _nodeTop* pNext;
-    }NodeTop;
+        struct _nodeTopT* pNext;
+    }NodeTopT;
 
-    typedef struct Top{
+    typedef struct Top_T{
         int size;
 
-        NodeTop* pFist;
-        NodeTop* pLast;
-    }Top;
+        int i_ValMin;
+        char c_ValMin[COLUMN_SIZE];
 
-    
-
+        NodeTopT* pFist;
+    }Top_T;
 
 
 // PROTOTYPES
     DataLine* init_ReadLine(FILE* fFile);
     int readLine(FILE* fFile, DataLine* pLine);
+
+    void init_Top(Top_T* pTop);
+    NodeTopT *create_NodeTopT(NodeAvlChar* pNodeAvlTown);
+    void free_NodeTopT(NodeTopT* pNode);
+    NodeTopT* insertTopT(NodeTopT* pNode, int val, NodeAvlChar* pNodeAvlTown);
+    int popLastTopT(NodeTopT* pNode);
+    void compute_t_Top(NodeAvlChar* pTree, Top_T* pTop);
+    void print_t_Top(Top_T* pTop);
+    void t_Top(AvlChar* pAvlTown);
 
     void t_Process(FILE* fFile);
     // Return 0 if the end of the file is reached

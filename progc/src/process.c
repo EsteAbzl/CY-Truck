@@ -91,83 +91,102 @@ int readLine(FILE* fFile, DataLine* pLine){
   return (string[0] != EOF); // Part of a little complicated way to know when we trully hit the EOF
 }
 
-NodeTop *create_NodeTop(){
-  NodeTop* pNew = malloc(sizeof(NodeTop));
+
+void init_Top(Top_T* pTop){
+  pTop->pFist = NULL;
+  pTop->size = 0;
+  pTop->i_ValMin = 0;
+  pTop->c_ValMin[0] = 0;
+}
+
+NodeTopT *create_NodeTopT(NodeAvlChar* pNodeAvlTown){
+  NodeTopT* pNew = malloc(sizeof(NodeTopT));
   if(CHECK_PTR(pNew)) exit(5);
 
   pNew->i_Val = 0;
-  pNew->f_Val = 0.0;
   pNew->c_Val[0] = 0;
   
-  pNew->caption[0] = 0;
+  sprintf(pNew->caption, "%s", pNodeAvlTown->pTown->name);
 
-  pNew->f1 = 0;
-  pNew->f2 = 0;
-  pNew->f3 = 0;
-
-  pNew->i1 = 0;
-  pNew->i2 = 0;
+  pNew->nPath = pNodeAvlTown->pTown->nPath;
+  pNew->nFirstPath = pNodeAvlTown->pTown->nStartingTown;
 
   pNew->pNext = NULL;
 
   return pNew;
 }
 
-NodeTop* insertInt(NodeTop* pNode, int val){
+void free_NodeTopT(NodeTopT* pNode){
   if(pNode){
+    free_NodeTopT(pNode->pNext);
 
+    free(pNode);
+  }
+}
+
+NodeTopT* insertTopT(NodeTopT* pNode, int val, NodeAvlChar* pNodeAvlTown){
+  NodeTopT* pNew = NULL;
+
+  if(CHECK_PTR(pNode)){
+    pNew = create_NodeTopT(pNodeAvlTown);
+    pNew->i_Val = val;
+  }
+  else if(val > pNode->i_Val){
+    pNew = create_NodeTopT(pNodeAvlTown);
+    pNew->i_Val = val;
+    pNew->pNext = pNode;
   }
   else{
-    
+    pNode->pNext = insertTopT(pNode->pNext, val, pNodeAvlTown);
+    pNew = pNode;
   }
 
+  return pNew;
 }
 
-void init_Top(Top* pTop){
-  pTop->pFist = NULL;
-  pTop->pFist = NULL;
-  pTop->size = 0;
+int popLastTopT(NodeTopT* pNode){
+  if(CHECK_PTR(pNode)) exit(4);
+
+  if(CHECK_PTR(pNode->pNext)){
+    return pNode->i_Val;
+  }
+  else{
+    return popLastTopT(pNode->pNext);
+  }
 }
 
-void compute_t_Top(NodeAvlChar* pTree, Top* pTop){
+void compute_t_Top(NodeAvlChar* pTree, Top_T* pTop){
   if(pTree){
     if(pTop->size < 10){
-    
+      pTop->pFist = insertTopT(pTop->pFist, pTree->pTown->nPath, pTree);
+      pTop->size++;
+    }
+    else if(pTree->pTown->nPath > pTop->i_ValMin){
+      pTop->pFist = insertTopT(pTop->pFist, pTree->pTown->nPath, pTree);
+      pTop->i_ValMin = popLastTopT(pTop->pFist);
     }
 
-    pTown->nPass = avlIntSize(pTown->pRoutes); 
-
-    if(pTown->nPass > top10[9]->nPass){
-      int i = 0;
-      while((pTown->nPass < top10[i]->nPass) && i<10){
-        i++;
-      }
-    
-      for(int j = 8; j > i+1 ; j--){
-        top10[j]->nFirst = top10[j-1]->nFirst;
-        top10[j]->nPass = top10[j-1]->nPass;
-        top10[j]->name = top10[j-1]->name;
-      }
-      top10[i]->nPass = pTown->nPass;
-      top10[i]->name = pTown->name;
-      top10[i]->nFirst = pTown->nFirst;
-    }
-
-    T_Process1(pTown->pL, AvlTown** top10)
-    T_Process1(pTown->pR, AvlTown** top10)
+    compute_t_Top(pTree->pL, pTop);
+    compute_t_Top(pTree->pR, pTop);
   }
 }
 
-void print_t_Top(Top* pTop){
-
+void print_t_Top(Top_T* pTop){
+  NodeTopT* pTrav = pTop->pFist;
+  while(pTrav){
+    printf("%s;%d;%d\n", pTrav->caption, pTrav->nPath, pTrav->nFirstPath);
+    pTrav = pTrav->pNext;
+  }
 }
 
 void t_Top(AvlChar* pAvlTown){
-  Top top;
+  Top_T top;
   init_Top(&top);
 
+  compute_t_Top(pAvlTown->pRoot, &top);
+  print_t_Top(&top);
 
-  
+  free_NodeTopT(top.pFist);
 }
 
 
@@ -184,10 +203,10 @@ void t_Process(FILE* fFile){
     
     if(pLine->step_ID == 1){
 
-      pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_A);
+      pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_A);
       if(CHECK_PTR(pTempNodeTown)){
         add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_A, pLine->route_ID), pLine->town_A);
-        pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_A);
+        pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_A);
       }
 
       pTempNodeTown->pTown->nStartingTown++;
@@ -195,16 +214,16 @@ void t_Process(FILE* fFile){
     }
 
 
-    pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_B);
+    pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_B);
 
     if(CHECK_PTR(pTempNodeTown)){
       add_AvlChar(pAvlTown, NULL, create_Town(pLine->town_B, pLine->route_ID), pLine->town_B);
-      pTempNodeTown = isInAvlChar(pAvlTown, pLine->town_B);
+      pTempNodeTown = isInAvlChar(pAvlTown->pRoot, pLine->town_B);
 
       pTempNodeTown->pTown->nPath++;
     }
     else{
-      if(!isInAvlBasicInt(pTempNodeTown->pTown->AvlPath, pLine->route_ID)){
+      if(!isInAvlBasicInt(pTempNodeTown->pTown->AvlPath->pRoot, pLine->route_ID)){
         add_AvlBasicInt(pTempNodeTown->pTown->AvlPath, pLine->route_ID);
 
         pTempNodeTown->pTown->nPath++;
@@ -212,7 +231,7 @@ void t_Process(FILE* fFile){
     }
   }
 
-
+  t_Top(pAvlTown);
 
   free_AvlChar(pAvlTown);
   free(pLine);

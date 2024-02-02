@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
   }
   else if(strcmp(argv[2], "-t") == 0){
-    //T_Init(fData);
+    t_Process(fData);
   }
   else if(strcmp(argv[2], "-s") == 0){
     //S_Init(fData);
