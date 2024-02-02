@@ -205,7 +205,6 @@ void t_Process(FILE* fFile){
 // STEP 1 : FILL THE AVL
 
   while(readLine(fFile, pLine)){
-    
     pTempNodeTown = NULL;
     
     // Town A
@@ -243,7 +242,7 @@ void t_Process(FILE* fFile){
     }
   }
 
-  t_Top(pAvlTown);
+  //t_Top(pAvlTown);
 
   free_AvlChar(pAvlTown);
   free(pLine);
